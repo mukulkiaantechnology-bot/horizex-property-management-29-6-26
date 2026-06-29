@@ -1,0 +1,146 @@
+import React, { useState, useEffect } from 'react';
+import { Search, Menu, LogOut, MessageSquare, Globe, Bell } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import api from '../api/client';
+import clsx from 'clsx';
+
+export const Topbar = ({ title = 'Overview', onMenuClick }) => {
+    const navigate = useNavigate();
+    const { i18n } = useTranslation();
+    const [unreadCount, setUnreadCount] = useState(0);
+    const [userName, setUserName] = useState('Admin User');
+    const [userInitials, setUserInitials] = useState('AU');
+    const [propertyName, setPropertyName] = useState('Horizex Group');
+    const [currentLang, setCurrentLang] = React.useState(i18n.language?.split('-')[0] || 'en');
+
+    const handleLogout = () => {
+        localStorage.removeItem('isLoggedIn');
+        navigate('/login');
+    };
+
+    useEffect(() => {
+        // Load user from localStorage
+        try {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.name) {
+                setUserName(user.name);
+                const inits = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                setUserInitials(inits);
+            }
+        } catch (e) {}
+    }, []);
+
+    useEffect(() => {
+        const fetchUnreadCount = async () => {
+            try {
+                const res = await api.get('/api/communication/unread-stats');
+                setUnreadCount(res.data.count || 0);
+            } catch (err) { }
+        };
+        fetchUnreadCount();
+        const interval = setInterval(fetchUnreadCount, 30000);
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        const syncWithGoogle = () => {
+            const masterSelect = document.querySelector("#google_translate_master_container select.goog-te-combo");
+            if (masterSelect && masterSelect.value && masterSelect.value !== currentLang) {
+                setCurrentLang(masterSelect.value);
+                i18n.changeLanguage(masterSelect.value);
+            }
+        };
+        const interval = setInterval(syncWithGoogle, 1000);
+        return () => clearInterval(interval);
+    }, [currentLang, i18n]);
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang);
+        setCurrentLang(lang);
+        const masterSelect = document.querySelector("#google_translate_master_container select.goog-te-combo");
+        if (masterSelect) {
+            masterSelect.value = lang;
+            masterSelect.dispatchEvent(new Event("change"));
+        }
+    };
+
+    return (
+        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100/80 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-40">
+            {/* LEFT */}
+            <div className="flex items-center gap-4">
+                <button
+                    className="block lg:hidden text-slate-600 p-2 hover:bg-slate-50 rounded-xl transition"
+                    onClick={onMenuClick}
+                >
+                    <Menu size={24} />
+                </button>
+                <h1 className="text-lg font-black text-slate-800 tracking-tight whitespace-nowrap">{title}</h1>
+            </div>
+
+            {/* RIGHT */}
+            <div className="flex items-center gap-3 md:gap-4">
+                {/* SMS NOTIFICATION */}
+                <Link
+                    to="/admin/sms/inbox"
+                    className="relative p-2.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                    title="SMS Inbox"
+                >
+                    <MessageSquare size={20} />
+                    {unreadCount > 0 && (
+                        <span className="absolute top-1 right-1 w-4 h-4 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                            {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                    )}
+                </Link>
+
+                {/* LANGUAGE SWITCHER */}
+                <div className="flex items-center bg-slate-100/80 rounded-xl p-1 h-9 notranslate">
+                    <button
+                        onClick={() => handleLanguageChange('en')}
+                        className={clsx(
+                            "px-3 h-full text-[11px] font-black rounded-lg transition-all uppercase tracking-wider",
+                            currentLang === 'en'
+                                ? "bg-white text-primary shadow-sm"
+                                : "text-slate-400 hover:text-slate-600"
+                        )}
+                    >
+                        EN
+                    </button>
+                    <button
+                        onClick={() => handleLanguageChange('fr')}
+                        className={clsx(
+                            "px-3 h-full text-[11px] font-black rounded-lg transition-all uppercase tracking-wider",
+                            currentLang === 'fr'
+                                ? "bg-white text-primary shadow-sm"
+                                : "text-slate-400 hover:text-slate-600"
+                        )}
+                    >
+                        FR
+                    </button>
+                </div>
+
+                {/* PROFILE */}
+                <div className="flex items-center gap-3 border-l border-slate-100 pl-3 md:pl-4">
+                    <div className="hidden md:flex flex-col items-end">
+                        <span className="text-xs font-black text-slate-800 uppercase tracking-tight">{userName}</span>
+                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{propertyName}</span>
+                    </div>
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-blue-400 text-white flex items-center justify-center text-xs font-black shadow-sm shrink-0 cursor-default">
+                        {userInitials}
+                    </div>
+                </div>
+
+                {/* LOGOUT */}
+                <button
+                    className="hidden sm:flex items-center gap-1.5 h-9 px-3 rounded-xl border border-slate-200 bg-white text-slate-500 text-xs font-bold cursor-pointer transition-all hover:bg-rose-50 hover:text-danger hover:border-rose-100"
+                    onClick={handleLogout}
+                    title="Logout"
+                >
+                    <LogOut size={15} />
+                    <span className="hidden md:inline">Logout</span>
+                </button>
+            </div>
+        </header>
+    );
+};
