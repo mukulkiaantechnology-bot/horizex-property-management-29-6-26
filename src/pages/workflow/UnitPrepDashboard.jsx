@@ -104,7 +104,7 @@ const UnitPrepDashboard = () => {
                 </span>
             </div>
 
-            <div className="flex flex-col gap-3 overflow-y-auto max-h-[calc(100vh-320px)] pr-1 scrollbar-thin scrollbar-thumb-gray-200">
+            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar flex flex-col gap-3">
                 {items.map(item => (
                     <Card key={item.id} item={item} columnTitle={title} />
                 ))}
@@ -179,14 +179,14 @@ const UnitPrepDashboard = () => {
     );
 
     const StatCard = ({ icon: Icon, label, sublabel, value, color, bg }) => (
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-start gap-4 hover:shadow-xl transition-all cursor-pointer group">
-            <div className={`p-4 rounded-2xl ${bg} ${color} group-hover:scale-110 transition-transform shadow-sm`}>
-                <Icon size={24} />
+        <div className="bg-white p-3.5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-3 hover:shadow-md transition-all cursor-pointer group min-w-0">
+            <div className={`p-2 rounded-xl ${bg} ${color} group-hover:scale-105 transition-transform shrink-0`}>
+                <Icon size={20} />
             </div>
-            <div className="flex flex-col">
-                <span className="text-2xl font-black text-gray-900 leading-none mb-1">{value}</span>
-                <span className="text-[13px] font-black text-gray-900 leading-tight mb-0.5">{label}</span>
-                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{sublabel}</span>
+            <div className="flex flex-col min-w-0">
+                <span className="text-xl font-black text-gray-900 leading-none mb-0.5">{value}</span>
+                <span className="text-xs font-bold text-gray-800 leading-tight">{label}</span>
+                <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider mt-0.5">{sublabel}</span>
             </div>
         </div>
     );
@@ -220,7 +220,7 @@ const UnitPrepDashboard = () => {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-6 gap-4 mb-10">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
                     <StatCard icon={Calendar} label="Upcoming Move-Outs" sublabel="Next 30 Days" value={stats.upcomingMoveOuts} color="text-blue-600" bg="bg-blue-50" />
                     <StatCard icon={CheckSquare} label="Confirmed Move-Outs" sublabel="Next 30 Days" value={stats.confirmedMoveOuts} color="text-orange-600" bg="bg-orange-50" />
                     <StatCard icon={Sparkles} label="In Cleaning" sublabel="Awaiting Clean" value={stats.cleaningTotal || 0} color="text-purple-600" bg="bg-purple-50" />
@@ -268,7 +268,7 @@ const UnitPrepDashboard = () => {
                     });
 
                     return (
-                        <div className="flex gap-6 overflow-x-auto pb-6 h-[calc(100vh-380px)] scrollbar-thin scrollbar-thumb-gray-200">
+                        <div className="flex gap-6 overflow-x-auto pb-4 h-[calc(100vh-340px)] min-h-[450px] custom-scrollbar">
                             <Column
                                 title="Maintenance Required"
                                 subtitle="Blocked: Fix required tickets first"

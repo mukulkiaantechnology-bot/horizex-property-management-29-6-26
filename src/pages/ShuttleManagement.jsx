@@ -438,19 +438,19 @@ export const ShuttleManagement = () => {
         ) : (
           <Card className="p-0 overflow-hidden bg-white shadow-sm rounded-xl">
             {activeTab === 'requests' && (
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-bold text-slate-800">{t('shuttle.requests')}</h3>
-                  <div className="flex gap-3">
+              <div className="p-4">
+                <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+                  <h3 className="text-base font-bold text-slate-800">{t('shuttle.requests')}</h3>
+                  <div className="flex flex-wrap gap-2">
                     <div className="relative">
                       <input 
                         type="text" 
                         placeholder="Search Tenant or Route..." 
                         value={searchFilter}
                         onChange={(e) => setSearchFilter(e.target.value)}
-                        className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-64"
+                        className="pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-52"
                       />
-                      <svg className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                      <svg className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     </div>
                     <select 
                       value={statusFilter}

@@ -313,16 +313,16 @@ const UnitReadiness = () => {
             </div>
           </div>
 
-          {/* Toolbar Section (Matching Units Page Design) */}
-          <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-3">
+          {/* Toolbar Section */}
+          <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm mb-4">
+            <div className="flex flex-wrap items-center gap-2">
                 {/* Building Filter */}
-                <div className="relative min-w-[180px]">
+                <div className="relative min-w-[160px]">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Building2 size={16} />
+                    <Building2 size={15} />
                   </div>
                   <select 
-                    className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer hover:bg-white transition-all"
+                    className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer hover:bg-white transition-all"
                     value={propertyFilter}
                     onChange={(e) => { setPropertyFilter(e.target.value); setPage(1); }}
                   >
@@ -334,10 +334,10 @@ const UnitReadiness = () => {
                 {/* Status Filter */}
                 <div className="relative min-w-[150px]">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Filter size={16} />
+                    <Filter size={15} />
                   </div>
                   <select 
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer hover:bg-white transition-all"
+                  className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer hover:bg-white transition-all"
                   value={statusFilter}
                   onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                 >
@@ -351,24 +351,22 @@ const UnitReadiness = () => {
                 </div>
 
                 {/* Search Bar */}
-                <div className="relative min-w-[280px]">
+                <div className="relative flex-1 min-w-[200px]">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Search size={16} />
+                    <Search size={15} />
                   </div>
                   <input 
                     type="text"
                     placeholder="Search by unit or building..."
-                    className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:bg-white transition-all"
+                    className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:bg-white transition-all"
                     value={searchTerm}
                     onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }}
                   />
                 </div>
-            </div>
 
-            <div className="flex items-center gap-4">
-               {/* Show Leased Toggle (Rule 5) */}
-               <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
-                  <span className="text-xs font-bold text-slate-500">Show Leased Units</span>
+               {/* Show Leased Toggle */}
+               <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 shrink-0">
+                  <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Show Leased Units</span>
                   <input 
                     type="checkbox" 
                     className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
@@ -378,16 +376,16 @@ const UnitReadiness = () => {
                </label>
               <button 
                   onClick={() => setShowHolidays(!showHolidays)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm shrink-0"
               >
-                  <Calendar size={16} />
+                  <Calendar size={15} />
                   <span>Holidays</span>
               </button>
               <button 
                   onClick={() => setShowSettings(!showSettings)}
-                  className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm shrink-0"
               >
-                  <SettingsIcon size={16} />
+                  <SettingsIcon size={15} />
                   <span>Settings</span>
               </button>
             </div>

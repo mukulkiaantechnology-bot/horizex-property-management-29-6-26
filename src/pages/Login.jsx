@@ -78,17 +78,17 @@ export const Login = () => {
 
           {/* Logo & Brand Header */}
           <div className="flex items-center gap-3 mb-5">
-            <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center shrink-0">
-              <img src="/assets/logo.png" alt="Horizon Logo" className="h-7 w-auto object-contain" />
+            <div className="bg-white border border-slate-200 shadow-md rounded-xl p-2 shrink-0 flex items-center justify-center">
+              <img src="/assets/logo.png" alt="Horizex Logo" className="h-10 w-10 object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Horizex Group</span>
-              <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">Real Estate</span>
+              <span className="text-sm font-black text-slate-800 uppercase tracking-wider">Horizex Group</span>
+              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Real Estate</span>
             </div>
           </div>
 
-          <h2 className="text-xl font-black text-slate-900 tracking-tight mb-0.5">Admin Login</h2>
-          <p className="text-[11px] text-slate-400 font-semibold mb-5">Sign in to manage your property portfolio</p>
+          <h2 className="text-xl font-black text-slate-900 uppercase tracking-wider mb-1">Login</h2>
+          <p className="text-[11px] text-slate-400 font-semibold mb-4">Sign in to manage your property portfolio</p>
 
           {error && (
             <div className="mb-4 p-3 bg-rose-50 text-rose-600 text-xs font-semibold rounded-xl border border-rose-100">
@@ -106,7 +106,7 @@ export const Login = () => {
                   placeholder="name@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-10 pl-10 pr-4 rounded-xl border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-xs text-slate-700 placeholder:text-slate-300"
+                  className="w-full h-[40px] pl-[54px] pr-4 rounded-xl border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-xs text-slate-700 placeholder:text-slate-300"
                   required
                 />
               </div>
@@ -121,7 +121,7 @@ export const Login = () => {
                   placeholder="••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-10 pl-10 pr-10 rounded-xl border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-xs text-slate-700 placeholder:text-slate-300"
+                  className="w-full h-[40px] pl-[54px] pr-[44px] rounded-xl border border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all text-xs text-slate-700 placeholder:text-slate-300"
                   required
                 />
                 <button
@@ -137,7 +137,7 @@ export const Login = () => {
 
             <button
               type="submit"
-              className="w-full h-10 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white border-0 rounded-xl text-xs font-bold shadow-sm hover:shadow-md hover:translate-y-[-1px] transition-all duration-200 active:scale-[0.98] cursor-pointer mt-4"
+              className="w-full h-[40px] bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white border-0 rounded-xl text-xs font-bold shadow-sm hover:shadow-md hover:translate-y-[-1px] transition-all duration-200 active:scale-[0.98] cursor-pointer mt-4"
               disabled={loading}
             >
               {loading ? 'Signing in...' : 'Sign In'}

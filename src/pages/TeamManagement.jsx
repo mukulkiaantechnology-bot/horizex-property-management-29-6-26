@@ -346,7 +346,7 @@ export const TeamManagement = () => {
           </div>
           <button 
             onClick={() => { resetForm(); setShowModal(true); }}
-            className="flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-2xl font-bold shadow-xl shadow-primary-100 hover:bg-primary-700 transition-all group"
+            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all group cursor-pointer"
           >
             <UserPlus size={20} className="group-hover:scale-110 transition-transform" />
             {t('team.new_member')}
@@ -376,13 +376,13 @@ export const TeamManagement = () => {
                                 onClick={() => setSelectedMember(member)}
                                 className={`group p-4 rounded-2xl border transition-all cursor-pointer ${
                                     selectedMember?.id === member.id 
-                                    ? 'bg-primary-50 border-primary-100 ring-2 ring-primary-50/50' 
+                                    ? 'bg-indigo-50 border-indigo-100 ring-2 ring-indigo-50/50' 
                                     : 'bg-white border-slate-50 hover:border-slate-200'
                                 }`}
                             >
                                 <div className="flex items-center gap-4">
                                     <div className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-sm uppercase ${
-                                         selectedMember?.id === member.id ? 'bg-primary-600 text-white' : 'bg-slate-100 text-slate-500'
+                                         selectedMember?.id === member.id ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'
                                      }`}>
                                          {(member.firstName && member.firstName !== 'undefined') ? member.firstName[0] : (member.name?.[0] || member.email?.[0] || 'U')}
                                          {(member.lastName && member.lastName !== 'undefined') ? member.lastName[0] : ''}
@@ -605,7 +605,7 @@ export const TeamManagement = () => {
                                     value={formData.firstName} 
                                     onChange={handleInputChange} 
                                     required 
-                                    className="px-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-primary-100 outline-none font-bold transition-all"
+                                    className="px-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 outline-none font-bold transition-all"
                                     placeholder="e.g. John"
                                 />
                             </div>
@@ -616,7 +616,7 @@ export const TeamManagement = () => {
                                     value={formData.lastName} 
                                     onChange={handleInputChange} 
                                     required 
-                                    className="px-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-primary-100 outline-none font-bold transition-all"
+                                    className="px-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 outline-none font-bold transition-all"
                                     placeholder="e.g. Doe"
                                 />
                             </div>
@@ -630,7 +630,7 @@ export const TeamManagement = () => {
                                 value={formData.email} 
                                 onChange={handleInputChange} 
                                 required 
-                                className="px-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-primary-100 outline-none font-bold transition-all"
+                                className="px-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 outline-none font-bold transition-all"
                                 placeholder="john.doe@masteko.com"
                             />
                         </div>
@@ -638,8 +638,8 @@ export const TeamManagement = () => {
                         <div className="flex flex-col gap-2">
                             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 px-1">{t('team.phone')}</label>
                             <div className="relative group/phone">
-                                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within/phone:text-primary-500 z-10" />
-                                <div className="w-full flex items-center bg-slate-50/50 rounded-2xl border border-slate-100 focus-within:bg-white focus-within:ring-2 focus-within:ring-primary-100 focus-within:border-transparent transition-all overflow-hidden pl-12">
+                                <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 transition-colors group-focus-within/phone:text-indigo-600 z-10" />
+                                <div className="w-full flex items-center bg-slate-50/50 rounded-2xl border border-slate-100 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 focus-within:border-transparent transition-all overflow-hidden pl-12">
                                     <span className="text-slate-400 font-bold select-none pr-1">+1</span>
                                     <input 
                                         name="phone" 
@@ -663,7 +663,7 @@ export const TeamManagement = () => {
                                     name="title" 
                                     value={formData.title} 
                                     onChange={handleInputChange} 
-                                    className="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-primary-100 outline-none font-bold transition-all"
+                                    className="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 outline-none font-bold transition-all"
                                     placeholder="e.g. Property Manager"
                                 />
                             </div>
@@ -676,7 +676,7 @@ export const TeamManagement = () => {
                                 name="preferredLanguage" 
                                 value={formData.preferredLanguage} 
                                 onChange={handleInputChange} 
-                                className="w-full px-5 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-primary-100 outline-none font-bold transition-all"
+                                className="w-full px-5 py-3 rounded-2xl border border-slate-100 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-indigo-100 outline-none font-bold transition-all"
                             >
                                 <option value="English">English</option>
                                 <option value="French">French</option>
@@ -761,7 +761,7 @@ export const TeamManagement = () => {
                             </button>
                             <button 
                                 type="submit"
-                                className="flex-3 py-4 bg-primary-600 text-white font-black rounded-2xl shadow-xl shadow-primary-200 hover:bg-primary-700 transition-all uppercase tracking-tighter"
+                                className="flex-3 py-4 bg-indigo-600 text-white font-black rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all uppercase tracking-tighter cursor-pointer"
                             >
                                 {isEditing ? t('team.update_profile') : t('team.create_profile')}
                             </button>
@@ -773,13 +773,13 @@ export const TeamManagement = () => {
 
         {/* INVITATION TEMPLATE SELECT MODAL */}
         {showInviteModal && memberToInvite && (
-            <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                 <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]" onClick={() => setShowInviteModal(false)}></div>
                 <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl relative z-10 p-8 flex flex-col gap-6 animate-[bounceIn_0.4s_ease]">
                     <div>
                         <h3 className="text-xl font-black text-slate-800">Choose Invitation Template</h3>
                         <p className="text-sm text-slate-500 font-medium mt-1">
-                            Sending to: <span className="text-primary-600 font-bold">{memberToInvite.name || memberToInvite.email}</span>
+                            Sending to: <span className="text-indigo-600 font-bold">{memberToInvite.name || memberToInvite.email}</span>
                         </p>
                         <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-2 italic">Language: {memberToInvite.preferredLanguage || 'English'}</p>
                     </div>
@@ -795,13 +795,13 @@ export const TeamManagement = () => {
                                 <button 
                                     key={template.id}
                                     onClick={() => sendInvitation(memberToInvite.id, template.id)}
-                                    className="p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:border-primary-500 hover:shadow-lg transition-all text-left flex items-center justify-between group"
+                                    className="p-4 rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white hover:border-indigo-500 hover:shadow-lg transition-all text-left flex items-center justify-between group cursor-pointer"
                                 >
                                     <div className="flex-1 min-w-0 pr-4">
-                                        <h4 className="font-bold text-slate-800 group-hover:text-primary-600 transition-colors truncate">{template.name}</h4>
+                                        <h4 className="font-bold text-slate-800 group-hover:text-indigo-600 transition-colors truncate">{template.name}</h4>
                                         <p className="text-[10px] text-slate-400 font-medium truncate uppercase italic">{template.subject}</p>
                                     </div>
-                                    <div className="w-8 h-8 rounded-full bg-white border border-slate-100 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all">
+                                    <div className="w-8 h-8 rounded-full bg-white border border-slate-100 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all">
                                         <Mail size={14} />
                                     </div>
                                 </button>

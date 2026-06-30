@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useLocation, Link } from "react-router-dom";
+import { NavLink, useLocation, Link, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
@@ -23,7 +23,8 @@ import {
   Car,
   Hammer,
   Clock,
-  Home
+  Home,
+  LogOut
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -244,7 +245,7 @@ const NavItem = ({ item, depth = 0, onClose }) => {
         onClick={handleClick}
         className={({ isActive }) =>
           clsx(
-            "flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-300 group relative overflow-hidden",
+            "flex items-center gap-3 px-4 py-[10px] rounded-2xl text-sm font-bold transition-all duration-300 group relative overflow-hidden",
             isActive && !hasChildren
               ? "bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white shadow-lg shadow-blue-500/20"
               : "text-slate-400 hover:bg-[#1F2937] hover:text-white"
@@ -252,7 +253,7 @@ const NavItem = ({ item, depth = 0, onClose }) => {
         }
         style={{ paddingLeft: `calc(16px + ${depth * 14}px)` }}
       >
-        {item.icon && <item.icon size={20} />}
+        {item.icon && <item.icon size={18} />}
         <span className="flex-1">{t(item.tKey || item.label)}</span>
         {(item.label === 'SMS Hub' || item.label === 'Inbox') && (
           <UnreadSMSBadge />
@@ -281,6 +282,12 @@ const NavItem = ({ item, depth = 0, onClose }) => {
  ========================= */
 
 export const Sidebar = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    navigate('/login');
+  };
+
   /* SCROLL PRESERVATION */
   const navRef = React.useRef(null);
 
@@ -325,10 +332,10 @@ export const Sidebar = ({ isOpen, onClose }) => {
         isOpen ? "translate-x-0" : "-translate-x-full",
         "lg:translate-x-0"
       )}>
-        <div className="px-5 py-5 flex items-center justify-between shrink-0 border-b border-slate-800/60">
+        <div className="h-16 flex items-center px-5 justify-between shrink-0 border-b border-slate-800/60">
           <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-xl shadow-sm flex items-center justify-center overflow-hidden shrink-0">
-              <img src="/assets/logo.png" alt="Horizex Logo" className="h-8 w-auto object-contain" />
+            <div className="bg-white rounded-xl p-1.5 shadow-md shrink-0 flex items-center justify-center">
+              <img src="/assets/logo.png" alt="Horizex Logo" className="h-8 w-8 object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-black text-white uppercase tracking-wider leading-none">Horizex</span>
@@ -340,7 +347,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <nav ref={navRef} className="flex-1 overflow-y-auto px-4 py-2 space-y-1 custom-scrollbar">
+        <nav ref={navRef} className="flex-1 overflow-y-auto px-4 py-2 space-y-[6px] custom-scrollbar">
           <div className="px-4 mb-2 mt-2">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Main Menu</p>
           </div>
@@ -446,24 +453,31 @@ export const Sidebar = ({ isOpen, onClose }) => {
           })()}
         </nav>
 
-        <div className="p-6 border-t border-slate-800 shrink-0">
+        <div className="p-4 border-t border-slate-800 shrink-0">
           <Link to="/profile" className="block no-underline">
-            <div className="bg-slate-800/40 rounded-2xl p-4 border border-slate-800/80 group cursor-pointer hover:border-slate-700 hover:bg-[#1F2937]/50 transition-all duration-300">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-primary text-white flex items-center justify-center font-bold text-sm border-2 border-slate-800 shadow-sm">
+            <div className="bg-slate-800/20 rounded-xl p-2.5 border border-slate-800/60 group cursor-pointer hover:border-slate-700 hover:bg-[#1F2937]/30 transition-all duration-300">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-primary text-white flex items-center justify-center font-bold text-xs border border-slate-800 shadow-sm shrink-0">
                   {JSON.parse(localStorage.getItem('user') || '{}').profilePictureUrl ? (
                     <img src={JSON.parse(localStorage.getItem('user') || '{}').profilePictureUrl} alt="Avatar" className="w-full h-full object-cover" />
                   ) : (
                     JSON.parse(localStorage.getItem('user') || '{}').firstName?.[0] || 'A'
                   )}
                 </div>
-                <div className="overflow-hidden">
-                  <p className="text-sm font-black text-white truncate">{JSON.parse(localStorage.getItem('user') || '{}').firstName ? `${JSON.parse(localStorage.getItem('user') || '{}').firstName} ${JSON.parse(localStorage.getItem('user') || '{}').lastName || ''}` : 'Admin User'}</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide truncate">{JSON.parse(localStorage.getItem('user') || '{}').title || (JSON.parse(localStorage.getItem('user') || '{}').role === 'ADMIN' ? 'Super Admin' : 'Staff')}</p>
+                <div className="overflow-hidden flex-1">
+                  <p className="text-xs font-bold text-white truncate leading-tight">{JSON.parse(localStorage.getItem('user') || '{}').firstName ? `${JSON.parse(localStorage.getItem('user') || '{}').firstName} ${JSON.parse(localStorage.getItem('user') || '{}').lastName || ''}` : 'Admin User'}</p>
+                  <p className="text-[9px] font-medium text-slate-400 uppercase tracking-wider truncate mt-0.5">{JSON.parse(localStorage.getItem('user') || '{}').title || (JSON.parse(localStorage.getItem('user') || '{}').role === 'ADMIN' ? 'Super Admin' : 'Staff')}</p>
                 </div>
               </div>
             </div>
           </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full mt-3 flex items-center justify-center gap-2 py-2 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-rose-950/20 hover:border-rose-900/40 text-slate-400 hover:text-rose-400 text-[11px] font-bold transition-all cursor-pointer"
+          >
+            <LogOut size={13} />
+            Logout
+          </button>
         </div>
       </aside>
     </>

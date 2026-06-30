@@ -216,10 +216,10 @@ export const Dashboard = () => {
 
   return (
     <MainLayout title="Dashboard Overview">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
 
         {/* TOP BAR / FILTERS */}
-        <section className="flex justify-end sticky top-0 z-10 py-2 bg-bg/85 backdrop-blur-md -mx-4 px-4">
+        <section className="flex justify-end sticky top-0 z-10 py-1 bg-bg/85 backdrop-blur-md -mx-4 px-4">
           <OwnerSelector value={selectedOwnerId} onOwnerChange={(id) => setSelectedOwnerId(id)} />
         </section>
 
@@ -229,25 +229,8 @@ export const Dashboard = () => {
           </div>
         ) : (
           <>
-            {/* WELCOME BANNER */}
-            <section className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[22px] p-8 text-white relative overflow-hidden shadow-xl shadow-blue-200 mb-6">
-                <div className="relative z-10 space-y-2">
-                    <h2 className="text-3xl font-bold">{greeting}, {adminName}! 👋</h2>
-                    <p className="text-blue-100 font-medium text-lg">Here is the update on your property portfolio performance.</p>
-                    <div className="pt-4">
-                        <Link to="/properties/buildings" className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-lg hover:translate-y-[-2px] active:scale-95">
-                            View Overview
-                            <ArrowUpRight size={20} />
-                        </Link>
-                    </div>
-                </div>
-                {/* Abstract background shapes */}
-                <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-blue-500 rounded-full blur-3xl opacity-50"></div>
-                <div className="absolute bottom-[-20%] left-[-5%] w-48 h-48 bg-indigo-400 rounded-full blur-2xl opacity-30"></div>
-            </section>
-
             {/* STAT CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {[
                     { title: 'Total Properties', value: totalProperties || 0, subValue: 'Active Properties', icon: Building2, color: 'bg-blue-500', path: '/properties/buildings' },
                     { title: 'Total Units', value: totalUnits || 0, subValue: 'Registered Units', icon: Home, color: 'bg-emerald-500', path: '/properties/buildings' },
@@ -261,20 +244,20 @@ export const Dashboard = () => {
                     <Link
                         key={idx}
                         to={card.path}
-                        className="bg-white p-6 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all group active:scale-[0.98] flex flex-col justify-between"
+                        className="bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all group active:scale-[0.98] flex flex-col justify-between"
                     >
                         <div>
-                            <div className="flex justify-between items-start mb-4">
-                                <div className={`w-12 h-12 ${card.color} rounded-xl flex items-center justify-center text-white shadow-lg`}>
-                                    <card.icon size={24} />
+                            <div className="flex justify-between items-start mb-3">
+                                <div className={`w-10 h-10 ${card.color} rounded-xl flex items-center justify-center text-white shadow-lg`}>
+                                    <card.icon size={20} />
                                 </div>
-                                <ArrowUpRight size={18} className="text-slate-300 group-hover:text-primary transition-colors" />
+                                <ArrowUpRight size={16} className="text-slate-300 group-hover:text-primary transition-colors" />
                             </div>
-                            <h4 className="text-slate-500 font-bold text-xs uppercase tracking-wider">{card.title}</h4>
-                            <p className="text-2xl font-black text-slate-800 tracking-tight mt-1">{card.value}</p>
+                            <h4 className="text-slate-500 font-bold text-[11px] uppercase tracking-wider">{card.title}</h4>
+                            <p className="text-xl font-black text-slate-800 tracking-tight mt-0.5">{card.value}</p>
                         </div>
-                        <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{card.subValue}</span>
+                        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{card.subValue}</span>
                         </div>
                     </Link>
                 ))}

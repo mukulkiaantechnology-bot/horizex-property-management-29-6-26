@@ -133,7 +133,7 @@ const SMSInbox = () => {
 
     return (
         <MainLayout title="SMS Inbox">
-            <div className="flex flex-col lg:flex-row h-[calc(100vh-120px)] bg-slate-50 overflow-hidden">
+            <div className="flex flex-col lg:flex-row h-[calc(100vh-140px)] lg:h-[calc(100vh-165px)] bg-white rounded-[22px] border border-slate-200 shadow-sm overflow-hidden">
                 
                 {/* Conversations Sidebar */}
                 <div className={`${!showSidebar && selectedUser ? 'hidden lg:flex' : 'flex'} w-full lg:w-96 flex-col bg-white border-r border-slate-200 z-30`}>
@@ -144,14 +144,14 @@ const SMSInbox = () => {
                                 <RefreshCw className="h-5 w-5 text-slate-400" />
                             </button>
                         </div>
-                        <div className="relative">
-                            <Search className="absolute left-4 top-3.5 h-4 w-4 text-slate-400" />
+                        <div className="relative flex items-center">
+                            <Search className="absolute left-3.5 text-slate-400" size={15} />
                             <input 
                                 type="text"
                                 placeholder="Search conversations..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition-all outline-none h-10"
                             />
                         </div>
 
@@ -212,7 +212,7 @@ const SMSInbox = () => {
                                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${unread ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'bg-slate-100 text-slate-500'}`}>
                                                 {conv.name?.charAt(0) || 'T'}
                                             </div>
-                                            {unread && <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 border-2 border-white rounded-full"></span>}
+                                            {unread && <span className="absolute -top-0.5 -right-0.5 w-[10px] h-[10px] bg-red-500 border border-white rounded-full"></span>}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start mb-0.5">
@@ -228,7 +228,7 @@ const SMSInbox = () => {
                                                     </span>
                                                 </div>
                                                 <span className="text-[10px] text-slate-400 font-bold whitespace-nowrap">
-                                                    {conv.lastMessage ? new Date(conv.lastMessage.createdAt).toLocaleDateString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                                                    {conv.lastMessage?.createdAt ? new Date(conv.lastMessage.createdAt).toLocaleDateString([], {hour: '2-digit', minute:'2-digit'}) : ''}
                                                 </span>
                                             </div>
                                             <p className={`text-xs truncate ${unread ? 'text-indigo-600 font-bold' : 'text-slate-400'}`}>

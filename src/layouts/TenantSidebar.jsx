@@ -50,19 +50,23 @@ export const TenantSidebar = ({ isOpen, onClose }) => {
                 isOpen ? "translate-x-0" : "-translate-x-full",
                 "lg:translate-x-0"
             )}>
-                <div className="h-20 flex items-center px-6 justify-between border-b border-slate-800 shrink-0">
-                    <div className="flex items-center gap-2">
-                        <div className="bg-white p-2.5 rounded-xl shadow-sm border border-slate-100 flex items-center justify-center overflow-hidden">
-                            <img src="/assets/logo.png" alt="Masteko Logo" className="h-10 w-auto object-contain" />
+                <div className="h-16 flex items-center px-5 justify-between border-b border-slate-800 shrink-0">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-white rounded-xl p-1.5 shadow-md shrink-0 flex items-center justify-center">
+                            <img src="/assets/logo.png" alt="Horizex Logo" className="h-8 w-8 object-contain" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-sm font-black text-white uppercase tracking-wider leading-none">Horizex</span>
+                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real Estate</span>
                         </div>
                     </div>
                     <button className="lg:hidden p-2 text-slate-400 hover:bg-slate-800 rounded-md transition" onClick={onClose}>
-                        <X size={20} />
+                        <X size={18} />
                     </button>
                 </div>
 
-                <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1 custom-scrollbar flex flex-col">
-                    <div className="flex-1 space-y-1">
+                <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-[6px] custom-scrollbar flex flex-col">
+                    <div className="flex-1 space-y-[6px]">
                         {TENANT_NAV_ITEMS.map((item) => (
                             <NavLink
                                 key={item.label}
@@ -70,14 +74,14 @@ export const TenantSidebar = ({ isOpen, onClose }) => {
                                 onClick={onClose}
                                 className={({ isActive }) =>
                                     clsx(
-                                        "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 group relative",
+                                        "flex items-center gap-3 px-4 py-[10px] rounded-xl text-sm font-bold transition-all duration-200 group relative",
                                         isActive
                                             ? "bg-gradient-to-r from-[#2563EB] to-[#3B82F6] text-white shadow-lg shadow-blue-500/20"
                                             : "text-slate-400 hover:bg-[#1F2937] hover:text-white"
                                     )
                                 }
-                            >
-                                <item.icon size={20} />
+                              >
+                                <item.icon size={18} />
                                 <span>{item.label}</span>
                             </NavLink>
                         ))}
@@ -85,9 +89,9 @@ export const TenantSidebar = ({ isOpen, onClose }) => {
 
                     <button
                         onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:bg-rose-600/20 hover:text-rose-400 transition-all duration-200 mt-auto border border-transparent"
+                        className="flex items-center gap-3 px-4 py-[10px] rounded-xl text-sm font-bold text-slate-400 hover:bg-rose-600/20 hover:text-rose-400 transition-all duration-200 mt-auto border border-transparent"
                     >
-                        <LogOut size={20} />
+                        <LogOut size={18} />
                         <span>Logout</span>
                     </button>
                 </nav>

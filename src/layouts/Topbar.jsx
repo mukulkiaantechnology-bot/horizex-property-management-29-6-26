@@ -88,7 +88,7 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
                 >
                     <MessageSquare size={20} />
                     {unreadCount > 0 && (
-                        <span className="absolute top-1 right-1 w-4 h-4 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                        <span className="absolute top-1 right-1 w-2 h-2 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                             {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
                     )}
@@ -118,17 +118,6 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
                     >
                         FR
                     </button>
-                </div>
-
-                {/* PROFILE */}
-                <div className="flex items-center gap-3 border-l border-slate-100 pl-3 md:pl-4">
-                    <div className="hidden md:flex flex-col items-end">
-                        <span className="text-xs font-black text-slate-800 uppercase tracking-tight">{userName}</span>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{propertyName}</span>
-                    </div>
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-blue-400 text-white flex items-center justify-center text-xs font-black shadow-sm shrink-0 cursor-default">
-                        {userInitials}
-                    </div>
                 </div>
 
                 {/* LOGOUT */}

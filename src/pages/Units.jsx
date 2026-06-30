@@ -403,14 +403,14 @@ export const Units = () => {
         )}
 
         {/* TOP CONTROLS */}
-        <section className="flex justify-between items-center">
-          <div className="flex gap-4">
-            <div className="flex items-center gap-2 bg-white py-2.5 px-3.5 rounded-xl shadow-sm border border-slate-200">
-              <Filter size={16} className="text-slate-400" />
+        <section className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2 bg-white py-2 px-3 rounded-xl shadow-sm border border-slate-200">
+              <Filter size={15} className="text-slate-400 shrink-0" />
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="border-none outline-none text-sm bg-transparent text-slate-700 min-w-[120px] font-medium cursor-pointer"
+                className="border-none outline-none text-sm bg-transparent text-slate-700 min-w-[100px] font-medium cursor-pointer"
               >
                 <option value="">All Types</option>
                 {unitTypes.map(t => (
@@ -419,12 +419,12 @@ export const Units = () => {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 bg-white py-2.5 px-3.5 rounded-xl shadow-sm border border-slate-200">
-              <Filter size={16} className="text-slate-400" />
+            <div className="flex items-center gap-2 bg-white py-2 px-3 rounded-xl shadow-sm border border-slate-200">
+              <Filter size={15} className="text-slate-400 shrink-0" />
               <select
                 value={buildingFilter}
                 onChange={(e) => setBuildingFilter(e.target.value)}
-                className="border-none outline-none text-sm bg-transparent text-slate-700 min-w-[120px] font-medium cursor-pointer"
+                className="border-none outline-none text-sm bg-transparent text-slate-700 min-w-[100px] font-medium cursor-pointer"
               >
                 <option value="">All Buildings</option>
                 {buildings.map(b => (
@@ -433,19 +433,19 @@ export const Units = () => {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 bg-white py-2.5 px-3.5 rounded-xl shadow-sm border border-slate-200">
-              <Search size={18} className="text-slate-400" />
+            <div className="flex items-center gap-2 bg-white py-2 px-3 rounded-xl shadow-sm border border-slate-200">
+              <Search size={16} className="text-slate-400 shrink-0" />
               <input
                 type="text"
                 placeholder="Search by unit or building"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="border-none outline-none text-sm w-48 text-slate-700 placeholder:text-slate-400"
+                className="border-none outline-none text-sm w-40 text-slate-700 placeholder:text-slate-400"
               />
             </div>
 
-            <label className="flex items-center gap-2 cursor-pointer group">
-               <div className="relative">
+            <label className="flex items-center gap-2 cursor-pointer group bg-white py-2 px-3 rounded-xl shadow-sm border border-slate-200">
+               <div className="relative shrink-0">
                  <input 
                     type="checkbox" 
                     className="sr-only" 
@@ -456,10 +456,10 @@ export const Units = () => {
                       localStorage.setItem('showUnitsInConstruction', newValue.toString());
                     }} 
                  />
-                 <div className={`w-10 h-6 rounded-full transition-colors ${showInactive ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
-                 <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${showInactive ? 'translate-x-4' : ''}`}></div>
+                 <div className={`w-9 h-5 rounded-full transition-colors ${showInactive ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
+                 <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform shadow ${showInactive ? 'translate-x-4' : ''}`}></div>
                </div>
-               <span className="text-xs font-bold text-slate-500 uppercase tracking-tight">Show units in construction</span>
+               <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Show units in construction</span>
             </label>
           </div>
 

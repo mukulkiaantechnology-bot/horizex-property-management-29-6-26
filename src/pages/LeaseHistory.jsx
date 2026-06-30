@@ -138,9 +138,9 @@ export const LeaseHistory = () => {
             <div className="flex flex-col gap-6">
 
                 {/* FILTERS */}
-                <div className="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.05)] border border-slate-100">
-                    <div className="flex-1 flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
-                        <Search size={18} className="text-slate-400" />
+                <div className="flex flex-wrap gap-2 bg-white p-3 rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.05)] border border-slate-100 items-center">
+                    <div className="flex-1 min-w-[180px] flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+                        <Search size={16} className="text-slate-400 shrink-0" />
                         <input
                             type="text"
                             placeholder="Search by tenant, unit, or building..."
@@ -151,9 +151,9 @@ export const LeaseHistory = () => {
                     </div>
 
                     <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                        <Home size={18} className="text-slate-400" />
+                        <Home size={16} className="text-slate-400 shrink-0" />
                         <select
-                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[150px] cursor-pointer"
+                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[120px] cursor-pointer"
                             value={buildingFilter}
                             onChange={(e) => {
                                 setBuildingFilter(e.target.value);
@@ -168,9 +168,9 @@ export const LeaseHistory = () => {
                     </div>
 
                     <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                        <FileText size={18} className="text-slate-400" />
+                        <FileText size={16} className="text-slate-400 shrink-0" />
                         <select
-                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[150px] cursor-pointer"
+                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[120px] cursor-pointer"
                             value={typeFilter}
                             onChange={(e) => {
                                 setTypeFilter(e.target.value);
@@ -184,13 +184,13 @@ export const LeaseHistory = () => {
                     </div>
 
                     <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                        <AlertTriangle size={18} className="text-slate-400" />
+                        <AlertTriangle size={16} className="text-slate-400 shrink-0" />
                         <select
-                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[150px] cursor-pointer font-medium"
+                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[110px] cursor-pointer font-medium"
                             value={statusFilter}
                             onChange={(e) => {
                                 setStatusFilter(e.target.value);
-                                setPage(1); // Reset to page 1 on filter change
+                                setPage(1);
                             }}
                         >
                             <option value="">All Statuses</option>
@@ -199,15 +199,15 @@ export const LeaseHistory = () => {
                         </select>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0">
                         {hasPermission('Leases', 'add') && (
                             <>
                                 <Button variant="secondary" onClick={() => navigate('/leases/new-bedroom')}>
-                                    <Bed size={18} />
+                                    <Bed size={16} />
                                     Bedroom Lease
                                 </Button>
                                 <Button variant="primary" onClick={() => navigate('/leases/new')}>
-                                    <FileText size={18} />
+                                    <FileText size={16} />
                                     Full Unit Lease
                                 </Button>
                             </>

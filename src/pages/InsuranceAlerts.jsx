@@ -276,22 +276,22 @@ export const InsuranceAlerts = () => {
                 </section>
 
                 {/* FILTERS */}
-                <section className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap gap-4 items-center">
-                    <div className="flex-1 min-w-[240px] relative">
-                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <section className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex flex-wrap gap-2 items-center">
+                    <div className="flex-1 min-w-[200px] relative">
+                        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                         <input
                             type="text"
                             placeholder="Search tenant or policy #..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all text-sm font-medium"
+                            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 transition-all text-sm font-medium"
                         />
                     </div>
 
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 text-sm font-medium bg-white"
+                        className="px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 text-sm font-medium bg-white"
                     >
                         <option value="All">{t('sidebar.all_statuses') || 'All Statuses'}</option>
                         <option value="MISSING">{t('common.status_missing')}</option>
@@ -304,7 +304,7 @@ export const InsuranceAlerts = () => {
                     <select
                         value={propertyFilter}
                         onChange={(e) => setPropertyFilter(e.target.value)}
-                        className="px-4 py-2.5 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 text-sm font-medium bg-white"
+                        className="px-3 py-2 rounded-xl border border-slate-200 outline-none focus:border-indigo-500 text-sm font-medium bg-white"
                     >
                         <option value="All">{t('sidebar.buildings')}</option>
                         {Array.from(new Set(insuranceData.map(i => i.building).filter(b => b && b !== 'N/A'))).map(building => (
@@ -313,7 +313,7 @@ export const InsuranceAlerts = () => {
                     </select>
 
                     <button onClick={clearFilters} className="text-sm font-bold text-slate-400 hover:text-rose-500 px-2 flex items-center gap-1">
-                        <X size={16} /> Reset
+                        <X size={15} /> Reset
                     </button>
                 </section>
 
