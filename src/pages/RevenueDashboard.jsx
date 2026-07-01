@@ -178,7 +178,7 @@ export const RevenueDashboard = () => {
             </section>
 
             {/* CHARTS & BREAKDOWN */}
-            <section className="grid grid-cols-[repeat(auto-fit,minmax(360px,1fr))] gap-6">
+            <section className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
 
               {/* Monthly Revenue Chart */}
               <Card title="Revenue Trends (Monthly)" className="p-6 rounded-[18px] bg-white shadow-[0_20px_45px_rgba(0,0,0,0.08)]">

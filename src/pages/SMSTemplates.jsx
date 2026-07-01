@@ -78,35 +78,35 @@ const SMSTemplates = () => {
 
     return (
         <MainLayout title="SMS Templates">
-            <div className="space-y-6 text-slate-800 p-4 lg:p-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-3xl shadow-sm border border-gray-100 gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                            <MessageSquare className="h-6 w-6 text-indigo-600" />
+            <div className="space-y-4 text-slate-800 w-full max-w-full overflow-hidden">
+                <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4 w-full">
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
+                            <MessageSquare className="h-5 w-5 text-indigo-600 shrink-0" />
                             SMS Templates
                         </h1>
-                        <p className="text-gray-500 mt-1">Manage reusable SMS messages for your tenants.</p>
+                        <p className="text-gray-500 mt-0.5 text-xs">Manage reusable SMS messages for your tenants.</p>
                     </div>
                     {hasPermission('Templates', 'add') && (
                         <button 
                             onClick={() => openModal()}
-                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all shadow-lg shadow-indigo-100 active:scale-95"
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 h-10 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 w-full sm:w-auto font-bold text-xs shrink-0"
                         >
-                            <Plus className="h-5 w-5" />
-                            Create Template
+                            <Plus className="h-4 w-4 shrink-0" />
+                            <span className="whitespace-nowrap">Create Template</span>
                         </button>
                     )}
                 </div>
 
                 {/* Search Bar */}
-                <div className="relative max-w-md">
-                    <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+                <div className="relative max-w-md w-full">
+                    <Search size={14} className="absolute left-3.5 top-3 text-gray-400" />
                     <input 
                         type="text" 
                         placeholder="Search templates..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none bg-white font-medium shadow-sm"
+                        className="w-full pl-9 pr-4 py-2 h-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none bg-white font-semibold text-xs text-slate-800"
                     />
                 </div>
 
@@ -170,90 +170,97 @@ const SMSTemplates = () => {
 
                 {/* Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
-                        <div className="bg-white w-full max-w-2xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
-                            <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center">
-                                <h2 className="text-2xl font-bold text-gray-900">{currentTemplate.id ? 'Edit Template' : 'New SMS Template'}</h2>
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6 bg-gray-900/60 backdrop-blur-sm overflow-y-auto">
+                        <div className="bg-white w-full max-w-2xl rounded-none md:rounded-[2rem] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]">
+                            
+                            {/* Sticky Modal Header */}
+                            <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 md:px-8 md:py-6 flex justify-between items-center shrink-0 z-20">
+                                <h2 className="text-xl md:text-2xl font-bold text-gray-900">{currentTemplate.id ? 'Edit Template' : 'New SMS Template'}</h2>
                                 <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                    <X className="h-6 w-6 text-gray-400" />
+                                    <X size={20} className="text-gray-400" />
                                 </button>
                             </div>
                             
-                            <form onSubmit={handleSave} className="p-8 space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Template Name</label>
-                                        <input 
-                                            type="text" 
-                                            required
-                                            value={currentTemplate.name}
-                                            onChange={(e) => setCurrentTemplate({...currentTemplate, name: e.target.value})}
-                                            className="w-full px-5 py-3.5 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-medium"
-                                            placeholder="e.g. Welcome Message"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category</label>
-                                        <input 
-                                            type="text" 
-                                            value={currentTemplate.category || ''}
-                                            onChange={(e) => setCurrentTemplate({...currentTemplate, category: e.target.value})}
-                                            className="w-full px-5 py-3.5 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-medium"
-                                            placeholder="e.g. Onboarding"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Message Content</label>
-                                        <span className={`text-[10px] font-bold ${currentTemplate.content?.length > 160 ? 'text-amber-500' : 'text-gray-400'}`}>
-                                            {currentTemplate.content?.length || 0} characters
-                                        </span>
-                                    </div>
-                                    <textarea 
-                                        rows="6"
-                                        required
-                                        value={currentTemplate.content}
-                                        onChange={(e) => setCurrentTemplate({...currentTemplate, content: e.target.value})}
-                                        className="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-medium leading-relaxed"
-                                        placeholder="Type your message here..."
-                                    />
-                                    
-                                    {/* Placeholders Toolbar */}
-                                    <div className="mt-4">
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Insert Placeholders:</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {['first_name', 'last_name', 'full_name', 'unit_number', 'building_name'].map(tag => (
-                                                <button
-                                                    key={tag}
-                                                    type="button"
-                                                    onClick={() => insertPlaceholder(tag)}
-                                                    className="px-3 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all"
-                                                >
-                                                    +{tag.replace('_', ' ')}
-                                                </button>
-                                            ))}
+                            {/* Scrollable Form Body */}
+                            <div className="flex-1 overflow-y-auto p-6 md:p-8">
+                                <form id="sms-template-form" onSubmit={handleSave} className="space-y-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Template Name</label>
+                                            <input 
+                                                type="text" 
+                                                required
+                                                value={currentTemplate.name}
+                                                onChange={(e) => setCurrentTemplate({...currentTemplate, name: e.target.value})}
+                                                className="w-full px-5 py-3.5 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-medium"
+                                                placeholder="e.g. Welcome Message"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category</label>
+                                            <input 
+                                                type="text" 
+                                                value={currentTemplate.category || ''}
+                                                onChange={(e) => setCurrentTemplate({...currentTemplate, category: e.target.value})}
+                                                className="w-full px-5 py-3.5 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-medium"
+                                                placeholder="e.g. Onboarding"
+                                            />
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
-                                    <button 
-                                        type="button"
-                                        onClick={() => setIsModalOpen(false)}
-                                        className="px-6 py-3.5 border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 transition-all"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button 
-                                        type="submit"
-                                        className="px-10 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-xl shadow-indigo-100"
-                                    >
-                                        {currentTemplate.id ? 'Save Changes' : 'Create Template'}
-                                    </button>
-                                </div>
-                            </form>
+                                    <div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest">Message Content</label>
+                                            <span className={`text-[10px] font-bold ${currentTemplate.content?.length > 160 ? 'text-amber-500' : 'text-gray-400'}`}>
+                                                {currentTemplate.content?.length || 0} characters
+                                            </span>
+                                        </div>
+                                        <textarea 
+                                            rows="5"
+                                            required
+                                            value={currentTemplate.content}
+                                            onChange={(e) => setCurrentTemplate({...currentTemplate, content: e.target.value})}
+                                            className="w-full px-5 py-4 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-medium leading-relaxed"
+                                            placeholder="Type your message here..."
+                                        />
+                                        
+                                        {/* Placeholders Toolbar */}
+                                        <div className="mt-4">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Insert Placeholders:</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {['first_name', 'last_name', 'full_name', 'unit_number', 'building_name'].map(tag => (
+                                                    <button
+                                                        key={tag}
+                                                        type="button"
+                                                        onClick={() => insertPlaceholder(tag)}
+                                                        className="px-3 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg border border-indigo-100 hover:bg-indigo-600 hover:text-white transition-all"
+                                                    >
+                                                        +{tag.replace('_', ' ')}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* Sticky Modal Footer */}
+                            <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 md:px-8 md:py-5 flex flex-col sm:flex-row justify-end gap-3 shrink-0 z-20">
+                                <button 
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-2xl transition-all text-sm text-center"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    form="sms-template-form"
+                                    type="submit"
+                                    className="w-full sm:w-auto px-10 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-xl shadow-indigo-100 text-sm text-center"
+                                >
+                                    {currentTemplate.id ? 'Save Changes' : 'Create Template'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

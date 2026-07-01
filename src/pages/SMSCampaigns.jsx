@@ -225,49 +225,52 @@ const SMSCampaigns = () => {
             case 'PROCESSING': return <Clock className="h-5 w-5 text-amber-500 animate-pulse" />;
             case 'FAILED': return <AlertCircle className="h-5 w-5 text-red-500" />;
             case 'STUCK': return <AlertCircle className="h-5 w-5 text-amber-600" />;
-            default: return <Clock className="h-5 w-5 text-slate-400" />;
+        default: return <Clock className="h-5 w-5 text-slate-400" />;
         }
     };
 
     return (
         <MainLayout title="SMS Campaigns">
-            <div className="space-y-6 text-slate-800 p-4 lg:p-6">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-3xl shadow-sm border border-gray-100 gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                            <Send className="h-6 w-6 text-indigo-600" />
+            <div className="space-y-4 text-slate-800 w-full max-w-full overflow-hidden">
+                
+                {/* Page Header Card */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4 w-full">
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <Send className="h-5 w-5 text-indigo-600 shrink-0" />
                             SMS Campaigns
                         </h1>
-                        <p className="text-gray-500 mt-1">Broadcast messages to buildings or specific tenant groups.</p>
+                        <p className="text-gray-500 mt-0.5 text-xs">Broadcast messages to buildings or specific tenant groups.</p>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto items-stretch sm:items-center shrink-0">
                         <button 
                             onClick={fetchCampaigns}
-                            className="bg-white hover:bg-gray-50 text-gray-600 p-3 rounded-2xl border border-gray-100 transition-all active:scale-95 shadow-sm"
+                            className="bg-white hover:bg-gray-50 text-gray-600 p-2 rounded-xl border border-gray-200 transition-all active:scale-95 shadow-sm flex items-center justify-center w-full sm:w-10 h-10 shrink-0 font-bold text-xs"
                             title="Refresh List"
                         >
-                            <Clock className="h-5 w-5" />
+                            <Clock className="h-4 w-4 shrink-0" />
+                            <span className="sm:hidden ml-2">Refresh List</span>
                         </button>
                         {hasPermission('Campaign Manager', 'add') && (
                             <button 
                                 onClick={() => setIsModalOpen(true)}
-                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition-all shadow-lg shadow-indigo-100 active:scale-95"
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 h-10 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 w-full sm:w-auto font-bold text-xs"
                             >
-                                <Plus className="h-5 w-5" />
-                                New Campaign
+                                <Plus className="h-4 w-4 shrink-0" />
+                                <span className="whitespace-nowrap">New Campaign</span>
                             </button>
                         )}
                     </div>
                 </div>
 
                 {/* Campaign List */}
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-4 w-full">
                     {loading ? (
                         [1, 2, 3].map(i => (
                             <div key={i} className="bg-white h-24 rounded-3xl animate-pulse border border-gray-100"></div>
                         ))
                     ) : campaigns.length === 0 ? (
-                        <div className="bg-white p-20 text-center rounded-3xl border border-dashed border-gray-200">
+                        <div className="bg-white p-10 md:p-20 text-center rounded-3xl border border-dashed border-gray-200 w-full">
                             <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                             <h3 className="text-xl font-semibold text-gray-600">No campaigns yet</h3>
                             <p className="text-gray-400 mt-2">Start your first broadcast to reach your tenants.</p>
@@ -281,19 +284,19 @@ const SMSCampaigns = () => {
                             return (
                                 <>
                                     {currentCampaigns.map(campaign => (
-                                        <div key={campaign.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col md:flex-row items-center justify-between gap-6 group">
-                                            <div className="flex items-center gap-4 flex-1">
-                                                <div className={`p-4 rounded-2xl ${campaign.status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'}`}>
+                                        <div key={campaign.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-all flex flex-col md:flex-row items-center justify-between gap-6 group w-full">
+                                            <div className="flex items-center gap-4 flex-1 w-full min-w-0">
+                                                <div className={`p-4 rounded-2xl shrink-0 ${campaign.status === 'COMPLETED' ? 'bg-emerald-50 text-emerald-600' : 'bg-indigo-50 text-indigo-600'}`}>
                                                     <Building2 className="h-6 w-6" />
                                                 </div>
-                                                <div>
-                                                    <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight">
+                                                <div className="min-w-0 flex-1">
+                                                    <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors uppercase tracking-tight truncate">
                                                         {campaign.name}
                                                     </h3>
                                                     <div className="flex items-center gap-3 mt-1 underline-offset-4 decoration-2">
                                                         <span className="text-xs text-gray-400 font-bold">#{campaign.id}</span>
-                                                        <span className="text-xs text-gray-400 flex items-center gap-1">
-                                                            <Clock className="h-3 w-3" />
+                                                        <span className="text-xs text-gray-400 flex items-center gap-1 font-semibold">
+                                                            <Clock size={12} />
                                                             {new Date(campaign.createdAt).toLocaleDateString()}
                                                         </span>
                                                     </div>
@@ -301,7 +304,7 @@ const SMSCampaigns = () => {
                                             </div>
 
                                             {/* Progress Section */}
-                                            <div className="flex flex-col items-end gap-2 w-full md:w-64">
+                                            <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-64">
                                                 <div className="flex justify-between w-full text-xs font-bold uppercase tracking-wider text-gray-400">
                                                     <span>Progress</span>
                                                     <span className={['PROCESSING', 'STUCK'].includes(campaign.status) ? 'text-amber-500' : 'text-gray-600'}>
@@ -310,7 +313,7 @@ const SMSCampaigns = () => {
                                                 </div>
                                                 <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden border border-gray-50">
                                                     <div 
-                                                        className={`h-full transition-all duration-1000 ${['FAILED', 'STUCK'].includes(campaign.status) ? 'bg-red-500' : 'bg-indigo-600'}`}
+                                                        className="h-full bg-indigo-600 transition-all duration-1000"
                                                         style={{ width: `${( (campaign.successCount + campaign.failedCount) / campaign.totalRecipients) * 100}%` }}
                                                     />
                                                 </div>
@@ -332,7 +335,7 @@ const SMSCampaigns = () => {
                                                             className="p-2.5 hover:bg-amber-50 text-amber-600 hover:text-amber-800 rounded-xl transition-all border border-transparent hover:border-amber-100"
                                                             title="View Missing Recipients"
                                                         >
-                                                            <Search className="h-5 w-5" />
+                                                            <Search size={18} />
                                                         </button>
                                                     )}
                                                     <button 
@@ -340,7 +343,7 @@ const SMSCampaigns = () => {
                                                         className="p-2.5 hover:bg-indigo-50 text-indigo-600 hover:text-indigo-800 rounded-xl transition-all border border-transparent hover:border-indigo-100"
                                                         title="Retry/Resume sending"
                                                     >
-                                                        <Send className="h-5 w-5" />
+                                                        <Send size={18} />
                                                     </button>
                                                     {hasPermission('Campaign Manager', 'delete') && (
                                                         <button 
@@ -348,7 +351,7 @@ const SMSCampaigns = () => {
                                                             className="p-2.5 hover:bg-red-50 text-red-500 hover:text-red-700 rounded-xl transition-all border border-transparent hover:border-red-100"
                                                             title="Delete Campaign"
                                                         >
-                                                            <Trash2 className="h-5 w-5" />
+                                                            <Trash2 size={18} />
                                                         </button>
                                                     )}
                                                 </div>
@@ -358,15 +361,15 @@ const SMSCampaigns = () => {
 
                                     {/* Report Modal */}
                                     {reportModal.open && (
-                                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 bg-gray-900/60 backdrop-blur-sm overflow-y-auto">
+                                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm overflow-y-auto">
                                             <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl flex flex-col animate-in fade-in zoom-in duration-200 my-auto">
-                                                <div className="px-10 py-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/30">
-                                                    <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Missing Delivery</h2>
+                                                <div className="px-6 md:px-10 py-6 md:py-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/30">
+                                                    <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Missing Delivery</h2>
                                                     <button onClick={() => setReportModal({ open: false, data: [] })} className="p-2 hover:bg-white rounded-full transition-colors shadow-sm">
-                                                        <X className="h-6 w-6 text-gray-400" />
+                                                        <X size={24} className="text-gray-400" />
                                                     </button>
                                                 </div>
-                                                <div className="p-10">
+                                                <div className="p-6 md:p-10">
                                                     {reportModal.data.length === 0 ? (
                                                         <p className="text-gray-500 text-center py-10 font-bold">Everyone has been reached!</p>
                                                     ) : (
@@ -378,7 +381,7 @@ const SMSCampaigns = () => {
                                                                 <div key={user.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                                                     <div className="flex items-center gap-3">
                                                                         <div className="p-2 bg-white rounded-lg border border-gray-100">
-                                                                            <Users className="h-4 w-4 text-indigo-500" />
+                                                                            <Users size={16} className="text-indigo-500" />
                                                                         </div>
                                                                         <span className="font-bold text-gray-700">{user.name}</span>
                                                                     </div>
@@ -389,7 +392,7 @@ const SMSCampaigns = () => {
                                                     )}
                                                     <button 
                                                         onClick={() => setReportModal({ open: false, data: [] })}
-                                                        className="w-full mt-10 py-4 bg-gray-900 text-white font-black uppercase tracking-widest rounded-2xl md:rounded-3xl hover:bg-black transition-all"
+                                                        className="w-full mt-6 py-4 bg-gray-900 text-white font-black uppercase tracking-widest rounded-2xl md:rounded-3xl hover:bg-black transition-all"
                                                     >
                                                         Close Report
                                                     </button>
@@ -400,7 +403,7 @@ const SMSCampaigns = () => {
 
                                     {/* List Pagination Controls */}
                                     {campaigns.length > campaignsPerPage && (
-                                        <div className="flex flex-col sm:flex-row items-center justify-between bg-white p-6 rounded-[2rem] mt-6 border border-gray-100 gap-4">
+                                        <div className="flex flex-col sm:flex-row items-center justify-between bg-white p-6 rounded-[2rem] mt-6 border border-gray-100 gap-4 w-full">
                                             <div className="text-xs font-bold text-gray-400 uppercase tracking-widest">
                                                 Showing {startIndex + 1} - {Math.min(startIndex + campaignsPerPage, campaigns.length)} of {campaigns.length} Campaigns
                                             </div>
@@ -410,13 +413,12 @@ const SMSCampaigns = () => {
                                                     disabled={currentPage === 1}
                                                     className="p-2 hover:bg-gray-50 rounded-xl disabled:opacity-20 transition-all"
                                                 >
-                                                    <ChevronLeft className="h-5 w-5 text-gray-600" />
+                                                    <ChevronLeft size={20} className="text-gray-600" />
                                                 </button>
                                                 
                                                 <div className="flex items-center gap-1">
                                                     {[...Array(totalPages)].map((_, i) => {
                                                         const pageNum = i + 1;
-                                                        // Simple logic to show only current, first, last and surrounding pages if many
                                                         if (
                                                             totalPages <= 7 || 
                                                             pageNum === 1 || 
@@ -451,7 +453,7 @@ const SMSCampaigns = () => {
                                                     disabled={currentPage === totalPages}
                                                     className="p-2 hover:bg-gray-50 rounded-xl disabled:opacity-20 transition-all"
                                                 >
-                                                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                                                    <ChevronRight size={20} className="text-gray-600" />
                                                 </button>
                                             </div>
                                         </div>
@@ -464,149 +466,155 @@ const SMSCampaigns = () => {
 
                 {/* Create Campaign Modal */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 bg-gray-900/60 backdrop-blur-sm overflow-y-auto">
-                        <div className="bg-white w-full max-w-4xl rounded-[2.5rem] shadow-2xl flex flex-col animate-in fade-in zoom-in duration-200 my-auto h-[90vh]">
-                            <div className="px-10 py-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/30 shrink-0">
-                                <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight">New Broadcast</h2>
-                                <div className="flex items-center gap-3">
-                                    <span className="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold uppercase">
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6 bg-gray-900/60 backdrop-blur-sm">
+                        <div className="bg-white w-full h-[100dvh] md:h-[90vh] max-w-full md:max-w-4xl rounded-none md:rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200">
+                            
+                            {/* Sticky Modal Header */}
+                            <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 md:px-10 md:py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 z-20">
+                                <div className="flex items-center gap-3 flex-wrap min-w-0">
+                                    <h2 className="text-xl md:text-2xl font-black text-gray-900 uppercase tracking-tight">New Broadcast</h2>
+                                    <span className="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold uppercase whitespace-nowrap">
                                         {getFilteredRecipients().length} Recipients
                                     </span>
-                                    <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-white rounded-full transition-colors shadow-sm">
-                                        <X className="h-6 w-6 text-gray-400" />
-                                    </button>
                                 </div>
+                                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors self-end sm:self-auto">
+                                    <X size={24} className="text-gray-400" />
+                                </button>
                             </div>
                             
-                            <div className="overflow-hidden flex flex-1">
-                                <div className="flex-1 overflow-y-auto p-10 space-y-8 border-r border-gray-100">
-                                    <form id="campaign-form" onSubmit={handleCreateCampaign} className="space-y-8">
-                                        <div>
-                                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 text-right">Campaign Name</label>
-                                            <input 
-                                                type="text" 
-                                                required
-                                                value={newCampaign.name}
-                                                onChange={(e) => setNewCampaign({...newCampaign, name: e.target.value})}
-                                                className="w-full px-6 py-4 border-2 border-gray-100 rounded-3xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-bold text-gray-700"
-                                                placeholder="e.g. October Maintenance Alert"
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 text-right">Target Audience</label>
-                                            <div className="grid grid-cols-3 gap-4">
-                                                {['TENANTS', 'COWORKERS', 'ALL'].map(type => (
-                                                    <button
-                                                        key={type}
-                                                        type="button"
-                                                        onClick={() => setNewCampaign({...newCampaign, recipientType: type})}
-                                                        className={`px-4 py-3 rounded-2xl border-2 text-[10px] font-black uppercase tracking-widest transition-all ${
-                                                            newCampaign.recipientType === type 
-                                                            ? 'border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm' 
-                                                            : 'border-gray-50 bg-gray-50 text-gray-400 hover:border-gray-100'
-                                                        }`}
-                                                    >
-                                                        {type.replace('_', ' ')}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        {newCampaign.recipientType !== 'COWORKERS' && (
+                            {/* Scrollable Body containing 2-Column Grid */}
+                            <div className="flex-1 overflow-y-auto p-6 md:p-10">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+                                    
+                                    {/* Left Column: Campaign Information Form */}
+                                    <div className="space-y-4">
+                                        <form id="campaign-form" onSubmit={handleCreateCampaign} className="space-y-4">
                                             <div>
-                                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 text-right">Target Building</label>
-                                                <select 
-                                                    value={newCampaign.buildingId}
-                                                    onChange={(e) => setNewCampaign({...newCampaign, buildingId: e.target.value})}
-                                                    className="w-full px-6 py-4 border-2 border-gray-100 rounded-3xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-bold text-gray-700 appearance-none disabled:opacity-30 disabled:cursor-not-allowed"
-                                                >
-                                                    <option value="">All Buildings</option>
-                                                    {buildings.map(b => (
-                                                        <option key={b.id} value={b.id}>{b.name}</option>
+                                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Campaign Name</label>
+                                                <input 
+                                                    type="text" 
+                                                    required
+                                                    value={newCampaign.name}
+                                                    onChange={(e) => setNewCampaign({...newCampaign, name: e.target.value})}
+                                                    className="w-full px-4 h-10 border border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-white font-semibold text-xs text-gray-700"
+                                                    placeholder="e.g. October Maintenance Alert"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Target Audience</label>
+                                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                                    {['TENANTS', 'COWORKERS', 'ALL'].map(type => (
+                                                        <button
+                                                            key={type}
+                                                            type="button"
+                                                            onClick={() => setNewCampaign({...newCampaign, recipientType: type})}
+                                                            className={`px-3 py-2 rounded-xl border text-[9px] font-black uppercase tracking-widest transition-all ${
+                                                                newCampaign.recipientType === type 
+                                                                ? 'border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm' 
+                                                                : 'border-gray-150 bg-gray-50 text-gray-400 hover:border-gray-200'
+                                                            }`}
+                                                        >
+                                                            {type.replace('_', ' ')}
+                                                        </button>
                                                     ))}
-                                                </select>
-                                            </div>
-                                        )}
-
-                                        <div>
-                                            <div className="flex gap-4 mb-4">
-                                                <button 
-                                                    type="button"
-                                                    onClick={() => setUseTemplate(true)}
-                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${useTemplate ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}
-                                                >
-                                                    Use Template
-                                                </button>
-                                                <button 
-                                                    type="button"
-                                                    onClick={() => setUseTemplate(false)}
-                                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!useTemplate ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}
-                                                >
-                                                    Custom Message
-                                                </button>
+                                                </div>
                                             </div>
 
-                                            {useTemplate ? (
+                                             {newCampaign.recipientType !== 'COWORKERS' && (
                                                 <div>
-                                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 text-right">Message Template</label>
+                                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Target Building</label>
                                                     <select 
-                                                        required={useTemplate}
-                                                        value={newCampaign.templateId}
-                                                        onChange={(e) => setNewCampaign({...newCampaign, templateId: e.target.value})}
-                                                        className="w-full px-6 py-4 border-2 border-gray-100 rounded-3xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-bold text-gray-700 appearance-none"
+                                                        value={newCampaign.buildingId}
+                                                        onChange={(e) => setNewCampaign({...newCampaign, buildingId: e.target.value})}
+                                                        className="w-full px-4 h-10 border border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-white font-semibold text-xs text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
                                                     >
-                                                        <option value="">Select a Template</option>
-                                                        {templates.map(t => (
-                                                            <option key={t.id} value={t.id}>{t.name}</option>
+                                                        <option value="">All Buildings</option>
+                                                        {buildings.map(b => (
+                                                            <option key={b.id} value={b.id}>{b.name}</option>
                                                         ))}
                                                     </select>
                                                 </div>
-                                            ) : (
-                                                <div>
-                                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 text-right">Your Message</label>
-                                                    <textarea 
-                                                        required={!useTemplate}
-                                                        value={newCampaign.customContent}
-                                                        onChange={(e) => setNewCampaign({...newCampaign, customContent: e.target.value})}
-                                                        rows="4"
-                                                        className="w-full px-6 py-4 border-2 border-gray-100 rounded-3xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/30 font-bold text-gray-700"
-                                                        placeholder="Type your bulk message here..."
-                                                    />
-                                                    <p className="mt-2 text-[10px] text-gray-400 font-bold italic">Character count: {newCampaign.customContent.length}</p>
-                                                </div>
                                             )}
+
+                                            <div>
+                                                <div className="flex gap-2.5 mb-3">
+                                                    <button 
+                                                        type="button"
+                                                        onClick={() => setUseTemplate(true)}
+                                                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${useTemplate ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}
+                                                    >
+                                                        Use Template
+                                                    </button>
+                                                    <button 
+                                                        type="button"
+                                                        onClick={() => setUseTemplate(false)}
+                                                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${!useTemplate ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}
+                                                    >
+                                                        Custom Message
+                                                    </button>
+                                                </div>
+
+                                                {useTemplate ? (
+                                                    <div>
+                                                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Message Template</label>
+                                                        <select 
+                                                            required={useTemplate}
+                                                            value={newCampaign.templateId}
+                                                            onChange={(e) => setNewCampaign({...newCampaign, templateId: e.target.value})}
+                                                            className="w-full px-4 h-10 border border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-white font-semibold text-xs text-gray-700"
+                                                        >
+                                                            <option value="">Select a Template</option>
+                                                            {templates.map(t => (
+                                                                <option key={t.id} value={t.id}>{t.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                ) : (
+                                                    <div>
+                                                        <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Your Message</label>
+                                                        <textarea 
+                                                            required={!useTemplate}
+                                                            value={newCampaign.customContent}
+                                                            onChange={(e) => setNewCampaign({...newCampaign, customContent: e.target.value})}
+                                                            rows="3"
+                                                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-white font-semibold text-xs text-gray-700"
+                                                            placeholder="Type your bulk message here..."
+                                                        />
+                                                        <p className="mt-1 text-[9px] text-gray-400 font-bold italic">Character count: {newCampaign.customContent.length}</p>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="bg-amber-50 p-4 rounded-xl border border-amber-100 flex gap-3">
+                                                <AlertCircle className="h-5 w-5 text-amber-500 shrink-0" />
+                                                <p className="text-[9px] text-amber-800 font-black uppercase leading-relaxed tracking-wider">
+                                                    Note: Messages are sent at 1 req/sec. Max selection recommended: 50.
+                                                </p>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    
+                                    {/* Right Column: Recipient Panel */}
+                                    <div className="space-y-6 lg:border-l lg:border-gray-100 lg:pl-10">
+                                        <div className="space-y-4">
+                                            <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Recipient List</h3>
+                                            <div className="relative">
+                                                <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Filter list..." 
+                                                    className="w-full pl-10 pr-4 py-3 bg-white border border-gray-100 rounded-2xl text-xs focus:ring-2 focus:ring-indigo-100 outline-none"
+                                                    value={tenantSearchTerm}
+                                                    onChange={(e) => setTenantSearchTerm(e.target.value)}
+                                                />
+                                            </div>
                                         </div>
 
-                                        <div className="bg-amber-50 p-6 rounded-3xl border border-amber-100 flex gap-4">
-                                            <AlertCircle className="h-6 w-6 text-amber-500 shrink-0" />
-                                            <p className="text-[10px] text-amber-800 font-bold uppercase leading-relaxed tracking-wider">
-                                                Note: Messages are sent at 1 req/sec. Max selection recommended: 50.
-                                            </p>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                {/* Right Side: Population Summary */}
-                                <div className="w-[380px] bg-gray-50 flex flex-col overflow-hidden">
-                                    <div className="p-8 border-b border-gray-100 bg-white/50">
-                                        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-4">Recipient List</h3>
-                                        <div className="relative">
-                                            <Search className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                                            <input 
-                                                type="text" 
-                                                placeholder="Filter list..." 
-                                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-100 rounded-2xl text-xs focus:ring-2 focus:ring-indigo-100 outline-none"
-                                                value={tenantSearchTerm}
-                                                onChange={(e) => setTenantSearchTerm(e.target.value)}
-                                            />
-                                        </div>
-
-                                        {/* Add Individual Tenant Search */}
-                                        <div className="mt-4 pt-4 border-t border-gray-100">
-                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Add Individual</p>
+                                        <div className="pt-4 border-t border-gray-100 space-y-2">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Add Individual</p>
                                             <div className="relative group/search">
-                                                <Plus className="h-4 w-4 absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" />
+                                                <Plus size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-400" />
                                                 <input 
                                                     type="text" 
                                                     placeholder="Search all tenants..." 
@@ -631,52 +639,59 @@ const SMSCampaigns = () => {
                                                 />
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="flex-1 overflow-y-auto p-8 space-y-3">
-                                        {getFilteredRecipients().filter(r => 
-                                            r.name.toLowerCase().includes(tenantSearchTerm.toLowerCase()) || 
-                                            r.email?.toLowerCase().includes(tenantSearchTerm.toLowerCase())
-                                        ).map(r => (
-                                            <div key={`${r.type}-${r.id}`} className="bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center group hover:border-red-100 transition-all">
-                                                <div>
-                                                    <div className="text-xs font-bold text-gray-800 line-clamp-1">{r.name}</div>
-                                                    <div className="text-[10px] text-gray-400 flex items-center gap-1 font-medium mt-0.5">
-                                                        <span className={`px-1.5 py-0.5 rounded ${r.type === 'TENANT' ? 'bg-indigo-50 text-indigo-500' : 'bg-amber-50 text-amber-500'}`}>
-                                                            {r.type}
-                                                        </span>
-                                                        {r.building?.name || r.role}
+                                        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar border border-gray-100 p-4 rounded-3xl bg-gray-50/50">
+                                            {getFilteredRecipients().filter(r => 
+                                                r.name.toLowerCase().includes(tenantSearchTerm.toLowerCase()) || 
+                                                r.email?.toLowerCase().includes(tenantSearchTerm.toLowerCase())
+                                            ).map(r => (
+                                                <div key={`${r.type}-${r.id}`} className="bg-white p-3 rounded-2xl border border-gray-100 flex justify-between items-center group hover:border-red-100 transition-all">
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className="text-xs font-bold text-gray-800 truncate">{r.name}</div>
+                                                        <div className="text-[10px] text-gray-400 flex items-center gap-1 font-medium mt-0.5 min-w-0">
+                                                            <span className={`px-1.5 py-0.5 rounded shrink-0 ${r.type === 'TENANT' ? 'bg-indigo-50 text-indigo-500' : 'bg-amber-50 text-amber-500'}`}>
+                                                                {r.type}
+                                                            </span>
+                                                            <span className="truncate">{r.building?.name || r.role}</span>
+                                                        </div>
                                                     </div>
+                                                    <button 
+                                                        onClick={() => toggleExclusion(r.id, r.type === 'COWORKER')}
+                                                        className="p-1.5 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-lg transition-all shrink-0"
+                                                        title="Exclude recipient"
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
                                                 </div>
-                                                <button 
-                                                    onClick={() => toggleExclusion(r.id, r.type === 'COWORKER')}
-                                                    className="p-1.5 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-lg transition-all"
-                                                    title="Exclude recipient"
-                                                >
-                                                    <X className="h-4 w-4" />
-                                                </button>
-                                            </div>
-                                        ))}
-
-                                        {getFilteredRecipients().length === 0 && (
-                                            <div className="py-20 text-center opacity-30 select-none">
-                                                <Users className="h-10 w-10 mx-auto mb-2" />
-                                                <p className="text-[10px] font-black uppercase tracking-widest">No Recipients</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                    
-                                    <div className="p-8 border-t border-gray-100 bg-white">
-                                        <button 
-                                            form="campaign-form"
-                                            type="submit"
-                                            className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-widest rounded-3xl transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3 active:scale-95"
-                                        >
-                                            <Send className="h-4 w-4" />
-                                            Start Broadcast
-                                        </button>
+                                            ))}
+                                            {getFilteredRecipients().length === 0 && (
+                                                <div className="py-12 text-center opacity-30 select-none">
+                                                    <Users size={32} className="mx-auto mb-2 text-gray-400" />
+                                                    <p className="text-[10px] font-black uppercase tracking-widest">No Recipients</p>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            {/* Sticky Modal Footer */}
+                            <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 md:px-10 md:py-6 flex flex-col sm:flex-row justify-end items-center gap-4 shrink-0 z-20">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-2xl transition-all text-sm text-center font-bold"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    form="campaign-form"
+                                    type="submit"
+                                    className="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black uppercase tracking-widest rounded-2xl transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3 active:scale-95 text-sm"
+                                >
+                                    <Send size={16} />
+                                    Start Broadcast
+                                </button>
                             </div>
                         </div>
                     </div>

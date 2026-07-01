@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, LogOut, MessageSquare } from 'lucide-react';
+import { Menu, LogOut, MessageSquare, Bell } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/client';
@@ -10,12 +10,31 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
     const navigate = useNavigate();
     const { i18n } = useTranslation();
     const [unreadCount, setUnreadCount] = useState(0);
+    const [notifCount, setNotifCount] = useState(0);
     const [currentLang, setCurrentLang] = React.useState(i18n.language?.split('-')[0] || 'en');
 
     const handleLogout = () => {
         localStorage.removeItem('isLoggedIn');
         navigate('/login');
     };
+
+    const updateNotifCount = () => {
+        try {
+            const list = JSON.parse(localStorage.getItem('mock_integrations_notifications') || '[]');
+            const count = list.filter(n => !n.isRead && !n.isDismissed && !n.isArchived).length;
+            setNotifCount(count);
+        } catch(e) {}
+    };
+
+    useEffect(() => {
+        updateNotifCount();
+        window.addEventListener('notifications_updated', updateNotifCount);
+        const interval = setInterval(updateNotifCount, 5000);
+        return () => {
+            window.removeEventListener('notifications_updated', updateNotifCount);
+            clearInterval(interval);
+        };
+    }, []);
 
     useEffect(() => {
         const fetchUnreadCount = async () => {
@@ -52,30 +71,30 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
     };
 
     return (
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100/80 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-40">
+        <header className="h-14 sm:h-16 bg-white/80 backdrop-blur-md border-b border-slate-100/80 flex items-center justify-between px-2 sm:px-4 lg:px-8 sticky top-0 z-40">
             {/* LEFT */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <button
-                    className="block lg:hidden text-slate-600 p-2 hover:bg-slate-50 rounded-xl transition"
+                    className="block lg:hidden text-slate-600 p-1.5 sm:p-2 hover:bg-slate-50 rounded-xl transition shrink-0"
                     onClick={onMenuClick}
                 >
-                    <Menu size={24} />
+                    <Menu size={22} />
                 </button>
-                <h1 className="text-lg font-black text-slate-800 tracking-tight whitespace-nowrap">{title}</h1>
+                <h1 className="text-xs sm:text-base md:text-lg font-black text-slate-800 tracking-tight overflow-hidden text-ellipsis whitespace-nowrap max-w-[80px] xs:max-w-[110px] sm:max-w-none">{title}</h1>
             </div>
 
             {/* RIGHT */}
-            <div className="flex items-center gap-3 md:gap-4">
+            <div className="flex items-center gap-1 sm:gap-2 md:gap-4 shrink-0">
                 {/* COMPANY SELECTOR */}
                 <CompanySelector />
 
                 {/* SMS NOTIFICATION */}
                 <Link
                     to="/admin/sms/inbox"
-                    className="relative p-2.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                    className="relative p-1.5 sm:p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
                     title="SMS Inbox"
                 >
-                    <MessageSquare size={20} />
+                    <MessageSquare size={17} className="sm:w-[19px] sm:h-[19px]" />
                     {unreadCount > 0 && (
                         <span className="absolute top-1 right-1 w-2 h-2 bg-danger text-white text-[9px] font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                             {unreadCount > 9 ? '9+' : unreadCount}
@@ -83,12 +102,26 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
                     )}
                 </Link>
 
+                {/* NOTIFICATION HUB BELL */}
+                <Link
+                    to="/integrations?tab=notifications"
+                    className="relative p-1.5 sm:p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                    title="System Notifications"
+                >
+                    <Bell size={17} className="sm:w-[19px] sm:h-[19px]" />
+                    {notifCount > 0 && (
+                        <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-rose-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border border-white shadow-sm">
+                            {notifCount}
+                        </span>
+                    )}
+                </Link>
+
                 {/* LANGUAGE SWITCHER */}
-                <div className="flex items-center bg-slate-100/80 rounded-xl p-1 h-9 notranslate">
+                <div className="flex items-center bg-slate-100/80 rounded-xl p-0.5 h-7 sm:h-9 notranslate">
                     <button
                         onClick={() => handleLanguageChange('en')}
                         className={clsx(
-                            "px-3 h-full text-[11px] font-black rounded-lg transition-all uppercase tracking-wider",
+                            "px-1.5 sm:px-3 h-full text-[9px] sm:text-[11px] font-black rounded-lg transition-all uppercase tracking-wider",
                             currentLang === 'en'
                                 ? "bg-white text-primary shadow-sm"
                                 : "text-slate-400 hover:text-slate-600"
@@ -99,7 +132,7 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
                     <button
                         onClick={() => handleLanguageChange('fr')}
                         className={clsx(
-                            "px-3 h-full text-[11px] font-black rounded-lg transition-all uppercase tracking-wider",
+                            "px-1.5 sm:px-3 h-full text-[9px] sm:text-[11px] font-black rounded-lg transition-all uppercase tracking-wider",
                             currentLang === 'fr'
                                 ? "bg-white text-primary shadow-sm"
                                 : "text-slate-400 hover:text-slate-600"

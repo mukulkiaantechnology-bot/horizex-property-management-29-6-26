@@ -24,7 +24,8 @@ import {
   LogOut,
   Gavel,
   StickyNote,
-  Clock
+  Clock,
+  Network
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -199,16 +200,7 @@ const NAV_ITEMS = [
     tKey: "sidebar.team",
     path: "/team-management"
   },
-  {
-    icon: ClipboardList,
-    label: "Inspections",
-    tKey: "sidebar.inspections",
-    path: "/admin/workflow/inspections",
-    children: [
-      { label: "Inspection List", tKey: "sidebar.inspection_list", path: "/admin/workflow/inspections" },
-      { label: "Inspection Templates", tKey: "sidebar.templates", path: "/admin/workflow/templates" }
-    ]
-  },
+
   {
     icon: SettingsIcon,
     label: "Settings",

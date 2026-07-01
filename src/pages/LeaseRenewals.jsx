@@ -97,15 +97,15 @@ export const LeaseRenewals = () => {
 
   return (
     <MainLayout title="Lease Renewals Management">
-      <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col gap-6 p-4 sm:p-6">
         
         {/* Toggle Mode & Action Bar */}
-        <div className="flex justify-between items-center bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm flex-wrap gap-4">
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm gap-3">
+          <div className="flex gap-2 flex-wrap">
             <Button
               variant={viewMode === 'list' ? 'primary' : 'secondary'}
               onClick={() => setViewMode('list')}
-              className="text-xs font-bold"
+              className="text-xs font-bold flex-1 sm:flex-none justify-center"
             >
               <ClipboardList size={16} className="mr-1.5" />
               Table List
@@ -113,7 +113,7 @@ export const LeaseRenewals = () => {
             <Button
               variant={viewMode === 'calendar' ? 'primary' : 'secondary'}
               onClick={() => setViewMode('calendar')}
-              className="text-xs font-bold"
+              className="text-xs font-bold flex-1 sm:flex-none justify-center"
             >
               <CalendarIcon size={16} className="mr-1.5" />
               Expiry Calendar
@@ -121,7 +121,7 @@ export const LeaseRenewals = () => {
           </div>
 
           <div className="flex gap-2 items-center flex-wrap">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mr-2">Sort:</span>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Sort:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -203,8 +203,8 @@ export const LeaseRenewals = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 {/* Renewals Table */}
-                <div className="lg:col-span-2 bg-white rounded-[22px] border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
-                  <div className="overflow-x-auto">
+                <div className="lg:col-span-2 bg-white rounded-[22px] border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[600px] max-h-[600px]">
+                  <div className="overflow-x-auto overflow-y-auto flex-1 custom-scrollbar">
                     <table className="w-full border-collapse text-left">
                       <thead>
                         <tr className="bg-slate-50 border-b border-slate-200">

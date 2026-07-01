@@ -298,6 +298,21 @@ const EmailComposer = () => {
             };
 
             const response = await api.post('/api/admin/email/send-bulk', payload);
+            
+            try {
+                const { emailService } = await import('../services/emailService');
+                const recipientEmails = getFilteredRecipients().map(r => r.email || r.firstName || 'unknown').join(', ');
+                emailService.send({
+                    templateName: selectedTemplate?.name || 'Custom Composer',
+                    subject: emailDraft.subject,
+                    body: emailDraft.body.replace(/<[^>]*>/g, ''),
+                    recipients: recipientEmails || 'unspecified@tenants.com',
+                    attachments: manualAttachments.map(d => d.fileName || d.name || 'Attachment')
+                });
+            } catch (err) {
+                console.error('Audit log failed', err);
+            }
+
             setStatus({ type: 'success', message: `Successfully sent to ${response.data.results.success} recipients!` });
             setStep(5);
         } catch (error) {
@@ -345,24 +360,24 @@ const EmailComposer = () => {
             </style>
             <div className="text-slate-800">
                 {/* Multi-step Header */}
-                <div className="mb-10">
-                    <div className="flex justify-between items-center mb-6">
+                <div className="mb-6">
+                    <div className="flex justify-between items-center mb-4">
                         <div>
-                            <h1 className="text-3xl font-extrabold text-gray-900">Communication Center</h1>
-                            <p className="text-gray-500 font-medium">Step {step}: {steps.find(s => s.id === step)?.label}</p>
+                            <h1 className="text-2xl font-bold text-gray-900">Communication Center</h1>
+                            <p className="text-gray-500 font-medium text-xs">Step {step}: {steps.find(s => s.id === step)?.label}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 bg-white p-4 rounded-3xl shadow-sm border border-gray-100 overflow-x-auto">
+                    <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 overflow-x-auto">
                         {steps.map((s, idx) => (
                             <React.Fragment key={s.id}>
-                                <div className={`flex items-center gap-3 transition-all shrink-0 ${step >= s.id ? 'text-indigo-600' : 'text-gray-400'}`}>
-                                    <div className={`h-10 w-10 rounded-2xl flex items-center justify-center font-bold transition-all border-2 ${
-                                        step === s.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100 scale-110' : 
+                                <div className={`flex items-center gap-2.5 transition-all shrink-0 ${step >= s.id ? 'text-indigo-600' : 'text-gray-400'}`}>
+                                    <div className={`h-8 w-8 rounded-xl flex items-center justify-center font-bold transition-all border-2 text-xs ${
+                                        step === s.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-md scale-105' : 
                                         step > s.id ? 'bg-indigo-50 border-indigo-100 text-indigo-600' : 'bg-gray-50 border-gray-50'
                                     }`}>
                                         {s.id}
                                     </div>
-                                    <span className={`text-sm font-bold ${step === s.id ? 'text-gray-900' : ''}`}>{s.label}</span>
+                                    <span className={`text-xs font-bold ${step === s.id ? 'text-gray-900' : ''}`}>{s.label}</span>
                                 </div>
                                 {idx < steps.length - 1 && <div className="flex-1 min-w-[20px] h-0.5 bg-gray-100" />}
                             </React.Fragment>
@@ -372,23 +387,23 @@ const EmailComposer = () => {
 
                 {/* STEP 1: RECIPIENT SELECTION */}
                 {step === 1 && (
-                    <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                    <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 animate-in fade-in slide-in-from-bottom-4 duration-300">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Left Column: Team, Buildings & Individual Search */}
                             <div className="space-y-6">
                                 {/* management & team selection */}
                                 <div className="space-y-6 pb-10 border-b border-gray-100 mb-10">
-                                    <h3 className="text-xl font-bold text-gray-900 flex items-center justify-between">
+                                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-indigo-600" />
                                             Management & Team
                                         </div>
-                                        <div className="relative">
-                                            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <div className="relative w-full sm:w-auto">
+                                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                             <input 
                                                 type="text" 
                                                 placeholder="Search team..." 
-                                                className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
+                                                className="w-full sm:w-auto pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
                                                 onChange={(e) => {
                                                     const term = e.target.value.toLowerCase();
                                                     setFilteredCoworkersList(coworkers.filter(c => c.name.toLowerCase().includes(term) || c.email.toLowerCase().includes(term)));
@@ -396,7 +411,7 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {(filteredCoworkersList.length > 0 ? filteredCoworkersList : coworkers).map(c => (
                                             <button
                                                 key={c.id}
@@ -414,93 +429,95 @@ const EmailComposer = () => {
                                     </div>
                                 </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                        <Building className="h-5 w-5 text-indigo-600" />
-                                        Target Buildings
+                                <div className="space-y-6 pb-10 border-b border-gray-100 mb-10">
+                                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
+                                        <div className="flex items-center gap-2">
+                                            <Building className="h-5 w-5 text-indigo-600" />
+                                            Target Buildings
+                                        </div>
+                                        <div className="relative w-full sm:w-auto">
+                                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                            <input 
+                                                type="text" 
+                                                placeholder="Search building..." 
+                                                className="w-full sm:w-auto pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
+                                                value={buildingSearchTerm}
+                                                onChange={(e) => {
+                                                    setBuildingSearchTerm(e.target.value);
+                                                    setBuildingPage(1);
+                                                }}
+                                            />
+                                        </div>
+                                    </h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {(() => {
+                                            const filtered = buildings.filter(b => 
+                                                b.name.toLowerCase().includes(buildingSearchTerm.toLowerCase()) || 
+                                                b.address.toLowerCase().includes(buildingSearchTerm.toLowerCase())
+                                            );
+                                            const paginated = filtered.slice((buildingPage - 1) * buildingsPerPage, buildingPage * buildingsPerPage);
+                                            const totalPages = Math.ceil(filtered.length / buildingsPerPage);
+                                            
+                                            return (
+                                                <>
+                                                    {paginated.map(b => (
+                                                        <button
+                                                            key={b.id}
+                                                            onClick={() => toggleBuilding(b.id)}
+                                                            className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                                                                selection.buildingIds.includes(b.id) 
+                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-4 ring-indigo-50' 
+                                                                : 'border-gray-50 bg-gray-50 hover:border-gray-200'
+                                                            }`}
+                                                        >
+                                                            <div className={`text-sm font-bold uppercase tracking-tight line-clamp-1 ${selection.buildingIds.includes(b.id) ? 'text-indigo-700' : 'text-gray-600'}`}>
+                                                                {b.name}
+                                                            </div>
+                                                            <div className="text-[10px] text-gray-400 mt-1 line-clamp-1">{b.address}</div>
+                                                        </button>
+                                                    ))}
+                                                    
+                                                    {filtered.length > buildingsPerPage && (
+                                                        <div className="col-span-full flex items-center justify-between mt-2 px-2">
+                                                            <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
+                                                                Page {buildingPage} of {totalPages}
+                                                            </div>
+                                                            <div className="flex gap-2">
+                                                                <button 
+                                                                    onClick={() => setBuildingPage(p => Math.max(1, p - 1))}
+                                                                    disabled={buildingPage === 1}
+                                                                    className="p-1.5 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                                                                >
+                                                                    <ChevronLeft className="h-4 w-4 text-gray-600" />
+                                                                </button>
+                                                                <button 
+                                                                    onClick={() => setBuildingPage(p => Math.min(totalPages, p + 1))}
+                                                                    disabled={buildingPage === totalPages}
+                                                                    className="p-1.5 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                                                                >
+                                                                    <ChevronRight className="h-4 w-4 text-gray-600" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            );
+                                        })()}
                                     </div>
-                                    <div className="relative">
-                                        <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                        <input 
-                                            type="text" 
-                                            placeholder="Search building..." 
-                                            className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
-                                            value={buildingSearchTerm}
-                                            onChange={(e) => {
-                                                setBuildingSearchTerm(e.target.value);
-                                                setBuildingPage(1);
-                                            }}
-                                        />
-                                    </div>
-                                </h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {(() => {
-                                        const filtered = buildings.filter(b => 
-                                            b.name.toLowerCase().includes(buildingSearchTerm.toLowerCase()) || 
-                                            b.address.toLowerCase().includes(buildingSearchTerm.toLowerCase())
-                                        );
-                                        const paginated = filtered.slice((buildingPage - 1) * buildingsPerPage, buildingPage * buildingsPerPage);
-                                        const totalPages = Math.ceil(filtered.length / buildingsPerPage);
-                                        
-                                        return (
-                                            <>
-                                                {paginated.map(b => (
-                                                    <button
-                                                        key={b.id}
-                                                        onClick={() => toggleBuilding(b.id)}
-                                                        className={`p-4 rounded-2xl border-2 text-left transition-all ${
-                                                            selection.buildingIds.includes(b.id) 
-                                                            ? 'border-indigo-600 bg-indigo-50/50 ring-4 ring-indigo-50' 
-                                                            : 'border-gray-50 bg-gray-50 hover:border-gray-200'
-                                                        }`}
-                                                    >
-                                                        <div className={`text-sm font-bold uppercase tracking-tight line-clamp-1 ${selection.buildingIds.includes(b.id) ? 'text-indigo-700' : 'text-gray-600'}`}>
-                                                            {b.name}
-                                                        </div>
-                                                        <div className="text-[10px] text-gray-400 mt-1 line-clamp-1">{b.address}</div>
-                                                    </button>
-                                                ))}
-                                                
-                                                {filtered.length > buildingsPerPage && (
-                                                    <div className="col-span-2 flex items-center justify-between mt-2 px-2">
-                                                        <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
-                                                            Page {buildingPage} of {totalPages}
-                                                        </div>
-                                                        <div className="flex gap-2">
-                                                            <button 
-                                                                onClick={() => setBuildingPage(p => Math.max(1, p - 1))}
-                                                                disabled={buildingPage === 1}
-                                                                className="p-1.5 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                                                            >
-                                                                <ChevronLeft className="h-4 w-4 text-gray-600" />
-                                                            </button>
-                                                            <button 
-                                                                onClick={() => setBuildingPage(p => Math.min(totalPages, p + 1))}
-                                                                disabled={buildingPage === totalPages}
-                                                                className="p-1.5 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                                                            >
-                                                                <ChevronRight className="h-4 w-4 text-gray-600" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </>
-                                        );
-                                    })()}
                                 </div>
 
                                 <div className="space-y-6 pt-10 border-t border-gray-100 mt-10">
-                                    <h3 className="text-xl font-bold text-gray-900 flex items-center justify-between">
+                                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-indigo-600" />
                                             Individual Tenants
                                         </div>
-                                        <div className="relative">
-                                            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <div className="relative w-full sm:w-auto">
+                                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                             <input 
                                                 type="text" 
                                                 placeholder="Search by name..." 
-                                                className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
+                                                className="w-full sm:w-auto pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
                                                 value={tenantSearchTerm}
                                                 onChange={(e) => {
                                                     setTenantSearchTerm(e.target.value);
@@ -509,9 +526,9 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {tenants.filter(t => t.type !== 'RESIDENT').length === 0 && (
-                                            <div className="col-span-2 text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400">
+                                            <div className="col-span-full text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400">
                                                 No tenants were found in the database.
                                             </div>
                                         )}
@@ -543,7 +560,7 @@ const EmailComposer = () => {
                                                     ))}
                                                     
                                                     {filtered.length > tenantsPerPage && (
-                                                        <div className="col-span-2 flex items-center justify-between mt-2 px-2">
+                                                        <div className="col-span-full flex items-center justify-between mt-2 px-2">
                                                             <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
                                                                 Page {tenantPage} of {totalPages}
                                                             </div>
@@ -572,17 +589,17 @@ const EmailComposer = () => {
                                 </div>
 
                                 <div className="space-y-6 pt-10 border-t border-gray-100 mt-10">
-                                    <h3 className="text-xl font-bold text-gray-900 flex items-center justify-between">
+                                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-indigo-600" />
                                             Individual Residents
                                         </div>
-                                        <div className="relative">
-                                            <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <div className="relative w-full sm:w-auto">
+                                            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                                             <input 
                                                 type="text" 
                                                 placeholder="Search by name..." 
-                                                className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
+                                                className="w-full sm:w-auto pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-100 placeholder:text-gray-400"
                                                 value={residentSearchTerm}
                                                 onChange={(e) => {
                                                     setResidentSearchTerm(e.target.value);
@@ -591,9 +608,9 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {tenants.filter(t => t.type === 'RESIDENT').length === 0 && (
-                                            <div className="col-span-2 text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400">
+                                            <div className="col-span-full text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400">
                                                 No residents were found in the database.
                                             </div>
                                         )}
@@ -625,7 +642,7 @@ const EmailComposer = () => {
                                                     ))}
                                                     
                                                     {filtered.length > residentsPerPage && (
-                                                        <div className="col-span-2 flex items-center justify-between mt-2 px-2">
+                                                        <div className="col-span-full flex items-center justify-between mt-2 px-2">
                                                             <div className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
                                                                 Page {residentPage} of {totalPages}
                                                             </div>
@@ -743,27 +760,27 @@ const EmailComposer = () => {
 
                 {/* STEP 3: EDITOR */}
                 {step === 3 && (
-                    <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            <div className="lg:col-span-2 space-y-6">
+                    <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-2 space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Subject Line</label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Subject Line</label>
                                     <input 
                                         type="text" 
                                         value={emailDraft.subject}
                                         onChange={(e) => setEmailDraft({...emailDraft, subject: e.target.value})}
-                                        className="w-full px-6 py-4 border-2 border-gray-100 rounded-2xl focus:border-indigo-600 focus:ring-0 transition-all outline-none bg-gray-50/50 text-lg font-bold text-gray-900"
+                                        className="w-full px-4 h-10 border border-gray-250 rounded-xl focus:border-indigo-600 focus:ring-0 transition-all outline-none bg-white text-xs font-semibold text-gray-700"
                                         placeholder="Add subject..."
                                     />
                                 </div>
-                                <div className="flex flex-col h-[500px]">
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Email Body</label>
-                                    <div className="flex-1 rounded-2xl overflow-hidden border-2 border-gray-100">
+                                <div className="flex flex-col h-[400px]">
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Email Body</label>
+                                    <div className="flex-1 rounded-xl overflow-hidden border border-gray-200">
                                         <ReactQuill 
                                             theme="snow" 
                                             value={emailDraft.body}
                                             onChange={(content) => setEmailDraft({...emailDraft, body: content})}
-                                            className="h-full bg-white"
+                                            className="h-full bg-white text-xs"
                                             modules={{
                                                 toolbar: [
                                                     [{ 'header': [1, 2, false] }],
@@ -777,31 +794,31 @@ const EmailComposer = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="space-y-6">
-                                <div className="bg-gray-900 text-white p-6 rounded-3xl">
-                                    <h4 className="text-md font-bold mb-4 flex items-center gap-2">
-                                        <Edit3 className="h-5 w-5 text-indigo-400" />
+                            <div className="space-y-4">
+                                <div className="bg-gray-900 text-white p-4 rounded-xl">
+                                    <h4 className="text-sm font-bold mb-3 flex items-center gap-2">
+                                        <Edit3 className="h-4 w-4 text-indigo-400" />
                                         Dynamic Placeholders
                                     </h4>
-                                    <p className="text-xs text-gray-400 mb-6 italic font-medium">Click to insert at current position.</p>
-                                    <div className="flex flex-wrap gap-2">
+                                    <p className="text-[10px] text-gray-400 mb-4 italic font-medium">Click to insert at current position.</p>
+                                    <div className="flex flex-wrap gap-1.5">
                                         {placeholders.map(ph => (
                                             <button 
                                                 key={ph}
                                                 onClick={() => insertPlaceholder(ph)}
-                                                className="bg-gray-800 hover:bg-indigo-600 text-[10px] font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95"
+                                                className="bg-gray-800 hover:bg-indigo-600 text-[9px] font-bold px-2.5 py-1.5 rounded-lg transition-all active:scale-95"
                                             >
                                                 { ph.split(/(?=[A-Z])/).join(' ') }
                                             </button>
                                         ))}
                                     </div>
                                 </div>
-                                <div className="bg-white p-6 rounded-3xl border-2 border-gray-100">
-                                    <h4 className="text-sm font-bold text-gray-900 mb-4 flex items-center gap-2 underline decoration-indigo-200">
+                                <div className="bg-white p-4 rounded-xl border border-gray-150">
+                                    <h4 className="text-xs font-bold text-gray-900 mb-3 flex items-center gap-2 underline decoration-indigo-200">
                                         Corporate Signature
                                     </h4>
                                     <div 
-                                        className="p-4 border border-dashed border-gray-200 rounded-xl bg-gray-50/50 text-[11px] text-gray-500 overflow-hidden" 
+                                        className="p-3 border border-dashed border-gray-200 rounded-xl bg-gray-50/50 text-[10px] text-gray-500 overflow-hidden" 
                                         dangerouslySetInnerHTML={{ __html: signature || '<p class="italic text-gray-400">No signature configured</p>' }}
                                     />
                                 </div>
@@ -812,29 +829,29 @@ const EmailComposer = () => {
 
                 {/* STEP 4: REVIEW & ATTACHMENTS */}
                 {step === 4 && (
-                    <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                        <div className="bg-indigo-900 rounded-3xl p-8 text-white relative overflow-hidden">
+                    <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="bg-indigo-900 rounded-xl p-5 text-white relative overflow-hidden">
                             <div className="relative z-10">
-                                <h2 className="text-3xl font-black mb-2 flex items-center gap-3">
-                                    <CheckCircle2 className="h-8 w-8 text-indigo-400" />
+                                <h2 className="text-xl font-bold mb-1 flex items-center gap-2">
+                                    <CheckCircle2 className="h-6 w-6 text-indigo-400" />
                                     Final Review
                                 </h2>
-                                <p className="text-indigo-200 font-medium">Ready to communicate with {getFilteredRecipients().length} tenants.</p>
+                                <p className="text-indigo-200 font-medium text-xs">Ready to communicate with {getFilteredRecipients().length} tenants.</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <div>
-                                <h3 className="text-lg font-extrabold text-gray-900 mb-4">Attachments</h3>
-                                <div className="space-y-3">
+                                <h3 className="text-sm font-bold text-gray-900 mb-3">Attachments</h3>
+                                <div className="space-y-2">
                                     {/* Template Linked */}
                                     {selectedTemplate?.documents?.map(doc => (
-                                        <div key={doc.id} className="p-4 bg-gray-50 rounded-2xl flex items-center justify-between border border-gray-100">
-                                            <div className="flex items-center gap-3">
-                                                <FileText className="h-6 w-6 text-gray-400" />
+                                        <div key={doc.id} className="p-3 bg-gray-50 rounded-xl flex items-center justify-between border border-gray-150">
+                                            <div className="flex items-center gap-2">
+                                                <FileText className="h-5 w-5 text-gray-400" />
                                                 <div className="flex flex-col">
-                                                    <span className="text-sm font-bold text-gray-700">{doc.name}</span>
-                                                    <span className="text-[10px] text-gray-400 italic">Linked to template</span>
+                                                    <span className="text-xs font-bold text-gray-700">{doc.name}</span>
+                                                    <span className="text-[9px] text-gray-400 italic">Linked to template</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -842,17 +859,17 @@ const EmailComposer = () => {
 
                                     {/* Manual Uploads */}
                                     {manualAttachments.map(doc => (
-                                        <div key={doc.id} className="p-4 bg-indigo-50/50 rounded-2xl flex items-center justify-between border border-indigo-100 animate-in zoom-in-95 duration-200">
-                                            <div className="flex items-center gap-3">
-                                                <FileText className="h-6 w-6 text-indigo-500" />
+                                        <div key={doc.id} className="p-3 bg-indigo-50/50 rounded-xl flex items-center justify-between border border-indigo-100 animate-in zoom-in-95 duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <FileText className="h-5 w-5 text-indigo-500" />
                                                 <div className="flex flex-col">
-                                                    <span className="text-sm font-bold text-gray-700">{doc.name}</span>
-                                                    <span className="text-[10px] text-indigo-400 italic">Direct Cloudinary Upload</span>
+                                                    <span className="text-xs font-bold text-gray-700">{doc.name}</span>
+                                                    <span className="text-[9px] text-indigo-400 italic">Direct Cloudinary Upload</span>
                                                 </div>
                                             </div>
                                             <button 
                                                 onClick={() => removeManualAttachment(doc.id)}
-                                                className="p-2 hover:bg-white rounded-full text-red-500 transition-colors"
+                                                className="p-1 hover:bg-white rounded-full text-red-500 transition-colors"
                                             >
                                                 <X className="h-4 w-4" />
                                             </button>
@@ -869,32 +886,32 @@ const EmailComposer = () => {
                                     <button 
                                         onClick={() => fileInputRef.current?.click()}
                                         disabled={loading}
-                                        className="w-full p-6 border-2 border-dashed border-gray-200 rounded-2xl text-gray-400 hover:text-indigo-600 hover:border-indigo-300 hover:bg-indigo-50/20 transition-all font-bold flex flex-col items-center justify-center gap-2 group"
+                                        className="w-full p-4 border border-dashed border-gray-200 rounded-xl text-gray-400 hover:text-indigo-600 hover:border-indigo-300 hover:bg-indigo-50/20 transition-all font-bold flex flex-col items-center justify-center gap-1.5 group text-xs"
                                     >
-                                        <PlusCircle className="h-8 w-8 group-hover:scale-110 transition-transform" />
+                                        <PlusCircle className="h-6 w-6 group-hover:scale-110 transition-transform" />
                                         <span>{loading ? 'Processing...' : 'Add Manual Attachment'}</span>
                                     </button>
                                 </div>
                             </div>
-                            <div className="bg-gray-900 rounded-3xl p-8 text-white relative overflow-hidden group">
-                                <h3 className="text-lg font-bold mb-4 opacity-50">Email Preview (Raw)</h3>
-                                <div className="p-6 bg-white/5 rounded-2xl border border-white/10 space-y-4 relative z-10">
+                            <div className="bg-gray-900 rounded-xl p-5 text-white relative overflow-hidden group">
+                                <h3 className="text-xs font-bold mb-3 opacity-50">Email Preview (Raw)</h3>
+                                <div className="p-4 bg-white/5 rounded-xl border border-white/10 space-y-3 relative z-10">
                                     <div>
-                                        <span className="text-[10px] font-black text-indigo-400 block uppercase mb-1">Subject</span>
-                                        <p className="text-lg font-bold">{emailDraft.subject}</p>
+                                        <span className="text-[9px] font-black text-indigo-400 block uppercase mb-0.5">Subject</span>
+                                        <p className="text-sm font-bold">{emailDraft.subject}</p>
                                     </div>
                                     <div className="h-px bg-white/10" />
                                     <div>
-                                        <span className="text-[10px] font-black text-indigo-400 block uppercase mb-1">Body Snippet</span>
+                                        <span className="text-[9px] font-black text-indigo-400 block uppercase mb-0.5">Body Snippet</span>
                                         <div 
-                                            className="text-sm opacity-80 max-h-[150px] overflow-hidden" 
+                                            className="text-xs opacity-80 max-h-[120px] overflow-hidden" 
                                             dangerouslySetInnerHTML={{ __html: emailDraft.body }}
                                         />
-                                        <div className="text-[10px] italic mt-2 text-indigo-200">Plus corporate signature...</div>
+                                        <div className="text-[9px] italic mt-1.5 text-indigo-200">Plus corporate signature...</div>
                                     </div>
                                 </div>
-                                <div className="absolute right-[-20px] bottom-[-20px] text-white/5 opacity-20 group-hover:scale-110 transition-transform">
-                                    <Send className="h-48 w-48" />
+                                <div className="absolute right-[-15px] bottom-[-15px] text-white/5 opacity-10 group-hover:scale-110 transition-transform">
+                                    <Send className="h-32 w-32" />
                                 </div>
                             </div>
                         </div>
@@ -903,26 +920,26 @@ const EmailComposer = () => {
 
                 {/* STEP 5: SUCCESS & SUMMARY */}
                 {step === 5 && (
-                    <div className="bg-white rounded-3xl p-12 shadow-xl border border-gray-100 flex flex-col items-center text-center animate-in zoom-in-95 duration-500">
-                        <div className="h-24 w-24 bg-green-100/50 text-green-600 rounded-full flex items-center justify-center mb-6">
-                            <CheckCircle2 className="h-12 w-12" />
+                    <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center animate-in zoom-in-95 duration-500">
+                        <div className="h-16 w-16 bg-green-100/50 text-green-600 rounded-full flex items-center justify-center mb-4">
+                            <CheckCircle2 className="h-8 w-8" />
                         </div>
-                        <div className="space-y-2 mb-10">
-                            <h2 className="text-4xl font-black text-gray-900">Transmission Complete!</h2>
-                            <p className="text-xl text-gray-500 max-w-lg mx-auto font-medium">
+                        <div className="space-y-1 mb-6">
+                            <h2 className="text-2xl font-bold text-gray-900">Transmission Complete!</h2>
+                            <p className="text-sm text-gray-500 max-w-md mx-auto font-medium">
                                 Your bulk email broadcast has been successfully processed. {getFilteredRecipients().length} recipients have been notified.
                             </p>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-md">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-sm">
                             <button 
                                 onClick={() => window.location.reload()}
-                                className="p-4 bg-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-200 transition-all active:scale-95"
+                                className="p-2.5 h-10 text-xs bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all active:scale-95"
                             >
                                 Start New Broadcast
                             </button>
                             <button 
                                 onClick={() => window.location.href = '/admin/email/history'}
-                                className="p-4 bg-indigo-600 text-white font-bold rounded-2xl hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 active:scale-95"
+                                className="p-2.5 h-10 text-xs bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-md active:scale-95"
                             >
                                 View Mail History
                             </button>
@@ -932,25 +949,25 @@ const EmailComposer = () => {
 
                 {/* NAVIGATION BAR */}
                 {step < 5 && (
-                    <div className="mt-8 flex justify-between items-center bg-white p-6 rounded-3xl shadow-xl border border-gray-100 sticky bottom-6 z-20">
+                    <div className="mt-5 flex justify-between items-center bg-white p-4 rounded-xl shadow-md border border-gray-100 sticky bottom-4 z-20">
                         <button 
                             onClick={() => setStep(step - 1)}
                             disabled={step === 1 || loading}
-                            className="px-8 py-3 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed group"
+                            className="px-4 h-10 bg-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-200 transition-all flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed group text-xs"
                         >
-                            <ChevronLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+                            <ChevronLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
                             Back
                         </button>
 
-                        <div className="flex gap-4">
+                        <div className="flex gap-3">
                             {step < 4 ? (
                                 hasPermission('Send Email', 'add') && (
                                     <button 
                                         onClick={() => setStep(step + 1)}
-                                        className="bg-gray-900 text-white px-10 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-black transition-all hover:shadow-xl active:scale-95 group"
+                                        className="bg-gray-900 text-white px-5 h-10 rounded-xl font-bold flex items-center gap-1.5 hover:bg-black transition-all active:scale-95 group text-xs"
                                     >
                                         Continue
-                                        <ChevronRight className="h-5 w-5 group-translate-x-1 transition-transform" />
+                                        <ChevronRight className="h-4 w-4 group-translate-x-0.5 transition-transform" />
                                     </button>
                                 )
                             ) : (
@@ -958,16 +975,16 @@ const EmailComposer = () => {
                                     <button 
                                         onClick={handleSend}
                                         disabled={loading || getFilteredRecipients().length === 0}
-                                        className="bg-indigo-600 text-white px-12 py-3 rounded-2xl font-black text-lg flex items-center gap-3 hover:bg-indigo-700 transition-all hover:scale-105 shadow-2xl shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed group"
+                                        className="bg-indigo-600 text-white px-6 h-10 rounded-xl font-bold flex items-center gap-1.5 hover:bg-indigo-700 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed group text-xs"
                                     >
                                         {loading ? (
                                             <>
-                                                <div className="h-5 w-5 border-4 border-white border-t-transparent rounded-full animate-spin" />
+                                                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                                 Sending...
                                             </>
                                         ) : (
                                             <>
-                                                <Send className="h-6 w-6 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                                <Send className="h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                                                 SEND EMAILS NOW
                                             </>
                                         )}

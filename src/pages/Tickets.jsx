@@ -308,101 +308,105 @@ export const Tickets = () => {
                     </div>
                 </section>
 
-                <section className="bg-white rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden">
-                    <div className="grid grid-cols-[auto_1fr_1.5fr_1.2fr_1.2fr_1fr_1fr_0.5fr] gap-4 bg-slate-50 border-b border-slate-200 px-6 py-4 items-center">
-                        <input type="checkbox" checked={allFilteredSelected} onChange={toggleSelectAll} className="w-4 h-4 text-indigo-600 rounded border-slate-300 cursor-pointer" />
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ticket ID</span>
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Subject</span>
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tenant</span>
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Unit</span>
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Priority</span>
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Actions</span>
-                    </div>
-
-                    <div className="divide-y divide-slate-100">
-                        {filteredTickets.map((ticket, index) => (
-                            <div
-                                key={ticket.id}
-                                className="grid grid-cols-[auto_1fr_1.5fr_1.2fr_1.2fr_1fr_1fr_0.5fr] gap-4 px-6 py-4 items-center hover:bg-slate-50/80 transition-all duration-200"
-                            >
-                                <input type="checkbox" checked={selectedForPrint.has(ticket.id)} onChange={() => toggleSelect(ticket.id)} className="w-4 h-4 text-indigo-600 rounded border-slate-300 cursor-pointer" />
-                                <span className="text-sm font-medium text-indigo-600">{ticket.id}</span>
-                                <div className="flex flex-col pr-4 overflow-hidden">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm text-slate-700 font-medium truncate">{ticket.subject}</span>
-                                        {ticket.isRequired && (
-                                            <span className="px-1.5 py-0.5 rounded bg-red-50 text-[8px] font-black text-red-600 uppercase border border-red-100">Required</span>
-                                        )}
-                                        {ticket.attachments && ticket.attachments.length > 0 && (
-                                            <div className="flex items-center gap-1 text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100" title={`${ticket.attachments.length} attachments`}>
-                                                <Camera size={10} />
-                                                <span className="text-[10px] font-bold">{ticket.attachments.length}</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="flex flex-col items-start gap-1">
-                                    <button
-                                        onClick={() => {
-                                            setViewingTenantDetails(ticket.tenantDetails || { name: ticket.tenant });
-                                        }}
-                                        className="text-sm text-indigo-600 font-semibold hover:underline text-left w-fit"
-                                    >
-                                        {ticket.tenant}
-                                    </button>
-                                    {ticket.userRole !== 'TENANT' && (
-                                        <span className="text-[9px] font-black bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded border border-slate-200 uppercase tracking-tighter">
-                                            Staff / Inspector
-                                        </span>
-                                    )}
-                                </div>
-                                <span className="text-sm text-slate-500">{ticket.unit}</span>
-
-                                <span>
-                                    <span className={clsx("px-2 py-1 rounded-full text-[10px] font-bold border uppercase tracking-tight", priorityColors[ticket.priority])}>
-                                        {ticket.priority}
-                                    </span>
-                                </span>
-
-                                <span className="flex items-center gap-2 text-sm text-slate-700">
-                                    {statusIcons[ticket.status]}
-                                    {ticket.status}
-                                </span>
-
-                                 <span className="flex justify-center gap-1">
-                                    <button
-                                        onClick={() => setSelectedTicket(ticket)}
-                                        className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
-                                        title="View Details"
-                                    >
-                                        <Eye size={16} />
-                                    </button>
-                                    {hasPermission('Tickets', 'edit') && (
-                                        <button
-                                            onClick={() => {
-                                                setEditingTicket(ticket);
-                                                setSelectedBuildingId(ticket.propertyId?.toString() || '');
-                                                setShowAddModal(true);
-                                            }}
-                                            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-all"
-                                            title="Edit Ticket"
-                                        >
-                                            <Edit2 size={16} />
-                                        </button>
-                                    )}
-                                    {hasPermission('Tickets', 'delete') && (
-                                        <button
-                                            onClick={() => handleDeleteTicket(ticket.dbId)}
-                                            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
-                                            title="Delete Ticket"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    )}
-                                </span>
+                <section className="bg-white rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden w-full">
+                    <div className="overflow-x-auto w-full">
+                        <div className="min-w-[850px]">
+                            <div className="grid grid-cols-[auto_1fr_1.5fr_1.2fr_1.2fr_1fr_1fr_0.5fr] gap-4 bg-slate-50 border-b border-slate-200 px-6 py-4 items-center">
+                                <input type="checkbox" checked={allFilteredSelected} onChange={toggleSelectAll} className="w-4 h-4 text-indigo-600 rounded border-slate-300 cursor-pointer" />
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ticket ID</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Subject</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Tenant</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Unit</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Priority</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</span>
+                                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Actions</span>
                             </div>
-                        ))}
+
+                            <div className="divide-y divide-slate-100">
+                                {filteredTickets.map((ticket, index) => (
+                                    <div
+                                        key={ticket.id}
+                                        className="grid grid-cols-[auto_1fr_1.5fr_1.2fr_1.2fr_1fr_1fr_0.5fr] gap-4 px-6 py-4 items-center hover:bg-slate-50/80 transition-all duration-200"
+                                    >
+                                        <input type="checkbox" checked={selectedForPrint.has(ticket.id)} onChange={() => toggleSelect(ticket.id)} className="w-4 h-4 text-indigo-600 rounded border-slate-300 cursor-pointer" />
+                                        <span className="text-sm font-medium text-indigo-600">{ticket.id}</span>
+                                        <div className="flex flex-col pr-4 overflow-hidden">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm text-slate-700 font-medium truncate">{ticket.subject}</span>
+                                                {ticket.isRequired && (
+                                                    <span className="px-1.5 py-0.5 rounded bg-red-50 text-[8px] font-black text-red-600 uppercase border border-red-100">Required</span>
+                                                )}
+                                                {ticket.attachments && ticket.attachments.length > 0 && (
+                                                    <div className="flex items-center gap-1 text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100" title={`${ticket.attachments.length} attachments`}>
+                                                        <Camera size={10} />
+                                                        <span className="text-[10px] font-bold">{ticket.attachments.length}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col items-start gap-1">
+                                            <button
+                                                onClick={() => {
+                                                    setViewingTenantDetails(ticket.tenantDetails || { name: ticket.tenant });
+                                                }}
+                                                className="text-sm text-indigo-600 font-semibold hover:underline text-left w-fit"
+                                            >
+                                                {ticket.tenant}
+                                            </button>
+                                            {ticket.userRole !== 'TENANT' && (
+                                                <span className="text-[9px] font-black bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded border border-slate-200 uppercase tracking-tighter">
+                                                    Staff / Inspector
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span className="text-sm text-slate-500">{ticket.unit}</span>
+
+                                        <span>
+                                            <span className={clsx("px-2 py-1 rounded-full text-[10px] font-bold border uppercase tracking-tight", priorityColors[ticket.priority])}>
+                                                {ticket.priority}
+                                            </span>
+                                        </span>
+
+                                        <span className="flex items-center gap-2 text-sm text-slate-700">
+                                            {statusIcons[ticket.status]}
+                                            {ticket.status}
+                                        </span>
+
+                                         <span className="flex justify-center gap-1">
+                                            <button
+                                                onClick={() => setSelectedTicket(ticket)}
+                                                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                                                title="View Details"
+                                            >
+                                                <Eye size={16} />
+                                            </button>
+                                            {hasPermission('Tickets', 'edit') && (
+                                                <button
+                                                    onClick={() => {
+                                                        setEditingTicket(ticket);
+                                                        setSelectedBuildingId(ticket.propertyId?.toString() || '');
+                                                        setShowAddModal(true);
+                                                    }}
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-amber-600 hover:bg-amber-50 transition-all"
+                                                    title="Edit Ticket"
+                                                >
+                                                    <Edit2 size={16} />
+                                                </button>
+                                            )}
+                                            {hasPermission('Tickets', 'delete') && (
+                                                <button
+                                                    onClick={() => handleDeleteTicket(ticket.dbId)}
+                                                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                                                    title="Delete Ticket"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            )}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </section>
 

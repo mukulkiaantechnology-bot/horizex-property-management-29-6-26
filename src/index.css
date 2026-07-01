@@ -244,4 +244,15 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+
+  /* Ensure all tables wrapped in overflow-x-auto scroll horizontally rather than squishing columns */
+  .overflow-x-auto table {
+    min-width: 800px !important;
+    width: 100%;
+  }
+
+  /* Exclude calendar tables or small custom layout grids from horizontal scroll forcing */
+  .overflow-x-auto table.no-responsive-scroll {
+    min-width: auto !important;
+  }
 }

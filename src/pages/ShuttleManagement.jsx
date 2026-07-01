@@ -1062,38 +1062,42 @@ export const ShuttleManagement = () => {
 
         {/* Ride Request Modal */}
         {showRequestModal && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-slate-50">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-0 md:p-6 overflow-y-auto">
+            <form id="new-ride-form" className="bg-white w-full max-w-md rounded-none md:rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]" onSubmit={handleCreateRequest}>
+              
+              {/* Sticky Header */}
+              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-slate-50 shrink-0 z-10">
                 <h3 className="font-bold text-slate-800 text-lg">New Ride Request</h3>
-                <button onClick={() => setShowRequestModal(false)} className="text-gray-400 hover:text-gray-600 font-bold text-2xl">×</button>
+                <button type="button" onClick={() => setShowRequestModal(false)} className="text-gray-400 hover:text-gray-600 font-bold text-2xl shrink-0">×</button>
               </div>
-              <form onSubmit={handleCreateRequest} className="p-6 space-y-4">
+
+              {/* Scrollable Form Body */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tenant Name</label>
-                  <input required className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" value={newRequest.tenant_name} onChange={e => setNewRequest({...newRequest, tenant_name: e.target.value})} placeholder="Full name of the tenant" />
+                  <input required className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" value={newRequest.tenant_name} onChange={e => setNewRequest({...newRequest, tenant_name: e.target.value})} placeholder="Full name of the tenant" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Date</label>
-                    <input required type="date" className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" value={newRequest.date} onChange={e => setNewRequest({...newRequest, date: e.target.value})} />
+                    <input required type="date" className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" value={newRequest.date} onChange={e => setNewRequest({...newRequest, date: e.target.value})} />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Time</label>
-                    <input required type="time" className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" value={newRequest.time} onChange={e => setNewRequest({...newRequest, time: e.target.value})} />
+                    <input required type="time" className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" value={newRequest.time} onChange={e => setNewRequest({...newRequest, time: e.target.value})} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">From</label>
-                    <select required className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" value={newRequest.origin} onChange={e => setNewRequest({...newRequest, origin: e.target.value})}>
+                    <select required className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" value={newRequest.origin} onChange={e => setNewRequest({...newRequest, origin: e.target.value})}>
                        <option value="">Select...</option>
                        {locations.map(loc => <option key={loc.id} value={loc.name}>{loc.name}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">To</label>
-                    <select required className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" value={newRequest.destination} onChange={e => setNewRequest({...newRequest, destination: e.target.value})}>
+                    <select required className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" value={newRequest.destination} onChange={e => setNewRequest({...newRequest, destination: e.target.value})}>
                        <option value="">Select...</option>
                        {locations.map(loc => <option key={loc.id} value={loc.name}>{loc.name}</option>)}
                     </select>
@@ -1101,39 +1105,47 @@ export const ShuttleManagement = () => {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Passengers</label>
-                  <input type="number" min="1" className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" value={newRequest.passengers} onChange={e => setNewRequest({...newRequest, passengers: e.target.value})} />
+                  <input type="number" min="1" className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800" value={newRequest.passengers} onChange={e => setNewRequest({...newRequest, passengers: e.target.value})} />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Notes (Optional)</label>
-                  <textarea className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm" rows="2" value={newRequest.notes} onChange={e => setNewRequest({...newRequest, notes: e.target.value})} placeholder="Any special instructions..." />
+                  <textarea className="w-full p-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800" rows="2" value={newRequest.notes} onChange={e => setNewRequest({...newRequest, notes: e.target.value})} placeholder="Any special instructions..." />
                 </div>
+              </div>
+
+              {/* Sticky Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-gray-150 p-6 flex items-center justify-end shrink-0 z-10 w-full">
                 <button type="submit" className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-[0.98]">Create Request</button>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         )}
 
         {/* Driver Modal */}
         {showDriverModal && (
-          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-slate-50">
+          <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[60] flex items-center justify-center p-0 md:p-6 overflow-y-auto">
+            <form id="driver-form" className="bg-white w-full max-w-md rounded-none md:rounded-2xl shadow-xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]" onSubmit={handleCreateDriver}>
+              
+              {/* Sticky Header */}
+              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-slate-50 shrink-0 z-10">
                 <h3 className="font-bold text-slate-800 text-lg">{isEditing ? 'Edit Driver' : 'Add New Driver'}</h3>
-                <button onClick={() => setShowDriverModal(false)} className="text-gray-400 hover:text-gray-600 font-bold text-2xl">×</button>
+                <button type="button" onClick={() => setShowDriverModal(false)} className="text-gray-400 hover:text-gray-600 font-bold text-2xl shrink-0">×</button>
               </div>
-              <form onSubmit={handleCreateDriver} className="p-6 space-y-4">
+
+              {/* Scrollable Form Body */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Full Name</label>
-                  <input required className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm" value={newDriver.name} onChange={e => setNewDriver({...newDriver, name: e.target.value})} placeholder="John Doe" />
+                  <input required className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800" value={newDriver.name} onChange={e => setNewDriver({...newDriver, name: e.target.value})} placeholder="John Doe" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Email Address</label>
-                  <input required type="email" disabled={isEditing} className={`w-full p-3 border border-gray-200 rounded-xl outline-none text-sm ${isEditing ? 'bg-slate-50 text-slate-400' : 'bg-white focus:ring-2 focus:ring-indigo-500'}`} value={newDriver.email} onChange={e => setNewDriver({...newDriver, email: e.target.value})} placeholder="driver@shuttle.com" />
+                  <input required type="email" disabled={isEditing} className={`w-full p-3 border border-gray-200 rounded-xl outline-none text-sm ${isEditing ? 'bg-slate-50 text-slate-400' : 'bg-white focus:ring-2 focus:ring-indigo-500 text-slate-800'}`} value={newDriver.email} onChange={e => setNewDriver({...newDriver, email: e.target.value})} placeholder="driver@shuttle.com" />
                   {isEditing && <p className="text-[10px] text-slate-400 mt-1">Email cannot be changed after creation.</p>}
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Phone Number</label>
-                  <input className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm" value={newDriver.phone} onChange={e => setNewDriver({...newDriver, phone: e.target.value})} placeholder="+1 (555) 000-0000" />
+                  <input className="w-full p-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm text-slate-800" value={newDriver.phone} onChange={e => setNewDriver({...newDriver, phone: e.target.value})} placeholder="+1 (555) 000-0000" />
                 </div>
                 
                 {!isEditing && (
@@ -1141,12 +1153,15 @@ export const ShuttleManagement = () => {
                     <p className="text-[10px] text-indigo-700 font-medium">An invitation will be sent to this email address automatically once you click "Add Driver".</p>
                   </div>
                 )}
+              </div>
 
-                <button type="submit" className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-[0.98] mt-2">
+              {/* Sticky Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-gray-100 p-6 flex items-center justify-end shrink-0 z-10 w-full">
+                <button type="submit" className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-[0.98]">
                   {isEditing ? 'Save Changes' : 'Add Driver'}
                 </button>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
         )}
 

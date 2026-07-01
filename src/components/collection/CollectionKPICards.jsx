@@ -13,11 +13,11 @@ export const CollectionKPICards = ({ metrics = {} }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-3">
       {cards.map((card, idx) => (
         <div key={idx} className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between gap-1.5 mb-1">
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider truncate" title={card.title}>{card.title}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate" title={card.title}>{card.title}</span>
             <div className={`w-6 h-6 rounded-md flex items-center justify-center ${card.color} shrink-0`}>
               <card.icon size={12} />
             </div>

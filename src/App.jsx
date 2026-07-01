@@ -86,13 +86,6 @@ import { PayrollProcessing } from "./pages/payroll/PayrollProcessing";
 import { PayrollTimelinePage } from "./pages/payroll/PayrollTimelinePage";
 
 /* WORKFLOW */
-import InspectionList from "./pages/workflow/InspectionList";
-import InspectionTemplates from "./pages/workflow/InspectionTemplates";
-import NewInspectionWizard from "./pages/workflow/NewInspectionWizard";
-import InspectionForm from "./pages/workflow/InspectionForm";
-import InspectionOverview from "./pages/workflow/InspectionOverview";
-import CreateInspectionTemplate from "./pages/workflow/CreateInspectionTemplate";
-import ResponseGroups from "./pages/workflow/ResponseGroups";
 
 /* TENANT PORTAL */
 import { TenantProtectedRoute } from "./components/TenantProtectedRoute";
@@ -219,14 +212,14 @@ function App() {
           <Route path="/admin/workflow/move-in" element={<Navigate to="/dashboard" replace />} />
           <Route path="/admin/workflow/move-out" element={<Navigate to="/dashboard" replace />} />
           <Route path="/admin/workflow/unit-prep" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/admin/workflow/inspections" element={<InspectionList />} />
-          <Route path="/admin/workflow/templates" element={<InspectionTemplates />} />
-          <Route path="/admin/workflow/templates/new" element={<CreateInspectionTemplate />} />
-          <Route path="/admin/workflow/templates/:id/edit" element={<CreateInspectionTemplate />} />
-          <Route path="/admin/workflow/response-groups" element={<ResponseGroups />} />
-          <Route path="/admin/workflow/inspections/new" element={<NewInspectionWizard />} />
-          <Route path="/admin/workflow/inspections/:id" element={<InspectionOverview />} />
-          <Route path="/admin/workflow/inspections/:id/form" element={<InspectionForm />} />
+          <Route path="/admin/workflow/inspections" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/templates" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/templates/new" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/templates/:id/edit" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/response-groups" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/inspections/new" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/inspections/:id" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/inspections/:id/form" element={<Navigate to="/dashboard" replace />} />
         </Route>
 
         {/* 📄 PUBLIC PAGES */}

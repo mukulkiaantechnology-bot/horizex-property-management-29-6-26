@@ -258,6 +258,7 @@ export const PayrollProcessing = () => {
             onPay={handlePay}
             onViewPayslip={setSelectedRecord}
             settings={settings}
+            onUploadReceipt={loadData}
           />
         )}
 

@@ -127,52 +127,61 @@ export const TenantTickets = () => {
 
             {/* NEW TICKET MODAL */}
             {showNew && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300" onClick={e => e.stopPropagation()}>
-                        <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-0 md:p-6 overflow-y-auto animate-in fade-in duration-300">
+                    <div className="bg-white w-full max-w-md rounded-none md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]">
+                        
+                        {/* Sticky Modal Header */}
+                        <div className="sticky top-0 bg-white border-b border-slate-50 p-6 flex items-center justify-between shrink-0 z-10">
                             <h3 className="text-xl font-black text-slate-800">Raise New Ticket</h3>
                             <button onClick={() => setShowNew(false)} className="p-2 text-slate-400 hover:bg-slate-50 rounded-xl transition-all">
                                 <X size={24} />
                             </button>
                         </div>
-                        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Subject</label>
-                                <input name="subject" required className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none font-medium text-slate-700" placeholder="e.g. Broken Light Fixture" />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Priority</label>
-                                <div className="grid grid-cols-3 gap-3">
-                                    {['Low', 'Medium', 'High'].map((p) => (
-                                        <label key={p} className="cursor-pointer group">
-                                            <input type="radio" name="priority" value={p} defaultChecked={p === 'Medium'} className="peer sr-only" />
-                                            <div className="text-center py-2.5 rounded-xl border-2 border-slate-100 peer-checked:border-primary-600 peer-checked:bg-primary-50 text-xs font-black uppercase text-slate-400 peer-checked:text-primary-600 transition-all">
-                                                {p}
-                                            </div>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Description</label>
-                                <textarea name="description" required className="w-full h-32 p-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none font-medium text-slate-700 resize-none" placeholder="Provide more details..." />
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-50">
+                        
+                        {/* Scrollable Form Body */}
+                        <div className="flex-1 overflow-y-auto p-6 md:p-8">
+                            <form id="raise-ticket-form" onSubmit={handleSubmit} className="space-y-6">
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Images</label>
-                                    <input type="file" name="images" multiple accept=".jpg,.png,.jpeg" className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-primary-50 file:text-primary-600 cursor-pointer" />
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Subject</label>
+                                    <input name="subject" required className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none font-medium text-slate-700 bg-white" placeholder="e.g. Broken Light Fixture" />
                                 </div>
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Video</label>
-                                    <input type="file" name="video" accept=".mp4,.mov" className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-primary-50 file:text-primary-600 cursor-pointer" />
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Priority</label>
+                                    <div className="grid grid-cols-3 gap-3">
+                                        {['Low', 'Medium', 'High'].map((p) => (
+                                            <label key={p} className="cursor-pointer group">
+                                                <input type="radio" name="priority" value={p} defaultChecked={p === 'Medium'} className="peer sr-only" />
+                                                <div className="text-center py-2.5 rounded-xl border-2 border-slate-100 peer-checked:border-primary-600 peer-checked:bg-primary-50 text-xs font-black uppercase text-slate-400 peer-checked:text-primary-600 transition-all">
+                                                    {p}
+                                                </div>
+                                            </label>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Description</label>
+                                    <textarea name="description" required className="w-full h-32 p-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none font-medium text-slate-700 resize-none bg-white" placeholder="Provide more details..." />
+                                </div>
 
-                            <Button variant="primary" className="w-full h-14 rounded-2xl font-black text-lg" disabled={isSubmitting}>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-50">
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Images</label>
+                                        <input type="file" name="images" multiple accept=".jpg,.png,.jpeg" className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-primary-50 file:text-primary-600 cursor-pointer" />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Video</label>
+                                        <input type="file" name="video" accept=".mp4,.mov" className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-primary-50 file:text-primary-600 cursor-pointer" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        {/* Sticky Modal Footer */}
+                        <div className="sticky bottom-0 bg-white border-t border-slate-50 p-6 flex items-center justify-end shrink-0 z-10 w-full">
+                            <Button form="raise-ticket-form" type="submit" variant="primary" className="w-full h-14 rounded-2xl font-black text-lg" disabled={isSubmitting}>
                                 {isSubmitting ? 'Submitting...' : 'Send Request'}
                             </Button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}

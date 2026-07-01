@@ -81,11 +81,11 @@ export const TenantChat = () => {
 
     return (
         <TenantLayout title="Messages">
-            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden h-[calc(100vh-140px)] flex flex-col">
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden h-[calc(100vh-140px)] flex flex-col w-full max-w-full">
 
                 {/* Header */}
                 <div className="p-4 border-b border-slate-50 bg-slate-50/50 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-600 shrink-0">
                         <MessageSquare size={20} />
                     </div>
                     <div>
@@ -97,7 +97,7 @@ export const TenantChat = () => {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-white relative">
+                <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-white relative">
                     {!adminUser && (
                         <div className="absolute inset-0 flex items-center justify-center text-slate-400 text-sm">
                             Connecting to support...
@@ -108,12 +108,12 @@ export const TenantChat = () => {
                         const isMe = msg.senderId === currentTenantId;
                         return (
                             <div key={index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[80%] px-5 py-3 rounded-2xl text-sm font-medium shadow-sm ${isMe
+                                <div className={`max-w-[85%] sm:max-w-[80%] px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl text-sm font-medium shadow-sm ${isMe
                                         ? 'bg-indigo-600 text-white rounded-br-none'
                                         : 'bg-slate-100 text-slate-700 rounded-bl-none'
                                     }`}>
                                     {msg.content}
-                                    <div className={`text-[10px] mt-1 text-right opacity-70`}>
+                                    <div className="text-[10px] mt-1 text-right opacity-70">
                                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>
                                 </div>
@@ -124,19 +124,19 @@ export const TenantChat = () => {
                 </div>
 
                 {/* Input */}
-                <div className="p-4 bg-slate-50 border-t border-slate-100">
+                <div className="p-3 sm:p-4 bg-slate-50 border-t border-slate-100">
                     <form onSubmit={handleSendMessage} className="flex gap-3">
                         <input
                             type="text"
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Type a message..."
-                            className="flex-1 h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all font-medium text-slate-700"
+                            className="flex-1 h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-50 outline-none transition-all font-medium text-slate-700 bg-white min-w-0"
                         />
                         <button
                             type="submit"
                             disabled={sending || !newMessage}
-                            className="h-12 w-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-12 w-12 bg-indigo-600 text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                         >
                             {sending ? <RefreshCw className="animate-spin" size={20} /> : <Send size={20} />}
                         </button>

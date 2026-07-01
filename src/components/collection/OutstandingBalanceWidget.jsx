@@ -38,15 +38,17 @@ export const OutstandingBalanceWidget = ({ aging = {} }) => {
           </div>
 
           {/* Bucket Legends and Details */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
             {buckets.map((b, idx) => (
-              <div key={idx} className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  <span className={`w-2 h-2 rounded-full ${b.color} shrink-0`} />
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-wider">{b.label}</span>
+              <div key={idx} className="flex sm:flex-col items-center sm:items-start gap-3 sm:gap-0 bg-slate-50 sm:bg-transparent rounded-xl sm:rounded-none p-3 sm:p-0">
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className={`w-2.5 h-2.5 rounded-full ${b.color} shrink-0`} />
+                  <span className="text-[10px] font-black text-slate-500 uppercase tracking-wider">{b.label}</span>
                 </div>
-                <span className="text-xs font-black text-slate-800 font-mono mt-1">${b.amount.toLocaleString('en-CA')}</span>
-                <span className="text-[9px] text-slate-400 font-bold mt-0.5">{Math.round((b.amount / total) * 100)}% of total</span>
+                <div className="flex sm:flex-col sm:mt-1 items-baseline gap-2 sm:gap-0">
+                  <span className="text-sm sm:text-xs font-black text-slate-800 font-mono">${b.amount.toLocaleString('en-CA')}</span>
+                  <span className="text-[10px] text-slate-400 font-bold sm:mt-0.5">{Math.round((b.amount / total) * 100)}% of total</span>
+                </div>
               </div>
             ))}
           </div>

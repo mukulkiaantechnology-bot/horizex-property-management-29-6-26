@@ -17,10 +17,12 @@ export const payrollService = {
   getAll(filters = {}) {
     let list = getStore();
     const employees = employeeService.getAll();
+    const properties = JSON.parse(localStorage.getItem('mock_properties') || '[]');
 
     // Enhance records with employee names and identifiers
     list = list.map(item => {
       const emp = employees.find(e => String(e.id) === String(item.employeeId));
+      const prop = emp ? properties.find(p => String(p.id) === String(emp.buildingId)) : null;
       return {
         ...item,
         employeeName: emp ? `${emp.firstName} ${emp.lastName}` : `Employee #${item.employeeId}`,
@@ -28,7 +30,8 @@ export const payrollService = {
         department: emp ? emp.department : '',
         designation: emp ? emp.designation : '',
         companyId: emp ? emp.companyId : item.companyId,
-        buildingId: emp ? emp.buildingId : null
+        buildingId: emp ? emp.buildingId : null,
+        buildingName: prop ? prop.name : 'Unknown Location'
       };
     });
 
@@ -51,6 +54,28 @@ export const payrollService = {
     }
 
     return list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  },
+
+  uploadReceipt(id, receiptFile) {
+    const list = getStore();
+    const idx = list.findIndex(item => String(item.id) === String(id));
+    if (idx !== -1) {
+      list[idx].receiptFile = receiptFile;
+      list[idx].updatedAt = new Date().toISOString();
+      setStore(list);
+
+      // Audit timeline entry
+      payrollTimelineService.create({
+        eventType: 'Status Changed',
+        employeeId: list[idx].employeeId,
+        employeeName: list[idx].employeeName,
+        companyId: list[idx].companyId,
+        description: `Receipt uploaded for payslip ${list[idx].payslipNo}: ${receiptFile}`
+      });
+
+      return list[idx];
+    }
+    throw new Error('Payroll run not found.');
   },
 
   getById(id) {

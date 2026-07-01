@@ -23,6 +23,13 @@ import { DashboardTasksWidget } from '../components/tal/DashboardTasksWidget';
 import { UrgentCasesWidget } from '../components/tal/UrgentCasesWidget';
 import { CommunicationTimeline } from '../components/notes/CommunicationTimeline';
 import { RecentNotesWidget } from '../components/notes/RecentNotesWidget';
+
+/* ENTERPRISE INTEGRATIONS MODULE */
+import syncEngineService from '../services/syncEngineService';
+import calendarService from '../services/calendarService';
+import notificationService from '../services/notificationService';
+import emailService from '../services/emailService';
+import integrationAnalyticsService from '../services/integrationAnalyticsService';
 import { 
   BarChart, 
 
@@ -107,6 +114,12 @@ export const Dashboard = () => {
   const [dashboardSettings, setDashboardSettings] = useState({});
   const [dashboardCorrections, setDashboardCorrections] = useState([]);
 
+  // Integrations States
+  const [integrationStats, setIntegrationStats] = useState({});
+  const [dashboardEvents, setDashboardEvents] = useState([]);
+  const [unreadNotifsCount, setUnreadNotifsCount] = useState(0);
+  const [sentEmailsCount, setSentEmailsCount] = useState(0);
+
 
   const fetchStats = async (ownerId = '') => {
     try {
@@ -136,6 +149,12 @@ export const Dashboard = () => {
       setDashboardEmployees(employeeService.getAll({ companyId: compId }));
       setDashboardSettings(payrollSettingsService.getSettings());
       setDashboardCorrections(attendanceService.getCorrections({ companyId: compId, status: 'Pending' }));
+
+      // Fetch Integrations
+      setIntegrationStats(integrationAnalyticsService.getStats());
+      setDashboardEvents(calendarService.getAll());
+      setUnreadNotifsCount(notificationService.getUnreadCount());
+      setSentEmailsCount(emailService.getAll().length);
     } catch (error) {
       console.error('Failed to fetch dashboard stats', error);
       setStats(null);
@@ -682,6 +701,76 @@ export const Dashboard = () => {
               </Card>
             </section>
 
+            {/* ENTERPRISE INTEGRATIONS MODULE WIDGETS */}
+            <section className="mt-8 mb-6">
+              <div className="flex flex-col gap-4">
+                <h3 className="text-lg font-black text-gray-800 tracking-tight">Enterprise Integrations Hub</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  
+                  {/* Sync Queue Summary */}
+                  <Card className="p-6 rounded-[22px] bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-slate-50 pb-2">
+                      <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Sync & Connection Status</span>
+                      <Link to="/integrations?tab=queue" className="text-[10px] text-indigo-600 font-bold hover:underline">Manage Queue</Link>
+                    </div>
+                    <div className="flex flex-col gap-3 justify-center flex-1">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-500 font-medium">Pending Sync Jobs</span>
+                        <span className="font-bold text-slate-850 bg-amber-50 text-amber-700 px-2 py-0.5 rounded-lg border border-amber-100">{integrationStats.pendingSyncJobs || 0}</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-500 font-medium">Failed Sync Jobs</span>
+                        <span className="font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-lg border border-rose-100">{integrationStats.failedSyncJobs || 0}</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-500 font-medium">Last Sync Attempt</span>
+                        <span className="font-mono text-slate-500">{integrationStats.lastSuccessfulSync ? new Date(integrationStats.lastSuccessfulSync).toLocaleTimeString() : 'N/A'}</span>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Upcoming Calendar Events */}
+                  <Card className="p-6 rounded-[22px] bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-slate-50 pb-2">
+                      <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Upcoming Calendar Events</span>
+                      <Link to="/integrations?tab=calendar" className="text-[10px] text-indigo-600 font-bold hover:underline">View Calendar</Link>
+                    </div>
+                    <div className="flex flex-col gap-2.5 max-h-[100px] overflow-y-auto pr-1">
+                      {dashboardEvents.slice(0, 3).map((evt) => (
+                        <div key={evt.id} className="flex justify-between text-xs font-semibold items-center">
+                          <span className="text-slate-700 truncate w-36" title={evt.title}>{evt.title}</span>
+                          <span className="font-mono text-[10px] text-slate-400 shrink-0 bg-slate-100 px-1.5 py-0.5 rounded-md">{evt.start}</span>
+                        </div>
+                      ))}
+                      {dashboardEvents.length === 0 && <span className="text-xs text-slate-400 italic">No sync events found.</span>}
+                    </div>
+                  </Card>
+
+                  {/* Unread Notifications / Recent Emails */}
+                  <Card className="p-6 rounded-[22px] bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
+                    <div className="flex justify-between items-center border-b border-slate-50 pb-2">
+                      <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Mails & Alerts</span>
+                      <Link to="/integrations?tab=notifications" className="text-[10px] text-indigo-600 font-bold hover:underline">Open Inbox</Link>
+                    </div>
+                    <div className="flex flex-col gap-3 justify-center flex-1">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-500 font-medium">Unread System Alerts</span>
+                        <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-600 font-bold text-[10px] border border-rose-100">{unreadNotifsCount || 0} Alerts</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-500 font-medium">Sent Emails Count</span>
+                        <span className="font-bold text-slate-700">{sentEmailsCount || 0} Emails</span>
+                      </div>
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-500 font-medium">Webhook Target Listeners</span>
+                        <span className="text-emerald-600 font-bold flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" /> Active</span>
+                      </div>
+                    </div>
+                  </Card>
+
+                </div>
+              </div>
+            </section>
 
           </>
         )}

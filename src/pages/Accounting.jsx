@@ -76,22 +76,22 @@ export const Accounting = () => {
                 <div>{/* Buttons removed as requested */}</div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-blue-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Rent Revenue</div>
-                    <div className="text-2xl font-black text-slate-800">${totalRent.toLocaleString('en-CA')}</div>
+                    <div className="text-xl sm:text-2xl font-black text-slate-800">${totalRent.toLocaleString('en-CA')}</div>
                 </Card>
                 <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-purple-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Deposits</div>
-                    <div className="text-2xl font-black text-slate-800">${totalDeposits.toLocaleString('en-CA')}</div>
+                    <div className="text-xl sm:text-2xl font-black text-slate-800">${totalDeposits.toLocaleString('en-CA')}</div>
                 </Card>
                 <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-orange-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fees</div>
-                    <div className="text-2xl font-black text-slate-800">${totalFees.toLocaleString('en-CA')}</div>
+                    <div className="text-xl sm:text-2xl font-black text-slate-800">${totalFees.toLocaleString('en-CA')}</div>
                 </Card>
                 <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-red-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Deposit Refunds</div>
-                    <div className="text-2xl font-black text-red-600">${totalRefunds.toLocaleString('en-CA')}</div>
+                    <div className="text-xl sm:text-2xl font-black text-red-600">${totalRefunds.toLocaleString('en-CA')}</div>
                 </Card>
             </div>
 

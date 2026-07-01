@@ -113,25 +113,25 @@ export const Vehicles = () => {
       <div className="flex flex-col gap-6">
         
         {/* TOP BAR / FILTERS */}
-        <section className="flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100 gap-4">
-          <div className="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all w-full md:w-auto md:min-w-[320px]">
+        <section className="flex flex-col xl:flex-row justify-between items-stretch xl:items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100 gap-4">
+          <div className="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-xl border border-slate-200 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all w-full xl:w-auto xl:min-w-[320px]">
             <Search size={18} className="text-slate-400" />
             <input
               type="text"
-              placeholder={t('sidebar.overview')}
+              placeholder="Search plate, brand, model..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent border-none outline-none text-slate-700 placeholder:text-slate-400 w-full text-sm font-medium"
             />
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="flex items-center gap-2 bg-slate-50 py-2.5 px-3.5 rounded-xl border border-slate-200 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto">
+            <div className="flex items-center gap-2 bg-slate-50 py-2.5 px-3.5 rounded-xl border border-slate-200 w-full sm:w-auto">
               <Building2 size={16} className="text-slate-400" />
               <select
                 value={buildingFilter}
                 onChange={(e) => setBuildingFilter(e.target.value)}
-                className="bg-transparent border-none outline-none text-sm text-slate-700 font-medium cursor-pointer min-w-[150px]"
+                className="bg-transparent border-none outline-none text-sm text-slate-700 font-medium cursor-pointer w-full sm:min-w-[150px]"
               >
                 <option value="">{t('sidebar.buildings')}</option>
                 {properties.map(p => (
@@ -141,7 +141,7 @@ export const Vehicles = () => {
             </div>
 
             {hasPermission('Vehicles', 'add') && (
-              <Button variant="primary" onClick={() => { setEditingVehicle(null); setShowForm(true); }} className="whitespace-nowrap rounded-xl shadow-lg shadow-indigo-100">
+              <Button variant="primary" onClick={() => { setEditingVehicle(null); setShowForm(true); }} className="whitespace-nowrap rounded-xl shadow-lg shadow-indigo-100 w-full sm:w-auto justify-center">
                 <Plus size={18} />
                 {t('vehicle.register')}
               </Button>

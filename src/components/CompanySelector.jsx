@@ -67,12 +67,12 @@ export const CompanySelector = () => {
     const showAllOption = companies.length > 1;
 
     return (
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100/80 rounded-xl border border-slate-200/50 min-w-[200px] h-9">
-            <Briefcase size={14} className="text-slate-400 shrink-0" />
+        <div className="flex items-center gap-1 sm:gap-2 px-1.5 sm:px-3 py-1 bg-slate-100/80 rounded-xl border border-slate-200/50 min-w-[100px] sm:min-w-[150px] md:min-w-[200px] h-8 sm:h-9">
+            <Briefcase size={14} className="hidden sm:block text-slate-400 shrink-0" />
             <select
                 value={selectedId}
                 onChange={handleChange}
-                className="bg-transparent border-none outline-none text-slate-700 font-bold text-[11px] uppercase tracking-wider cursor-pointer w-full appearance-none pr-4"
+                className="bg-transparent border-none outline-none text-slate-700 font-bold text-[9px] sm:text-[10px] md:text-[11px] uppercase tracking-wider cursor-pointer w-full appearance-none pr-3 sm:pr-4"
             >
                 {showAllOption && (
                     <option value="">All Companies</option>

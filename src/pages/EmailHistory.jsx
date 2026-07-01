@@ -62,12 +62,27 @@ const EmailHistory = () => {
             const response = await api.get(`/api/admin/email/history?${queryParams}`);
             
             // Handle new paginated structure
+            let apiLogs = [];
             if (response.data && response.data.data) {
-                setHistory(response.data.data);
+                apiLogs = response.data.data;
                 setPagination(response.data.pagination);
             } else {
-                setHistory(response.data);
+                apiLogs = response.data || [];
             }
+
+            const localMails = JSON.parse(localStorage.getItem('mock_integrations_emails') || '[]');
+            const formattedLocal = localMails.map(m => ({
+                id: m.id,
+                subject: m.subject,
+                body: m.body,
+                timestamp: m.createdAt,
+                status: m.status,
+                recipientUser: { name: m.recipients.split('@')[0] },
+                recipient: m.recipients,
+                emailTemplate: { name: m.templateName }
+            }));
+
+            setHistory([...formattedLocal, ...apiLogs]);
         } catch (error) {
             console.error('Error fetching email history:', error);
         } finally {
@@ -121,52 +136,52 @@ const EmailHistory = () => {
 
     return (
         <MainLayout title="Sent Emails History">
-            <div className="space-y-6">
-                <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <div className="space-y-4">
+                <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                            <History className="h-6 w-6 text-indigo-600" />
+                        <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <History className="h-5 w-5 text-indigo-600" />
                             Sent Emails Dashboard
                         </h1>
-                        <p className="text-gray-500 mt-1">Track and manage all outgoing communications.</p>
+                        <p className="text-gray-500 mt-0.5 text-xs">Track and manage all outgoing communications.</p>
                     </div>
                 </div>
 
                 {/* Filters Section */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Tenant Name</label>
+                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tenant Name</label>
                         <div className="relative">
-                            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                            <Search size={14} className="absolute left-3 top-3 text-gray-400" />
                             <input
                                 type="text"
                                 name="tenantName"
                                 value={filters.tenantName}
                                 onChange={handleFilterChange}
                                 placeholder="Recipient name..."
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                                className="w-full pl-9 pr-4 py-2 h-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-xs font-semibold text-slate-800"
                             />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Building</label>
+                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Building</label>
                         <select
                             name="buildingId"
                             value={filters.buildingId}
                             onChange={handleFilterChange}
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                            className="w-full px-3 h-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-xs font-semibold text-slate-800 bg-white"
                         >
                             <option value="">All Buildings</option>
                             {buildings.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Template</label>
+                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Template</label>
                         <select
                             name="templateId"
                             value={filters.templateId}
                             onChange={handleFilterChange}
-                            className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                            className="w-full px-3 h-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-xs font-semibold text-slate-800 bg-white"
                         >
                             <option value="">All Templates</option>
                             {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
@@ -175,7 +190,7 @@ const EmailHistory = () => {
                     <div className="flex gap-2 items-end">
                         <button
                             onClick={fetchHistory}
-                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+                            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 h-10 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 text-xs font-bold"
                         >
                             <Filter className="h-4 w-4" />
                             Apply Filters
@@ -193,16 +208,16 @@ const EmailHistory = () => {
                 )}
 
                 {/* History Table */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <table className="w-full text-left">
                         <thead className="bg-gray-50 border-b border-gray-100">
                             <tr>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Date Sent</th>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Recipient</th>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Subject</th>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Template</th>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Status</th>
-                                <th className="px-6 py-4 text-sm font-semibold text-gray-600">Actions</th>
+                                <th className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Date Sent</th>
+                                <th className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Recipient</th>
+                                <th className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Subject</th>
+                                <th className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Template</th>
+                                <th className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">

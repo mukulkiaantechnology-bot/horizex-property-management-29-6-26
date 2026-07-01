@@ -393,127 +393,133 @@ export const Buildings = () => {
 
         {/* Add Building Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200 overflow-y-auto py-8">
-            <form className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-300 my-auto" onSubmit={addBuilding}>
-              <div className="flex justify-between items-center mb-6">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200 overflow-y-auto p-0 md:p-6">
+            <form id="add-building-form" className="bg-white w-full max-w-lg rounded-none md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]" onSubmit={addBuilding}>
+              
+              {/* Sticky Modal Header */}
+              <div className="sticky top-0 bg-white border-b border-slate-100 p-6 md:p-8 flex justify-between items-center shrink-0 z-10">
                 <h3 className="m-0 text-slate-800 text-2xl font-bold">Add New Building</h3>
                 <button
                   type="button"
-                  className="bg-transparent border-none cursor-pointer text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-slate-100 hover:text-slate-700"
+                  className="bg-transparent border-none cursor-pointer text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-slate-100 hover:text-slate-700 shrink-0"
                   onClick={() => setShowModal(false)}
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <div className="mb-4">
-                <label htmlFor="name" className="block mb-2 font-medium text-slate-600">Building Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  placeholder="Enter building name"
-                  required
-                  className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                />
-              </div>
-
-              {/* Address Fields */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              {/* Scrollable Form Body */}
+              <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-4">
                 <div>
-                  <label htmlFor="civicNumber" className="block mb-2 font-medium text-slate-600">Civic Number</label>
+                  <label htmlFor="name" className="block mb-2 font-medium text-slate-600">Building Name</label>
                   <input
                     type="text"
-                    id="civicNumber"
-                    name="civicNumber"
-                    placeholder="e.g., 82"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="street" className="block mb-2 font-medium text-slate-600">Street</label>
-                  <input
-                    type="text"
-                    id="street"
-                    name="street"
-                    placeholder="e.g., Allée Marthe-Rivard"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label htmlFor="city" className="block mb-2 font-medium text-slate-600">City</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    placeholder="e.g., Mont-Tremblant"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="province" className="block mb-2 font-medium text-slate-600">Province</label>
-                  <select
-                    id="province"
-                    name="province"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
-                  >
-                    <option value="">Select Province</option>
-                    <option value="Alberta">Alberta</option>
-                    <option value="British Columbia">British Columbia</option>
-                    <option value="Manitoba">Manitoba</option>
-                    <option value="New Brunswick">New Brunswick</option>
-                    <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
-                    <option value="Nova Scotia">Nova Scotia</option>
-                    <option value="Ontario">Ontario</option>
-                    <option value="Prince Edward Island">Prince Edward Island</option>
-                    <option value="Quebec">Quebec</option>
-                    <option value="Saskatchewan">Saskatchewan</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="postalCode" className="block mb-2 font-medium text-slate-600">Postal Code</label>
-                <input
-                  type="text"
-                  id="postalCode"
-                  name="postalCode"
-                  placeholder="e.g., J8E 2G5"
-                  className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label htmlFor="units" className="block mb-2 font-medium text-slate-600">Total Units</label>
-                  <input
-                    type="number"
-                    id="units"
-                    name="units"
-                    placeholder="Enter total units"
-                    min="0"
-                    defaultValue="0"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="status" className="block mb-2 font-medium text-slate-600">Status</label>
-                  <select
-                    id="status"
-                    name="status"
+                    id="name"
+                    name="name"
+                    placeholder="Enter building name"
                     required
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </select>
+                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                  />
+                </div>
+
+                {/* Address Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="civicNumber" className="block mb-2 font-medium text-slate-600">Civic Number</label>
+                    <input
+                      type="text"
+                      id="civicNumber"
+                      name="civicNumber"
+                      placeholder="e.g., 82"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="street" className="block mb-2 font-medium text-slate-600">Street</label>
+                    <input
+                      type="text"
+                      id="street"
+                      name="street"
+                      placeholder="e.g., Allée Marthe-Rivard"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="city" className="block mb-2 font-medium text-slate-600">City</label>
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      placeholder="e.g., Mont-Tremblant"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="province" className="block mb-2 font-medium text-slate-600">Province</label>
+                    <select
+                      id="province"
+                      name="province"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
+                    >
+                      <option value="">Select Province</option>
+                      <option value="Alberta">Alberta</option>
+                      <option value="British Columbia">British Columbia</option>
+                      <option value="Manitoba">Manitoba</option>
+                      <option value="New Brunswick">New Brunswick</option>
+                      <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                      <option value="Nova Scotia">Nova Scotia</option>
+                      <option value="Ontario">Ontario</option>
+                      <option value="Prince Edward Island">Prince Edward Island</option>
+                      <option value="Quebec">Quebec</option>
+                      <option value="Saskatchewan">Saskatchewan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="postalCode" className="block mb-2 font-medium text-slate-600">Postal Code</label>
+                  <input
+                    type="text"
+                    id="postalCode"
+                    name="postalCode"
+                    placeholder="e.g., J8E 2G5"
+                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="units" className="block mb-2 font-medium text-slate-600">Total Units</label>
+                    <input
+                      type="number"
+                      id="units"
+                      name="units"
+                      placeholder="Enter total units"
+                      min="0"
+                      defaultValue="0"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="status" className="block mb-2 font-medium text-slate-600">Status</label>
+                    <select
+                      id="status"
+                      name="status"
+                      required
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-2">
+              {/* Sticky Modal Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-slate-100 p-6 md:p-8 flex justify-end gap-3 shrink-0 z-10 w-full">
                 <Button
                   type="button"
                   variant="secondary"
@@ -521,7 +527,7 @@ export const Buildings = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" variant="primary">
+                <Button form="add-building-form" type="submit" variant="primary">
                   Add Building
                 </Button>
               </div>
@@ -615,156 +621,162 @@ export const Buildings = () => {
 
         {/* Edit Building Modal */}
         {showEditModal && currentBuilding && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200 overflow-y-auto py-8">
-            <form className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl animate-in zoom-in-95 duration-300 my-auto" onSubmit={updateBuilding}>
-              <div className="flex justify-between items-center mb-6">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200 overflow-y-auto p-0 md:p-6">
+            <form id="edit-building-form" className="bg-white w-full max-w-lg rounded-none md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]" onSubmit={updateBuilding}>
+              
+              {/* Sticky Modal Header */}
+              <div className="sticky top-0 bg-white border-b border-slate-100 p-6 md:p-8 flex justify-between items-center shrink-0 z-10">
                 <h3 className="m-0 text-slate-800 text-2xl font-bold">Edit Building</h3>
                 <button
                   type="button"
-                  className="bg-transparent border-none cursor-pointer text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-slate-100 hover:text-slate-700"
+                  className="bg-transparent border-none cursor-pointer text-slate-400 w-8 h-8 rounded-lg flex items-center justify-center transition-all hover:bg-slate-100 hover:text-slate-700 shrink-0"
                   onClick={() => setShowEditModal(false)}
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <div className="mb-4">
-                <label htmlFor="edit-name" className="block mb-2 font-medium text-slate-600">Building Name</label>
-                <input
-                  type="text"
-                  id="edit-name"
-                  name="name"
-                  defaultValue={currentBuilding.name}
-                  required
-                  className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                />
-              </div>
-
-              {/* Address Fields */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
+              {/* Scrollable Form Body */}
+              <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-4">
                 <div>
-                  <label htmlFor="edit-civicNumber" className="block mb-2 font-medium text-slate-600">Civic Number</label>
+                  <label htmlFor="edit-name" className="block mb-2 font-medium text-slate-600">Building Name</label>
                   <input
                     type="text"
-                    id="edit-civicNumber"
-                    name="civicNumber"
-                    defaultValue={currentBuilding.civicNumber || ''}
-                    placeholder="e.g., 82"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-street" className="block mb-2 font-medium text-slate-600">Street</label>
-                  <input
-                    type="text"
-                    id="edit-street"
-                    name="street"
-                    defaultValue={currentBuilding.street || ''}
-                    placeholder="e.g., Allée Marthe-Rivard"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label htmlFor="edit-city" className="block mb-2 font-medium text-slate-600">City</label>
-                  <input
-                    type="text"
-                    id="edit-city"
-                    name="city"
-                    defaultValue={currentBuilding.city || ''}
-                    placeholder="e.g., Mont-Tremblant"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-province" className="block mb-2 font-medium text-slate-600">Province</label>
-                  <select
-                    id="edit-province"
-                    name="province"
-                    defaultValue={currentBuilding.province || ''}
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
-                  >
-                    <option value="">Select Province</option>
-                    <option value="Alberta">Alberta</option>
-                    <option value="British Columbia">British Columbia</option>
-                    <option value="Manitoba">Manitoba</option>
-                    <option value="New Brunswick">New Brunswick</option>
-                    <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
-                    <option value="Nova Scotia">Nova Scotia</option>
-                    <option value="Ontario">Ontario</option>
-                    <option value="Prince Edward Island">Prince Edward Island</option>
-                    <option value="Quebec">Quebec</option>
-                    <option value="Saskatchewan">Saskatchewan</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="edit-postalCode" className="block mb-2 font-medium text-slate-600">Postal Code</label>
-                <input
-                  type="text"
-                  id="edit-postalCode"
-                  name="postalCode"
-                  defaultValue={currentBuilding.postalCode || ''}
-                  placeholder="e.g., J8E 2G5"
-                  className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                />
-              </div>
-
-              <div className="mb-4">
-                <label className="block mb-2 font-medium text-slate-600">Assign Owner(s)</label>
-                <div className="flex flex-wrap gap-2 p-3 border-2 border-slate-200 rounded-xl bg-slate-50/30 max-h-[120px] overflow-y-auto">
-                  {owners.map(owner => (
-                    <label key={owner.id} className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg cursor-pointer hover:bg-slate-100 transition-all border border-slate-200 shadow-sm">
-                      <input
-                        type="checkbox"
-                        checked={selectedOwnerIds.includes(owner.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedOwnerIds([...selectedOwnerIds, owner.id]);
-                          } else {
-                            setSelectedOwnerIds(selectedOwnerIds.filter(id => id !== owner.id));
-                          }
-                        }}
-                        className="w-4 h-4 rounded text-[#667eea] focus:ring-[#667eea]"
-                      />
-                      <span className="text-sm font-medium text-slate-700">{owner.name}</span>
-                    </label>
-                  ))}
-                  {owners.length === 0 && <span className="text-slate-400 text-xs italic p-1">No owners found</span>}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label htmlFor="edit-units" className="block mb-2 font-medium text-slate-600">Total Units</label>
-                  <input
-                    type="number"
-                    id="edit-units"
-                    name="units"
-                    defaultValue={currentBuilding.units}
-                    min="0"
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="edit-status" className="block mb-2 font-medium text-slate-600">Status</label>
-                  <select
-                    id="edit-status"
-                    name="status"
-                    defaultValue={currentBuilding.status}
+                    id="edit-name"
+                    name="name"
+                    defaultValue={currentBuilding.name}
                     required
-                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </select>
+                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                  />
+                </div>
+
+                {/* Address Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="edit-civicNumber" className="block mb-2 font-medium text-slate-600">Civic Number</label>
+                    <input
+                      type="text"
+                      id="edit-civicNumber"
+                      name="civicNumber"
+                      defaultValue={currentBuilding.civicNumber || ''}
+                      placeholder="e.g., 82"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="edit-street" className="block mb-2 font-medium text-slate-600">Street</label>
+                    <input
+                      type="text"
+                      id="edit-street"
+                      name="street"
+                      defaultValue={currentBuilding.street || ''}
+                      placeholder="e.g., Allée Marthe-Rivard"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="edit-city" className="block mb-2 font-medium text-slate-600">City</label>
+                    <input
+                      type="text"
+                      id="edit-city"
+                      name="city"
+                      defaultValue={currentBuilding.city || ''}
+                      placeholder="e.g., Mont-Tremblant"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="edit-province" className="block mb-2 font-medium text-slate-600">Province</label>
+                    <select
+                      id="edit-province"
+                      name="province"
+                      defaultValue={currentBuilding.province || ''}
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
+                    >
+                      <option value="">Select Province</option>
+                      <option value="Alberta">Alberta</option>
+                      <option value="British Columbia">British Columbia</option>
+                      <option value="Manitoba">Manitoba</option>
+                      <option value="New Brunswick">New Brunswick</option>
+                      <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                      <option value="Nova Scotia">Nova Scotia</option>
+                      <option value="Ontario">Ontario</option>
+                      <option value="Prince Edward Island">Prince Edward Island</option>
+                      <option value="Quebec">Quebec</option>
+                      <option value="Saskatchewan">Saskatchewan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="edit-postalCode" className="block mb-2 font-medium text-slate-600">Postal Code</label>
+                  <input
+                    type="text"
+                    id="edit-postalCode"
+                    name="postalCode"
+                    defaultValue={currentBuilding.postalCode || ''}
+                    placeholder="e.g., J8E 2G5"
+                    className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-2 font-medium text-slate-600">Assign Owner(s)</label>
+                  <div className="flex flex-wrap gap-2 p-3 border-2 border-slate-200 rounded-xl bg-slate-50/30 max-h-[120px] overflow-y-auto">
+                    {owners.map(owner => (
+                      <label key={owner.id} className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg cursor-pointer hover:bg-slate-100 transition-all border border-slate-200 shadow-sm">
+                        <input
+                          type="checkbox"
+                          checked={selectedOwnerIds.includes(owner.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedOwnerIds([...selectedOwnerIds, owner.id]);
+                            } else {
+                              setSelectedOwnerIds(selectedOwnerIds.filter(id => id !== owner.id));
+                            }
+                          }}
+                          className="w-4 h-4 rounded text-[#667eea] focus:ring-[#667eea]"
+                        />
+                        <span className="text-sm font-medium text-slate-700">{owner.name}</span>
+                      </label>
+                    ))}
+                    {owners.length === 0 && <span className="text-slate-400 text-xs italic p-1">No owners found</span>}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="edit-units" className="block mb-2 font-medium text-slate-600">Total Units</label>
+                    <input
+                      type="number"
+                      id="edit-units"
+                      name="units"
+                      defaultValue={currentBuilding.units}
+                      min="0"
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="edit-status" className="block mb-2 font-medium text-slate-600">Status</label>
+                    <select
+                      id="edit-status"
+                      name="status"
+                      defaultValue={currentBuilding.status}
+                      required
+                      className="w-full p-3 border-2 border-slate-200 rounded-xl text-base transition-all outline-none focus:border-[#667eea] focus:ring-4 focus:ring-[#667eea]/10 appearance-none bg-white"
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-2">
+              {/* Sticky Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-slate-100 p-6 md:p-8 flex justify-end gap-3 shrink-0 z-10 w-full">
                 <Button
                   type="button"
                   variant="secondary"
@@ -772,7 +784,7 @@ export const Buildings = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" variant="primary">
+                <Button form="edit-building-form" type="submit" variant="primary">
                   Update Building
                 </Button>
               </div>

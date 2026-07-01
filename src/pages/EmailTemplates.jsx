@@ -82,7 +82,20 @@ const EmailTemplates = () => {
         setLoading(true);
         try {
             const response = await api.get('/api/admin/email/templates');
-            setTemplates(response.data);
+            const apiTemplates = response.data || [];
+            
+            const localTemplates = JSON.parse(localStorage.getItem('mock_email_templates') || '[]');
+            const formattedLocal = localTemplates.map(t => ({
+                id: t.id,
+                name: t.templateName,
+                subject: t.subject,
+                body: t.body,
+                language: 'en',
+                type: 'System Mapped',
+                documents: []
+            }));
+
+            setTemplates([...formattedLocal, ...apiTemplates]);
         } catch (error) {
             console.error('Error fetching templates:', error);
         } finally {
@@ -172,37 +185,37 @@ const EmailTemplates = () => {
                     }
                 `}
             </style>
-            <div className="space-y-6 text-slate-800">
-                <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <Mail className="h-6 w-6 text-indigo-600" />
-                        Email Templates
-                    </h1>
-                    <p className="text-gray-500 mt-1">Manage reusable professional communication templates.</p>
+            <div className="space-y-4 text-slate-800 w-full max-w-full overflow-hidden">
+                <div className="flex flex-col sm:flex-row justify-between items-center text-center sm:text-left bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4 w-full">
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center justify-center sm:justify-start gap-2">
+                            <Mail className="h-5 w-5 text-indigo-600 shrink-0" />
+                            Email Templates
+                        </h1>
+                        <p className="text-gray-500 mt-0.5 text-xs">Manage reusable professional communication templates.</p>
+                    </div>
+                    {hasPermission('Email Templates', 'add') && (
+                        <button 
+                            onClick={() => openModal()}
+                            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 h-10 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md active:scale-95 w-full sm:w-auto font-bold text-xs shrink-0"
+                        >
+                            <Plus className="h-4 w-4 shrink-0" />
+                            <span className="whitespace-nowrap">New Template</span>
+                        </button>
+                    )}
                 </div>
-                {hasPermission('Email Templates', 'add') && (
-                    <button 
-                        onClick={() => openModal()}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md hover:shadow-indigo-100 active:scale-95"
-                    >
-                        <Plus className="h-5 w-5" />
-                        New Template
-                    </button>
-                )}
-            </div>
 
-            {/* Search Bar */}
-            <div className="relative max-w-md">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input 
-                    type="text" 
-                    placeholder="Search templates..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none bg-white font-medium"
-                />
-            </div>
+                {/* Search Bar */}
+                <div className="relative max-w-md w-full">
+                    <Search size={14} className="absolute left-3.5 top-3.5 text-gray-400" />
+                    <input 
+                        type="text" 
+                        placeholder="Search templates..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2 h-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 transition-all outline-none bg-white font-semibold text-xs text-slate-850"
+                    />
+                </div>
 
             {/* Templates Grid */}
             {loading ? (
@@ -267,136 +280,143 @@ const EmailTemplates = () => {
 
             {/* Modal - Simplified Create/Edit */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
-                        <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10">
-                            <h2 className="text-2xl font-bold text-gray-900">{currentTemplate.id ? 'Edit Template' : 'New Template'}</h2>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6 bg-black/40 backdrop-blur-sm overflow-y-auto">
+                    <div className="bg-white w-full max-w-4xl rounded-none md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in duration-200 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]">
+                        
+                        {/* Sticky Modal Header */}
+                        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 md:px-8 md:py-6 flex justify-between items-center shrink-0 z-20">
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-900">{currentTemplate.id ? 'Edit Template' : 'New Template'}</h2>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                                <X className="h-6 w-6 text-gray-400" />
+                                <X size={20} className="text-gray-400" />
                             </button>
                         </div>
                         
-                        <form onSubmit={handleSave} className="overflow-y-auto p-8 space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Language</label>
-                                    <select 
-                                        value={currentTemplate.language}
-                                        onChange={(e) => setCurrentTemplate({...currentTemplate, language: e.target.value})}
-                                        className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
-                                    >
-                                        <option value="en">English (EN)</option>
-                                        <option value="fr">French (FR)</option>
-                                    </select>
+                        {/* Scrollable Form Body */}
+                        <div className="flex-1 overflow-y-auto p-6 md:p-8">
+                            <form id="email-template-form" onSubmit={handleSave} className="space-y-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Language</label>
+                                        <select 
+                                            value={currentTemplate.language}
+                                            onChange={(e) => setCurrentTemplate({...currentTemplate, language: e.target.value})}
+                                            className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
+                                        >
+                                            <option value="en">English (EN)</option>
+                                            <option value="fr">French (FR)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">System Type (Optional)</label>
+                                        <select 
+                                            value={currentTemplate.type || ''}
+                                            onChange={(e) => setCurrentTemplate({...currentTemplate, type: e.target.value})}
+                                            className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
+                                        >
+                                            <option value="">None</option>
+                                            <option value="INVITATION">INVITATION</option>
+                                        </select>
+                                        <p className="mt-1 text-[10px] text-gray-400 italic px-1">* Set to "INVITATION" for system-automated emails.</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">System Type (Optional)</label>
-                                    <select 
-                                        value={currentTemplate.type || ''}
-                                        onChange={(e) => setCurrentTemplate({...currentTemplate, type: e.target.value})}
-                                        className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
-                                    >
-                                        <option value="">None</option>
-                                        <option value="INVITATION">INVITATION</option>
-                                    </select>
-                                    <p className="mt-1 text-[10px] text-gray-400 italic px-1">* Set to "INVITATION" for system-automated emails.</p>
-                                </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Template Name</label>
-                                    <input 
-                                        type="text" 
-                                        required
-                                        value={currentTemplate.name}
-                                        onChange={(e) => setCurrentTemplate({...currentTemplate, name: e.target.value})}
-                                        className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
-                                        placeholder="e.g. Rent Reminder"
-                                    />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 mb-2">Template Name</label>
+                                        <input 
+                                            type="text" 
+                                            required
+                                            value={currentTemplate.name}
+                                            onChange={(e) => setCurrentTemplate({...currentTemplate, name: e.target.value})}
+                                            className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
+                                            placeholder="e.g. Rent Reminder"
+                                        />
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between items-center mb-2">
+                                            <label className="text-sm font-bold text-gray-700">Subject Line</label>
+                                            <div className="flex gap-1">
+                                                {PLACEHOLDERS.slice(0, 3).map(p => (
+                                                    <button 
+                                                        key={p.code}
+                                                        type="button" 
+                                                        onClick={() => insertPlaceholder('subject', p.code)}
+                                                        className="px-2 py-0.5 text-[9px] font-black uppercase tracking-tighter bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors"
+                                                    >
+                                                        +{p.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <input 
+                                            id="editor-subject"
+                                            type="text" 
+                                            required
+                                            value={currentTemplate.subject}
+                                            onChange={(e) => setCurrentTemplate({...currentTemplate, subject: e.target.value})}
+                                            className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
+                                            placeholder="Dynamic fields like {{name}} supported"
+                                        />
+                                    </div>
                                 </div>
-                                 <div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <label className="text-sm font-bold text-gray-700">Subject Line</label>
-                                        <div className="flex gap-1">
-                                            {PLACEHOLDERS.slice(0, 3).map(p => (
+
+                                <div className="flex flex-col h-[350px] sm:h-[450px]">
+                                    <div className="flex justify-between items-center bg-gray-100 px-4 py-1.5 rounded-t-xl border-x-2 border-t-2 border-gray-100 shrink-0">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                                            Email Body Content
+                                        </label>
+                                        <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
+                                            <span className="text-[9px] text-gray-400 font-bold uppercase italic mr-1">Placeholders:</span>
+                                            {PLACEHOLDERS.map(p => (
                                                 <button 
                                                     key={p.code}
                                                     type="button" 
-                                                    onClick={() => insertPlaceholder('subject', p.code)}
-                                                    className="px-2 py-0.5 text-[9px] font-black uppercase tracking-tighter bg-indigo-50 text-indigo-600 rounded-md hover:bg-indigo-100 transition-colors"
+                                                    onClick={() => setCurrentTemplate({...currentTemplate, body: currentTemplate.body + p.code})}
+                                                    className="px-2.5 py-1 text-[10px] font-black uppercase bg-white border border-gray-200 text-indigo-600 rounded-lg hover:border-indigo-500 hover:shadow-sm transition-all whitespace-nowrap active:scale-95"
                                                 >
-                                                    +{p.label}
+                                                    {p.label}
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
-                                    <input 
-                                        id="editor-subject"
-                                        type="text" 
-                                        required
-                                        value={currentTemplate.subject}
-                                        onChange={(e) => setCurrentTemplate({...currentTemplate, subject: e.target.value})}
-                                        className="w-full px-5 py-3 border-2 border-gray-100 rounded-2xl focus:border-indigo-500 focus:ring-0 transition-all outline-none bg-gray-50/50"
-                                        placeholder="Dynamic fields like {{name}} supported"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col h-[500px]">
-                                <div className="flex justify-between items-center bg-gray-100 px-4 py-1.5 rounded-t-xl border-x-2 border-t-2 border-gray-100">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500">
-                                        Email Body Content
-                                    </label>
-                                    <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
-                                        <span className="text-[9px] text-gray-400 font-bold uppercase italic mr-1">Placeholders:</span>
-                                        {PLACEHOLDERS.map(p => (
-                                            <button 
-                                                key={p.code}
-                                                type="button" 
-                                                onClick={() => setCurrentTemplate({...currentTemplate, body: currentTemplate.body + p.code})}
-                                                className="px-2.5 py-1 text-[10px] font-black uppercase bg-white border border-gray-200 text-indigo-600 rounded-lg hover:border-indigo-500 hover:shadow-sm transition-all whitespace-nowrap active:scale-95"
-                                            >
-                                                {p.label}
-                                            </button>
-                                        ))}
+                                    <div className="flex-1 rounded-b-2xl overflow-hidden border-2 border-gray-100 bg-white min-h-0">
+                                        <ReactQuill 
+                                            theme="snow" 
+                                            value={currentTemplate.body}
+                                            onChange={(content) => setCurrentTemplate({...currentTemplate, body: content})}
+                                            className="h-full bg-white"
+                                            modules={{
+                                                toolbar: [
+                                                    [{ 'header': [1, 2, false] }],
+                                                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                                                    [{'list': 'ordered'}, {'list': 'bullet'}],
+                                                    ['link'],
+                                                    ['clean']
+                                                ],
+                                            }}
+                                        />
                                     </div>
                                 </div>
-                                <div className="flex-1 rounded-b-2xl overflow-hidden border-2 border-gray-100">
-                                    <ReactQuill 
-                                        theme="snow" 
-                                        value={currentTemplate.body}
-                                        onChange={(content) => setCurrentTemplate({...currentTemplate, body: content})}
-                                        className="h-full bg-white"
-                                        modules={{
-                                            toolbar: [
-                                                [{ 'header': [1, 2, false] }],
-                                                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                                                [{'list': 'ordered'}, {'list': 'bullet'}],
-                                                ['link'],
-                                                ['clean']
-                                            ],
-                                        }}
-                                    />
-                                </div>
-                            </div>
+                            </form>
+                        </div>
 
-                            <div className="flex justify-end gap-3 pt-6 border-t border-gray-100">
-                                <button 
-                                    type="button"
-                                    onClick={() => setIsModalOpen(false)}
-                                    className="px-6 py-3 border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 transition-all"
-                                >
-                                    Cancel
-                                </button>
-                                <button 
-                                    type="submit"
-                                    className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-lg hover:shadow-indigo-100"
-                                >
-                                    {currentTemplate.id ? 'Update Template' : 'Create Template'}
-                                </button>
-                            </div>
-                        </form>
+                        {/* Sticky Modal Footer */}
+                        <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 md:px-8 md:py-5 flex flex-col sm:flex-row justify-end gap-3 shrink-0 z-20">
+                            <button 
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="w-full sm:w-auto px-6 py-3 border-2 border-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-50 transition-all text-sm text-center"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                form="email-template-form"
+                                type="submit"
+                                className="w-full sm:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl transition-all shadow-lg hover:shadow-indigo-100 text-sm text-center"
+                            >
+                                {currentTemplate.id ? 'Update Template' : 'Create Template'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

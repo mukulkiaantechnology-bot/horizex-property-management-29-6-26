@@ -154,5 +154,45 @@ Since port 5173 is currently in use on your machine, Vite has started the develo
   - **Leave applications & absence calendar:** Go to Leave Management. Approve a pending leave request. Check if the approved leave appears in the Leave Calendar tab.
   - **Overtime logger & costs calculator:** Go to Overtime Tracking. Review KPIs. Click "Log Overtime" to submit hours for approval.
   - **Configurable Approval Workflows:** Go to Run Payroll. Open the Workflow Config tab. Switch between *Auto-Approval*, *Single Level*, and *Two Level* approvals.
-  - **Processing runs, audits, and payslips:** Under the Payroll Runs tab, click "Run Payroll" to process salaries for June 2026. Run through the approvals as per the active policy configuration, and click "Pay". Click "View Payslip" to open and print the itemized payslip card.
-  - **Timeline logging & local persistence:** Open the Audit Timeline page and confirm all transactions (leave approvals, run logs) are stored in chronological order. Switch the Global Company Selector and verify that all data filters instantly.
+  - **Processing runs, audits, and payslips:** Under the Payroll Runs tab, click "Run Payroll" to process salaries for June 2026. Run through the approvals as per the active policy configuration, and click "Pay". Click "View Payslip" (eye icon) to open and print the itemized payslip card.
+  - **Location Invoices & Receipt Uploads:** In the Payroll Runs table, observe the new **Location** column showing each employee's building assignment. Click the **Invoice icon (FileText)** to open the Location Invoice modal, demonstrating how labor costs are allocated and billed to each specific property (with print options). For "Paid" records, click the **Upload icon** to attach a payout transfer receipt (e.g. `wire_transfer_soros_june.pdf`) which appends an audit event to the timeline and displays a paperclip badge on the row.
+  - **Timeline logging & local persistence:** Open the Audit Timeline page and confirm all transactions (leave approvals, run logs, receipt attachments) are stored in chronological order. Switch the Global Company Selector and verify that all data filters instantly.
+
+## 13. Enterprise Reports & Portfolio Analytics
+- **URLs to open:**
+  - Reports Hub: `http://localhost:5174/reports`
+- **What to verify:**
+  - **Executive Dashboard Widgets:** Load the dashboard. Verify that KPIs (Occupancy, Revenue, Receivables, Active Lawsuits, and Payroll) load and respond to the Global Company Selector. Click **Configure Dashboard Layout** to toggle widget visibility or reset layout parameters. Verify that KPI cards support drilldown navigation to corresponding reports.
+  - **Operational Alerts:** Look at the operational alert log. Verify critical notifications are displayed based on current balances.
+  - **Standard Drill-Down Reports:** Click the **Standard Reports** tab. Browse through the financial reports (Rent Roll, Outstanding Balance, Rent Collection, Late Payments, and Aging Report), property reports, and litigation (TAL) cases. Make sure the Maintenance placeholders display outstanding repairs, upcoming repairs, costs, and **Furniture Status** reports.
+  - **Saved Filter Templates:** In the Standard Reports view, adjust some filters, input a name in "Save current filters as...", and click **Save Filters**. Verify you can reload this configuration from the saved filters dropdown.
+  - **Interactive Analytics:** Click the **Interactive Charts** tab. Verify the Area chart (Revenue), Donut chart (Occupancy Target), and Bar charts render correctly. Check the **Location Heat Map** grid representing access density.
+  - **Report Builder Queries:** Open the **Custom Report Builder** tab. Select a module (e.g. Leases), select custom checkboxes for columns, configure sorting parameters, and click **Generate Custom Report**. Input a name to save the query as a template and load/delete it from the template sidebar.
+  - **Audit Trails & Recurrence Schedules:** Open the **Schedules & Auditing** tab. Verify the audit log records all generated and exported reports from this session. Click **Schedule** to configure a weekly/monthly email report format for multiple recipient addresses.
+  - **Export Formats:** Click **CSV**, **Excel**, or **PDF** next to standard or custom builder reports. Confirm file generation and mock notifications trigger correctly.
+
+## 14. Enterprise Integrations Hub
+- **URLs to open:**
+  - QuickBooks Sync & Integrations: `http://localhost:5174/settings/quickbooks`
+  - Send Email: `http://localhost:5174/admin/email/composer`
+  - Sent Email History: `http://localhost:5174/admin/email/history`
+- **What to verify:**
+  - **QuickBooks Integration (Multi-Company):** Open the QuickBooks tab. Input OAuth Client Key and Secret to save credentials. Select a mapped company file (e.g. Apex Real Estate Partners) and a data type (e.g. Invoices, Payments, Customers, Vendors, Chart of Accounts). Trigger a manual synchronization, which places a sync task in the Sync Queue and updates the Mapped Chart of Accounts ledger table dynamically.
+  - **Google Calendar Synchronization:** Click the Google Calendar Sync tab on the same page. Verify that rent deadlines, lease expirations, and court hearings are populated on the interactive monthly grid. Click a day square to add a mock calendar event. Check that local events show a "Local Only" status badge. Trigger "Sync Calendar" to upload local records to the server, changing their status to "Synced".
+  - **Email Hub Composer:** Navigate to the Send Email page from the sidebar. Select a template (e.g. Rent Due Reminder). Verify that mock merge fields (Tenant name, unit, due amount) are resolved automatically. Click "SEND EMAILS NOW" to send. Open the Sent Emails page from the sidebar to verify the history logs the transaction (Sent or Failed).
+  - **Notification Center rules & alerts:** Click the Notification Settings tab in QuickBooks Sync. Enable/disable rules for late attendance and rent warnings. Filter the in-app notifications inbox by priority (High, Medium, Low) and category. Mark alerts as Read, Archive them, or click Dismiss to hide them. Confirm the notification counter updates in the header bar bell icon in real-time.
+  - **Sync Queue Engine:** Open the Operations Sync Queue tab. Observe the active jobs with animated progress indicators. Test retry/cancel buttons on active or failed synchronization runs, which register auditable timeline trails.
+
+## 15. Enterprise Maintenance, Repairs & Asset Management
+- **URLs to open:**
+  - Maintenance Control Center: `http://localhost:5174/maintenance`
+- **What to verify:**
+  - **Operations Dashboard Widgets:** View the metrics (Open, In Progress, Emergency, Waiting Parts). Verify that the Technician utilization workload meters, low stock warnings alert grid, and actual cost budget bars (Variance calculations) render correctly and update instantly upon switching properties in the filters.
+  - **Maintenance Request Workflow:** Click the "Requests" tab. Select "File Request Ticket" to submit a mock plumbing or electrical issue. Observe the status transitions (New -> Assigned -> In Progress -> Closed) in the dropdown and confirm it appends a chronological audit log instantly to the Audit timeline list.
+  - **Linked Work Orders:** Click the "Work Orders" tab. Create a new work order linked to an active request. Set an estimated budget. Verify actual costs and hours logged update on the overview graphs.
+  - **Technicians Shifts:** Click the "Technicians" tab. Select "Clock In / Clock Out" to toggle shifting status. Verify that the GPS mock coordinates update, and logged tech hours instantly map to "Payroll Synced Hours".
+  - **Asset Lifecycle Management:** Click the "Assets" tab. Check the Otis elevator and boiler items. Select a status (Purchased, Installed, Active, Under Repair, Out of Service, Replaced, Disposed) and verify the lifecycle history log tracks all details.
+  - **Apartment Furniture Inventory:** Click the "Furniture" tab. Change the condition of appliances (Good, Fair, Needs Repair, Replaced). Verify replacements values aggregate.
+  - **Double-Entry Stock Movements:** Click the "Inventory" tab. Log a dynamic parts movement (e.g. Consuming 5 Copper Joints). Verify that current stock levels are calculated dynamically from the ledger.
+
+

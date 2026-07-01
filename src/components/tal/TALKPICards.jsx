@@ -54,20 +54,20 @@ export const TALKPICards = ({ metrics = {} }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {cards.map((card, idx) => (
         <div
           key={idx}
-          className="p-3 bg-white border border-slate-200 rounded-[22px] shadow-sm flex items-center gap-3 hover:shadow-md transition-all duration-300"
+          className="p-3 sm:p-4 bg-white border border-slate-200 rounded-[18px] shadow-sm flex items-center gap-3 hover:shadow-md transition-all duration-300"
         >
-          <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${card.color} shrink-0 shadow-sm`}>
-            <card.icon size={15} />
+          <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center ${card.color} shrink-0 shadow-sm`}>
+            <card.icon size={16} />
           </div>
           <div className="min-w-0">
-            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block truncate" title={card.title}>
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest block truncate" title={card.title}>
               {card.title}
             </span>
-            <span className="text-sm font-black text-slate-800 font-mono tracking-tight block mt-0.5">
+            <span className="text-base sm:text-lg font-black text-slate-800 font-mono tracking-tight block mt-0.5">
               {card.value}
             </span>
           </div>

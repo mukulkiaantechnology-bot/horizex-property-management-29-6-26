@@ -29,24 +29,24 @@ export const RenewalStatusChart = ({ renewals = [] }) => {
   ].filter(s => s.value > 0);
 
   return (
-    <Card className="p-6 rounded-[22px] bg-white shadow-sm border border-slate-200 h-full flex flex-col justify-between">
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h3 className="text-base font-black text-slate-800 tracking-tight">Status Distribution</h3>
-            <p className="text-xs text-slate-400 font-medium mt-0.5">Lease renewals outcome breakdown</p>
-          </div>
-          <PieIcon className="text-indigo-500" size={20} />
+    <Card className="p-5 rounded-[22px] bg-white shadow-sm border border-slate-200 h-[288px] max-h-[288px] flex flex-col overflow-hidden">
+      <div className="flex items-center justify-between mb-4 shrink-0">
+        <div>
+          <h3 className="text-sm font-black text-slate-800 tracking-tight">Status Distribution</h3>
+          <p className="text-[10px] text-slate-400 font-medium mt-0.5">Lease renewals outcome breakdown</p>
         </div>
+        <PieIcon className="text-indigo-500 shrink-0" size={18} />
+      </div>
 
+      <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar min-h-0">
         {renewals.length === 0 ? (
-          <div className="flex items-center justify-center py-12 text-slate-400">
-            <span className="text-sm font-medium">No renewal stats available</span>
+          <div className="flex items-center justify-center h-full py-12 text-slate-400">
+            <span className="text-xs font-medium">No renewal stats available</span>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Visual stacked progress bar chart */}
-            <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden flex">
+            <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden flex shrink-0">
               {chartSegments.map((seg, idx) => (
                 <div
                   key={idx}
@@ -58,15 +58,15 @@ export const RenewalStatusChart = ({ renewals = [] }) => {
             </div>
 
             {/* Legends & percentage bars */}
-            <div className="space-y-3 pt-2">
+            <div className="space-y-2">
               {chartSegments.map((seg, idx) => (
                 <div key={idx} className="flex flex-col gap-1">
-                  <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2.5 h-2.5 rounded-full ${seg.color}`}></span>
+                  <div className="flex items-center justify-between text-xs font-semibold text-slate-750">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`w-2 h-2 rounded-full ${seg.color}`}></span>
                       <span>{seg.label}</span>
                     </div>
-                    <div className="text-slate-500 font-mono text-[11px]">
+                    <div className="text-slate-400 font-mono text-[10px]">
                       {seg.value} ({seg.pct}%)
                     </div>
                   </div>

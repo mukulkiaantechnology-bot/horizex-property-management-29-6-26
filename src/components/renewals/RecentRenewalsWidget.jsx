@@ -29,36 +29,36 @@ export const RecentRenewalsWidget = ({ renewals = [] }) => {
     .slice(0, 5);
 
   return (
-    <Card className="p-6 rounded-[22px] bg-white shadow-sm border border-slate-200 h-full flex flex-col justify-between">
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-base font-black text-slate-800 tracking-tight">Recent Activity Feed</h3>
-            <p className="text-xs text-slate-400 font-medium mt-0.5">Real-time lease renewal timeline audits</p>
-          </div>
-          <RefreshCw className="text-indigo-500 animate-spin-slow" size={20} />
+    <Card className="p-5 rounded-[22px] bg-white shadow-sm border border-slate-200 h-[288px] max-h-[288px] flex flex-col overflow-hidden">
+      <div className="flex items-center justify-between mb-3 shrink-0">
+        <div>
+          <h3 className="text-sm font-black text-slate-800 tracking-tight">Recent Activity Feed</h3>
+          <p className="text-[10px] text-slate-400 font-medium mt-0.5">Real-time lease renewal timeline audits</p>
         </div>
+        <RefreshCw className="text-indigo-500 animate-spin-slow shrink-0" size={18} />
+      </div>
 
+      <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar min-h-0">
         {sortedActivities.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center text-slate-400">
-            <span className="text-sm font-medium">No recent activities logged</span>
+          <div className="flex flex-col items-center justify-center h-full py-8 text-center text-slate-400">
+            <span className="text-xs font-medium">No recent activities logged</span>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {sortedActivities.map((act, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-all"
+                className="flex items-start gap-2.5 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-all"
                 onClick={() => navigate(`/leases/renewals/${act.renewalId}`)}
               >
                 <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 shrink-0 mt-0.5">
-                  <FileText size={16} />
+                  <FileText size={15} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-800 leading-normal">
+                  <p className="text-xs font-bold text-slate-800 leading-tight truncate">
                     {act.tenantName} ({act.unitNumber})
                   </p>
-                  <p className="text-[11px] text-slate-600 mt-0.5 leading-normal">
+                  <p className="text-[10px] text-slate-500 mt-0.5 leading-normal line-clamp-2">
                     {act.activity}
                   </p>
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider font-mono block mt-1">

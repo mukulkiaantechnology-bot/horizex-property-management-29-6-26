@@ -34,37 +34,9 @@ export const RenewalKPICards = ({ renewals = [] }) => {
     {
       title: 'Negotiating',
       value: renewals.filter(r => r.status === 'Negotiating').length,
-      color: 'bg-purple-50 text-purple-600 border border-purple-200',
+      color: 'bg-purple-600 text-white',
       textColor: 'text-purple-600',
       icon: MessageSquare
-    },
-    {
-      title: 'Open Cases',
-      value: renewals.filter(r => r.status === 'Open Case').length,
-      color: 'bg-orange-500 text-white',
-      textColor: 'text-orange-600',
-      icon: AlertCircle
-    },
-    {
-      title: 'Refused',
-      value: renewals.filter(r => r.status === 'Refused').length,
-      color: 'bg-rose-500 text-white',
-      textColor: 'text-rose-600',
-      icon: Trash2
-    },
-    {
-      title: 'Not Renewing',
-      value: renewals.filter(r => r.status === 'Not Renewing').length,
-      color: 'bg-slate-500 text-white',
-      textColor: 'text-slate-600',
-      icon: ShieldAlert
-    },
-    {
-      title: 'Expired Leases',
-      value: renewals.filter(r => r.status === 'Expired').length,
-      color: 'bg-red-500 text-white',
-      textColor: 'text-red-600',
-      icon: AlertTriangle
     }
   ];
 

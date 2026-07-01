@@ -187,58 +187,67 @@ export const TenantDocuments = () => {
 
             {/* UPLOAD MODAL */}
             {showUpload && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300" onClick={e => e.stopPropagation()}>
-                        <div className="p-6 border-b border-slate-50 flex items-center justify-between">
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-0 md:p-6 overflow-y-auto animate-in fade-in duration-300">
+                    <div className="bg-white w-full max-w-md rounded-none md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-300 my-auto h-[100dvh] md:h-auto md:max-h-[90vh]">
+                        
+                        {/* Sticky Modal Header */}
+                        <div className="sticky top-0 bg-white border-b border-slate-50 p-6 flex items-center justify-between shrink-0 z-10">
                             <h3 className="text-xl font-black text-slate-800">Upload New Document</h3>
                             <button onClick={() => setShowUpload(false)} className="p-2 text-slate-400 hover:bg-slate-50 rounded-xl transition-all">
                                 <X size={24} />
                             </button>
                         </div>
-                        <form onSubmit={handleUpload} className="p-8 space-y-6">
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Friendly Name</label>
-                                <input name="docName" className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none font-medium text-slate-700" placeholder="e.g. Utility Bill Jan" />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Document Type</label>
-                                <select name="docType" className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none bg-white font-medium text-slate-700 appearance-none">
-                                    <option value="ID Proof">ID Proof</option>
-                                    <option value="Agreement">Lease Related</option>
-                                    <option value="Utility">Utility Bill</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-
-                            <input
-                                type="file"
-                                className="hidden"
-                                ref={fileInputRef}
-                                onChange={handleFileSelect}
-                                accept="application/pdf,image/*"
-                            />
-
-                            <div
-                                className={`border-2 border-dashed rounded-2xl p-8 text-center space-y-4 hover:border-primary-300 transition-colors cursor-pointer group ${selectedFile ? 'border-primary-500 bg-primary-50/10' : 'border-slate-200'}`}
-                                onClick={() => fileInputRef.current?.click()}
-                            >
-                                <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mx-auto text-slate-400 group-hover:text-primary-500 group-hover:bg-primary-50 transition-colors">
-                                    {selectedFile ? <CheckCircle2 size={24} className="text-emerald-500" /> : <Upload size={24} />}
+                        
+                        {/* Scrollable Form Body */}
+                        <div className="flex-1 overflow-y-auto p-6 md:p-8">
+                            <form id="upload-doc-form" onSubmit={handleUpload} className="space-y-6">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Friendly Name</label>
+                                    <input name="docName" required className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none font-medium text-slate-700 bg-white" placeholder="e.g. Utility Bill Jan" />
                                 </div>
-                                <div>
-                                    <p className="text-sm font-bold text-slate-700">
-                                        {selectedFile ? selectedFile.name : 'Click to select file'}
-                                    </p>
-                                    <p className="text-xs text-slate-400 font-medium mt-1">
-                                        {selectedFile ? `${Math.round(selectedFile.size / 1024)} KB` : 'PDF, JPG, PNG (Max 10MB)'}
-                                    </p>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Document Type</label>
+                                    <select name="docType" className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-primary-500 outline-none bg-white font-medium text-slate-700 appearance-none">
+                                        <option value="ID Proof">ID Proof</option>
+                                        <option value="Agreement">Lease Related</option>
+                                        <option value="Utility">Utility Bill</option>
+                                        <option value="Other">Other</option>
+                                    </select>
                                 </div>
-                            </div>
 
-                            <Button variant="primary" className="w-full h-14 rounded-2xl font-black text-lg" disabled={isUploading || !selectedFile}>
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    ref={fileInputRef}
+                                    onChange={handleFileSelect}
+                                    accept="application/pdf,image/*"
+                                />
+
+                                <div
+                                    className={`border-2 border-dashed rounded-2xl p-8 text-center space-y-4 hover:border-primary-300 transition-colors cursor-pointer group ${selectedFile ? 'border-primary-500 bg-primary-50/10' : 'border-slate-200'}`}
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mx-auto text-slate-400 group-hover:text-primary-500 group-hover:bg-primary-50 transition-colors">
+                                        {selectedFile ? <CheckCircle2 size={24} className="text-emerald-500" /> : <Upload size={24} />}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-bold text-slate-700 break-all px-2">
+                                            {selectedFile ? selectedFile.name : 'Click to select file'}
+                                        </p>
+                                        <p className="text-xs text-slate-400 font-medium mt-1">
+                                            {selectedFile ? `${Math.round(selectedFile.size / 1024)} KB` : 'PDF, JPG, PNG (Max 10MB)'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        {/* Sticky Modal Footer */}
+                        <div className="sticky bottom-0 bg-white border-t border-slate-50 p-6 flex items-center justify-end shrink-0 z-10 w-full">
+                            <Button form="upload-doc-form" type="submit" variant="primary" className="w-full h-14 rounded-2xl font-black text-lg" disabled={isUploading || !selectedFile}>
                                 {isUploading ? 'Uploading...' : 'Confirm Upload'}
                             </Button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             )}

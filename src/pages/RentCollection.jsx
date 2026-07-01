@@ -210,11 +210,11 @@ export const RentCollection = () => {
 
   return (
     <MainLayout title="Rent Collection & Accounts Receivable">
-      <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col gap-6 p-4 sm:p-6">
 
         {/* Tab Selection Bar */}
-        <div className="flex justify-between items-center bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm flex-wrap gap-4">
-          <div className="flex gap-2">
+        <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm gap-3">
+          <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2">
             {[
               { id: 'dashboard', label: 'Overview Dashboard', icon: TrendingUp },
               { id: 'invoices', label: 'Rent Invoices Grid', icon: ClipboardList },
@@ -225,10 +225,10 @@ export const RentCollection = () => {
                 key={tab.id}
                 variant={activeTab === tab.id ? 'primary' : 'secondary'}
                 onClick={() => setActiveTab(tab.id)}
-                className="text-xs font-bold"
+                className="text-xs font-bold justify-center"
               >
-                <tab.icon size={16} className="mr-1.5" />
-                {tab.label}
+                <tab.icon size={16} className="mr-1.5 shrink-0" />
+                <span className="truncate">{tab.label}</span>
               </Button>
             ))}
           </div>
@@ -236,7 +236,7 @@ export const RentCollection = () => {
           <Button
             variant="primary"
             onClick={() => openModal('generate')}
-            className="text-xs font-bold"
+            className="text-xs font-bold justify-center lg:self-auto self-stretch"
           >
             <Plus size={16} className="mr-1.5" />
             Generate Invoice

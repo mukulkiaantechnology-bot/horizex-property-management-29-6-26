@@ -181,26 +181,27 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
   };
 
   return (
-    <MainLayout title="TAL Cases & Legal Case Management">
-      <div className="flex flex-col gap-6 p-6">
+    <MainLayout title="TAL Cases">
+      <div className="flex flex-col gap-4 sm:gap-6 p-4 sm:p-6">
         
         {/* Workspace Action Tab Selection Bar */}
-        <div className="flex justify-between items-center bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm flex-wrap gap-4">
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-white p-3 sm:p-4 rounded-[22px] border border-slate-200 shadow-sm gap-3">
+          {/* 2-col grid on mobile, flex row on sm+ */}
+          <div className="grid grid-cols-2 sm:flex gap-2">
             {[
               { id: 'overview', label: 'Case Overview', icon: TrendingUp },
-              { id: 'cases', label: 'All Legal Cases', icon: Gavel },
-              { id: 'calendar', label: 'Hearings Docket', icon: Calendar },
-              { id: 'tasks', label: 'Urgent Action Tasks', icon: ClipboardList }
+              { id: 'cases', label: 'All Cases', icon: Gavel },
+              { id: 'calendar', label: 'Hearings', icon: Calendar },
+              { id: 'tasks', label: 'Action Tasks', icon: ClipboardList }
             ].map(tab => (
               <Button
                 key={tab.id}
                 variant={activeTab === tab.id ? 'primary' : 'secondary'}
                 onClick={() => setActiveTab(tab.id)}
-                className="text-xs font-bold"
+                className="text-xs font-bold justify-center"
               >
-                <tab.icon size={16} className="mr-1.5" />
-                {tab.label}
+                <tab.icon size={14} className="mr-1 shrink-0" />
+                <span className="truncate">{tab.label}</span>
               </Button>
             ))}
           </div>
@@ -208,9 +209,9 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
           <Button
             variant="primary"
             onClick={() => setShowCreateModal(true)}
-            className="text-xs font-bold"
+            className="text-xs font-bold justify-center w-full sm:w-auto"
           >
-            <Plus size={16} className="mr-1.5" />
+            <Plus size={16} className="mr-1.5 shrink-0" />
             File Legal Case
           </Button>
         </div>
@@ -237,7 +238,8 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
             {activeTab === 'cases' && (
               <div className="flex flex-col gap-6">
                 {/* Search & Filter Toolbar */}
-                <div className="bg-white p-5 rounded-[22px] border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="bg-white p-4 sm:p-5 rounded-[22px] border border-slate-200 shadow-sm flex flex-col gap-3">
+                  {/* Search */}
                   <div className="relative">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                     <input
@@ -249,39 +251,38 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
                     />
                   </div>
 
-                  <div>
+                  {/* Dropdowns + Reset */}
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <select
                       value={selectedStatus}
                       onChange={(e) => setSelectedStatus(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 outline-none focus:bg-white focus:border-indigo-500 transition-all"
+                      className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 outline-none focus:bg-white focus:border-indigo-500 transition-all"
                     >
                       <option value="">All Statuses</option>
                       {Object.keys(TAL_CASE_STATUSES).map(k => (
                         <option key={k} value={TAL_CASE_STATUSES[k].label}>{TAL_CASE_STATUSES[k].label}</option>
                       ))}
                     </select>
-                  </div>
 
-                  <div>
                     <select
                       value={selectedLawyer}
                       onChange={(e) => setSelectedLawyer(e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 outline-none focus:bg-white focus:border-indigo-500 transition-all"
+                      className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 outline-none focus:bg-white focus:border-indigo-500 transition-all"
                     >
                       <option value="">All Lawyers</option>
                       {lawyers.map(l => (
                         <option key={l.id} value={l.id}>{l.name}</option>
                       ))}
                     </select>
-                  </div>
 
-                  <Button
-                    variant="secondary"
-                    onClick={() => { setSearch(''); setSelectedStatus(''); setSelectedPriority(''); setSelectedLawyer(''); }}
-                    className="w-full text-xs font-bold rounded-2xl h-11"
-                  >
-                    Reset Filters
-                  </Button>
+                    <Button
+                      variant="secondary"
+                      onClick={() => { setSearch(''); setSelectedStatus(''); setSelectedPriority(''); setSelectedLawyer(''); }}
+                      className="sm:w-36 text-xs font-bold rounded-2xl h-11 justify-center"
+                    >
+                      Reset Filters
+                    </Button>
+                  </div>
                 </div>
 
                 <CaseTable
@@ -321,7 +322,7 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
       {/* File Case Modal Dialog */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-[26px] p-6 max-w-lg w-full border border-slate-100 shadow-2xl relative">
+          <div className="bg-white rounded-[26px] p-5 sm:p-6 max-w-lg w-full border border-slate-100 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowCreateModal(false)}
               className="absolute right-6 top-6 p-1.5 hover:bg-slate-100 rounded-full text-slate-400"

@@ -248,231 +248,247 @@ export const EmployeeDirectory = () => {
 
       {/* ADD EMPLOYEE MODAL */}
       {addModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <form onSubmit={handleAddSubmit} className="bg-white rounded-3xl p-6 max-w-md w-full flex flex-col gap-4 shadow-float border border-slate-100 animate-zoom-in">
-            <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-0 md:p-6 overflow-y-auto">
+          <form id="add-employee-form" onSubmit={handleAddSubmit} className="bg-white w-full max-w-md rounded-none md:rounded-3xl shadow-float border border-slate-100 flex flex-col overflow-hidden animate-zoom-in my-auto h-[100dvh] md:h-auto md:max-h-[90vh]">
+            
+            {/* Sticky Header */}
+            <div className="p-6 border-b border-slate-150 flex justify-between items-center bg-slate-50 shrink-0 z-10">
               <h3 className="font-bold text-slate-800 text-sm">Add New Employee</h3>
-              <button type="button" onClick={() => setAddModal(false)} className="text-slate-400 hover:text-slate-600 font-bold text-sm bg-transparent border-none">×</button>
+              <button type="button" onClick={() => setAddModal(false)} className="text-slate-400 hover:text-slate-600 font-bold text-sm bg-transparent border-none shrink-0">×</button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">First Name</label>
-                <input 
-                  type="text" 
-                  value={form.firstName} 
-                  onChange={(e) => setForm(p => ({ ...p, firstName: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
+            {/* Scrollable Form Body */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">First Name</label>
+                  <input 
+                    type="text" 
+                    value={form.firstName} 
+                    onChange={(e) => setForm(p => ({ ...p, firstName: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Last Name</label>
+                  <input 
+                    type="text" 
+                    value={form.lastName} 
+                    onChange={(e) => setForm(p => ({ ...p, lastName: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Last Name</label>
-                <input 
-                  type="text" 
-                  value={form.lastName} 
-                  onChange={(e) => setForm(p => ({ ...p, lastName: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email Address</label>
+                  <input 
+                    type="email" 
+                    value={form.email} 
+                    onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Phone Number</label>
+                  <input 
+                    type="text" 
+                    value={form.phone} 
+                    onChange={(e) => setForm(p => ({ ...p, phone: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Company</label>
+                  <select 
+                    value={form.companyId} 
+                    onChange={(e) => setForm(p => ({ ...p, companyId: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium appearance-none"
+                  >
+                    {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Building</label>
+                  <select 
+                    value={form.buildingId} 
+                    onChange={(e) => setForm(p => ({ ...p, buildingId: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium appearance-none"
+                  >
+                    {buildings.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</label>
+                  <select 
+                    value={form.department} 
+                    onChange={(e) => setForm(p => ({ ...p, department: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium appearance-none"
+                  >
+                    {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Designation</label>
+                  <input 
+                    type="text" 
+                    value={form.designation} 
+                    onChange={(e) => setForm(p => ({ ...p, designation: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Employment Type</label>
+                  <select 
+                    value={form.employmentType} 
+                    onChange={(e) => setForm(p => ({ ...p, employmentType: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium appearance-none"
+                  >
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Temp">Temp</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Base Salary ($)</label>
+                  <input 
+                    type="number" 
+                    value={form.salary} 
+                    onChange={(e) => setForm(p => ({ ...p, salary: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email Address</label>
-                <input 
-                  type="email" 
-                  value={form.email} 
-                  onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Phone Number</label>
-                <input 
-                  type="text" 
-                  value={form.phone} 
-                  onChange={(e) => setForm(p => ({ ...p, phone: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                />
-              </div>
+            {/* Sticky Footer */}
+            <div className="sticky bottom-0 bg-white border-t border-slate-150 p-6 flex items-center justify-end shrink-0 z-10 w-full">
+              <button type="submit" className="w-full py-3 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl border-none shadow-lg cursor-pointer">
+                Register Employee
+              </button>
             </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Company</label>
-                <select 
-                  value={form.companyId} 
-                  onChange={(e) => setForm(p => ({ ...p, companyId: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                >
-                  {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Building</label>
-                <select 
-                  value={form.buildingId} 
-                  onChange={(e) => setForm(p => ({ ...p, buildingId: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                >
-                  {buildings.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
-                </select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</label>
-                <select 
-                  value={form.department} 
-                  onChange={(e) => setForm(p => ({ ...p, department: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                >
-                  {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Designation</label>
-                <input 
-                  type="text" 
-                  value={form.designation} 
-                  onChange={(e) => setForm(p => ({ ...p, designation: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Employment Type</label>
-                <select 
-                  value={form.employmentType} 
-                  onChange={(e) => setForm(p => ({ ...p, employmentType: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                >
-                  <option value="Full-time">Full-time</option>
-                  <option value="Part-time">Part-time</option>
-                  <option value="Contract">Contract</option>
-                  <option value="Temp">Temp</option>
-                </select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Base Salary ($)</label>
-                <input 
-                  type="number" 
-                  value={form.salary} 
-                  onChange={(e) => setForm(p => ({ ...p, salary: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
-              </div>
-            </div>
-
-            <button type="submit" className="w-full mt-2 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl border-none shadow-lg cursor-pointer">
-              Register Employee
-            </button>
           </form>
         </div>
       )}
 
       {/* EDIT PROFILE MODAL */}
       {editModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <form onSubmit={handleEditSubmit} className="bg-white rounded-3xl p-6 max-w-md w-full flex flex-col gap-4 shadow-float border border-slate-100 animate-zoom-in">
-            <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-0 md:p-6 overflow-y-auto">
+          <form id="edit-employee-form" onSubmit={handleEditSubmit} className="bg-white w-full max-w-md rounded-none md:rounded-3xl shadow-float border border-slate-100 flex flex-col overflow-hidden animate-zoom-in my-auto h-[100dvh] md:h-auto md:max-h-[90vh]">
+            
+            {/* Sticky Header */}
+            <div className="p-6 border-b border-slate-150 flex justify-between items-center bg-slate-50 shrink-0 z-10">
               <h3 className="font-bold text-slate-800 text-sm">Edit Employee Profile</h3>
-              <button type="button" onClick={() => setEditModal(false)} className="text-slate-400 hover:text-slate-600 font-bold text-sm bg-transparent border-none">×</button>
+              <button type="button" onClick={() => setEditModal(false)} className="text-slate-400 hover:text-slate-600 font-bold text-sm bg-transparent border-none shrink-0">×</button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">First Name</label>
-                <input 
-                  type="text" 
-                  value={form.firstName} 
-                  onChange={(e) => setForm(p => ({ ...p, firstName: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
+            {/* Scrollable Form Body */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">First Name</label>
+                  <input 
+                    type="text" 
+                    value={form.firstName} 
+                    onChange={(e) => setForm(p => ({ ...p, firstName: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Last Name</label>
+                  <input 
+                    type="text" 
+                    value={form.lastName} 
+                    onChange={(e) => setForm(p => ({ ...p, lastName: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Last Name</label>
-                <input 
-                  type="text" 
-                  value={form.lastName} 
-                  onChange={(e) => setForm(p => ({ ...p, lastName: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</label>
+                  <input 
+                    type="email" 
+                    value={form.email} 
+                    onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Phone</label>
+                  <input 
+                    type="text" 
+                    value={form.phone} 
+                    onChange={(e) => setForm(p => ({ ...p, phone: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</label>
+                  <select 
+                    value={form.department} 
+                    onChange={(e) => setForm(p => ({ ...p, department: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium appearance-none"
+                  >
+                    {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Designation</label>
+                  <input 
+                    type="text" 
+                    value={form.designation} 
+                    onChange={(e) => setForm(p => ({ ...p, designation: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</label>
+                  <select 
+                    value={form.status} 
+                    onChange={(e) => setForm(p => ({ ...p, status: e.target.value }))}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium appearance-none"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</label>
-                <input 
-                  type="email" 
-                  value={form.email} 
-                  onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Phone</label>
-                <input 
-                  type="text" 
-                  value={form.phone} 
-                  onChange={(e) => setForm(p => ({ ...p, phone: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                />
-              </div>
+            {/* Sticky Footer */}
+            <div className="sticky bottom-0 bg-white border-t border-slate-150 p-6 flex items-center justify-end shrink-0 z-10 w-full">
+              <button type="submit" className="w-full py-3 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl border-none shadow-lg cursor-pointer">
+                Save Changes
+              </button>
             </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</label>
-                <select 
-                  value={form.department} 
-                  onChange={(e) => setForm(p => ({ ...p, department: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                >
-                  {departments.map(d => <option key={d.id} value={d.name}>{d.name}</option>)}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Designation</label>
-                <input 
-                  type="text" 
-                  value={form.designation} 
-                  onChange={(e) => setForm(p => ({ ...p, designation: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</label>
-                <select 
-                  value={form.status} 
-                  onChange={(e) => setForm(p => ({ ...p, status: e.target.value }))}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-700 outline-none focus:border-blue-300 font-medium"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" className="w-full mt-2 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl border-none shadow-lg cursor-pointer">
-              Save Changes
-            </button>
           </form>
         </div>
       )}

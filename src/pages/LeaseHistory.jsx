@@ -147,8 +147,9 @@ export const LeaseHistory = () => {
             <div className="flex flex-col gap-6">
 
                 {/* FILTERS */}
-                <div className="flex flex-wrap gap-2 bg-white p-3 rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.05)] border border-slate-100 items-center">
-                    <div className="flex-1 min-w-[180px] flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+                <div className="flex flex-col gap-3 bg-white p-3 rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.05)] border border-slate-100">
+                    {/* Search */}
+                    <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
                         <Search size={16} className="text-slate-400 shrink-0" />
                         <input
                             type="text"
@@ -159,63 +160,67 @@ export const LeaseHistory = () => {
                         />
                     </div>
 
-                    <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                        <Home size={16} className="text-slate-400 shrink-0" />
-                        <select
-                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[120px] cursor-pointer"
-                            value={buildingFilter}
-                            onChange={(e) => {
-                                setBuildingFilter(e.target.value);
-                                setPage(1);
-                            }}
-                        >
-                            <option value="">All Buildings</option>
-                            {buildings.map(b => (
-                                <option key={b.id} value={b.id}>{b.name}</option>
-                            ))}
-                        </select>
+                    {/* Dropdowns row */}
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 flex-1">
+                            <Home size={16} className="text-slate-400 shrink-0" />
+                            <select
+                                className="bg-transparent border-none outline-none text-sm text-slate-700 w-full cursor-pointer"
+                                value={buildingFilter}
+                                onChange={(e) => {
+                                    setBuildingFilter(e.target.value);
+                                    setPage(1);
+                                }}
+                            >
+                                <option value="">All Buildings</option>
+                                {buildings.map(b => (
+                                    <option key={b.id} value={b.id}>{b.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 flex-1">
+                            <FileText size={16} className="text-slate-400 shrink-0" />
+                            <select
+                                className="bg-transparent border-none outline-none text-sm text-slate-700 w-full cursor-pointer"
+                                value={typeFilter}
+                                onChange={(e) => {
+                                    setTypeFilter(e.target.value);
+                                    setPage(1);
+                                }}
+                            >
+                                <option value="">All Lease Types</option>
+                                <option value="Full Unit Lease">Full Unit Lease</option>
+                                <option value="Bedroom Lease">Bedroom Lease</option>
+                            </select>
+                        </div>
+
+                        <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 flex-1">
+                            <AlertTriangle size={16} className="text-slate-400 shrink-0" />
+                            <select
+                                className="bg-transparent border-none outline-none text-sm text-slate-700 w-full cursor-pointer font-medium"
+                                value={statusFilter}
+                                onChange={(e) => {
+                                    setStatusFilter(e.target.value);
+                                    setPage(1);
+                                }}
+                            >
+                                <option value="">All Statuses</option>
+                                <option value="Active">Active</option>
+                                <option value="Expired">Expired</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                        <FileText size={16} className="text-slate-400 shrink-0" />
-                        <select
-                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[120px] cursor-pointer"
-                            value={typeFilter}
-                            onChange={(e) => {
-                                setTypeFilter(e.target.value);
-                                setPage(1);
-                            }}
-                        >
-                            <option value="">All Lease Types</option>
-                            <option value="Full Unit Lease">Full Unit Lease</option>
-                            <option value="Bedroom Lease">Bedroom Lease</option>
-                        </select>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                        <AlertTriangle size={16} className="text-slate-400 shrink-0" />
-                        <select
-                            className="bg-transparent border-none outline-none text-sm text-slate-700 min-w-[110px] cursor-pointer font-medium"
-                            value={statusFilter}
-                            onChange={(e) => {
-                                setStatusFilter(e.target.value);
-                                setPage(1);
-                            }}
-                        >
-                            <option value="">All Statuses</option>
-                            <option value="Active">Active</option>
-                            <option value="Expired">Expired</option>
-                        </select>
-                    </div>
-
-                    <div className="flex gap-2 shrink-0">
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-2">
                         {hasPermission('Leases', 'add') && (
                             <>
-                                <Button variant="secondary" onClick={() => navigate('/leases/new-bedroom')}>
+                                <Button variant="secondary" onClick={() => navigate('/leases/new-bedroom')} className="flex-1 justify-center">
                                     <Bed size={16} />
                                     Bedroom Lease
                                 </Button>
-                                <Button variant="primary" onClick={() => navigate('/leases/new')}>
+                                <Button variant="primary" onClick={() => navigate('/leases/new')} className="flex-1 justify-center">
                                     <FileText size={16} />
                                     Full Unit Lease
                                 </Button>

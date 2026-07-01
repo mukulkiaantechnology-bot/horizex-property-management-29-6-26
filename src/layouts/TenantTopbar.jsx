@@ -61,24 +61,24 @@ export const TenantTopbar = ({ title = 'Dashboard', onMenuClick }) => {
     }, [language]);
 
     return (
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100/80 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-40">
+        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-slate-100/80 flex items-center justify-between px-3 sm:px-4 lg:px-8 sticky top-0 z-40 w-full">
             {/* LEFT */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <button
-                    className="block lg:hidden text-slate-600 p-2 hover:bg-slate-50 rounded-xl transition"
+                    className="block lg:hidden text-slate-600 p-2 hover:bg-slate-50 rounded-xl transition shrink-0"
                     onClick={onMenuClick}
                 >
                     <Menu size={24} />
                 </button>
-                <h1 className="text-lg font-black text-slate-800 tracking-tight">{title}</h1>
+                <h1 className="text-sm sm:text-base md:text-lg font-black text-slate-800 tracking-tight truncate max-w-[130px] sm:max-w-[220px] md:max-w-none">{title}</h1>
             </div>
 
             {/* RIGHT */}
-            <div className="flex items-center gap-3 md:gap-4">
+            <div className="flex items-center gap-1.5 sm:gap-3 md:gap-4 shrink-0">
                 {/* Language Switcher */}
                 <button
                     onClick={toggleLanguage}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/80 hover:bg-primary/5 hover:text-primary transition-colors group h-9"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-xl bg-slate-100/80 hover:bg-primary/5 hover:text-primary transition-colors group h-9"
                 >
                     <Globe size={15} className="text-slate-400 group-hover:text-primary" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 group-hover:text-primary">
@@ -87,7 +87,7 @@ export const TenantTopbar = ({ title = 'Dashboard', onMenuClick }) => {
                 </button>
 
                 {/* Profile */}
-                <div className="flex items-center gap-3 border-l border-slate-100 pl-3 md:pl-4">
+                <div className="flex items-center gap-2 sm:gap-3 border-l border-slate-100 pl-2 sm:pl-3 md:pl-4">
                     <div className="hidden md:flex flex-col items-end">
                         <span className="text-xs font-black text-slate-800 uppercase tracking-tight">{tenantName}</span>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{buildingInfo}</span>

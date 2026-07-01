@@ -352,11 +352,11 @@ export const TeamManagement = () => {
         </div>
 
         {/* TEAM LIST SECTION */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full">
           
           {/* LEFT: MEMBER LIST (4 COLUMNS) */}
-          <div className="lg:col-span-4 flex flex-col gap-4">
-            <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
+          <div className="w-full lg:col-span-4 flex flex-col gap-4">
+            <div className="w-full bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="font-bold text-slate-800">{t('sidebar.team')}</h3>
                     <span className="bg-slate-100 text-slate-500 text-[10px] font-black px-2 py-1 rounded-full uppercase tracking-widest">{coworkers.length} {t('common.total')}</span>

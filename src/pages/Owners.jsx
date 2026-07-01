@@ -319,10 +319,10 @@ export const Owners = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex gap-2 pt-3 border-t border-slate-100">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-3 border-t border-slate-100">
                                         <button
                                             onClick={() => setViewingOwner(owner)}
-                                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all text-xs font-semibold"
+                                            className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all text-xs font-semibold"
                                         >
                                             <Eye size={14} />
                                             View
@@ -330,7 +330,7 @@ export const Owners = () => {
                                         <AccessControl module="Owners" action="edit">
                                             <button
                                                 onClick={() => handleSendInvite(owner)}
-                                                className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg transition-all text-xs font-semibold ${owner.isInviteSent ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-amber-600 bg-amber-50 hover:bg-amber-100'}`}
+                                                className={`flex items-center justify-center gap-1 px-3 py-2 rounded-lg transition-all text-xs font-semibold ${owner.isInviteSent ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-amber-600 bg-amber-50 hover:bg-amber-100'}`}
                                             >
                                                 {owner.isInviteSent ? (
                                                     <>
@@ -348,7 +348,7 @@ export const Owners = () => {
                                         <AccessControl module="Owners" action="edit">
                                             <button
                                                 onClick={() => handleEditOwner(owner)}
-                                                className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all text-xs font-semibold"
+                                                className="flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all text-xs font-semibold"
                                             >
                                                 <Pencil size={14} />
                                                 Edit

@@ -99,44 +99,49 @@ export const VacancyDashboard = () => {
             </section>
 
             {/* DETAILS */}
-            <section className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
+            <section className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
 
               {/* Vacancy by Building */}
               <Card title="Vacancy by Building" className="saas-card p-6">
                 <ul className="p-0 list-none">
                   {stats.vacancyByBuilding.map((b, index) => (
                     <li key={index} className="flex flex-col py-3 border-b border-dashed border-gray-200 last:border-0">
-                      <div className="flex justify-between items-start">
-                        <span className="font-medium text-gray-800">{b.name}</span>
-                        <div className="flex flex-col items-end gap-1">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                        <span className="font-bold text-gray-800 text-sm">{b.name}</span>
+                        <div className="flex flex-row flex-wrap sm:flex-col sm:items-end gap-1">
                           {/* Full-unit vacancy badge */}
                           {b.vacant > 0 ? (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-red-100 text-red-700">
                               {b.vacant} Unit{b.vacant > 1 ? 's' : ''} Vacant
                             </span>
                           ) : (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
                               All Units Occupied
                             </span>
                           )}
                           {/* Bedroom vacancy badge for BEDROOM_WISE buildings */}
                           {b.hasBedroomWise && b.vacantBedrooms > 0 && (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-amber-100 text-amber-700">
                               {b.vacantBedrooms} Bedroom{b.vacantBedrooms > 1 ? 's' : ''} Vacant
                             </span>
                           )}
                           {b.hasBedroomWise && b.vacantBedrooms === 0 && b.vacant === 0 && (
-                            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">
                               All Bedrooms Occupied
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="flex gap-3 mt-1 text-xs text-gray-500">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-3 mt-1.5 text-xs text-gray-500 font-medium">
                         <span>Total: {b.total} units</span>
-                        <span>·</span>
+                        <span className="hidden sm:inline">·</span>
                         <span>Occupied: {b.occupied}</span>
-                        {b.hasBedroomWise && <><span>·</span><span className="text-blue-600">Bedroom-wise rental</span></>}
+                        {b.hasBedroomWise && (
+                          <>
+                            <span className="hidden sm:inline">·</span>
+                            <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-bold text-[10px]">Bedroom-wise rental</span>
+                          </>
+                        )}
                       </div>
                     </li>
                   ))}
@@ -147,16 +152,16 @@ export const VacancyDashboard = () => {
               {/* Unit vs Bedroom Rental Mode */}
               <Card title="Unit vs Bedroom Rental Mode" className="saas-card p-6">
                 <p className="text-xs text-gray-500 mb-4">How units across all buildings are configured for rental</p>
-                <div className="flex gap-4 mt-2">
+                <div className="flex flex-col sm:flex-row gap-4 mt-2">
                   <div className="flex-1 p-5 rounded-xl text-center transition-transform duration-300 hover:scale-105 bg-blue-50">
                     <h4 className="font-semibold text-slate-900 text-sm">Full Unit Rental</h4>
                     <p className="text-[1.8rem] font-bold text-blue-700 mt-1">{stats.fullUnitCount ?? 0}</p>
-                    <p className="text-xs text-slate-500 mt-1">Entire unit rented to one tenant</p>
+                    <p className="text-xs text-slate-500 mt-1 leading-normal">Entire unit rented to one tenant</p>
                   </div>
                   <div className="flex-1 p-5 rounded-xl text-center transition-transform duration-300 hover:scale-105 bg-violet-50">
                     <h4 className="font-semibold text-slate-900 text-sm">Bedroom-Wise Rental</h4>
                     <p className="text-[1.8rem] font-bold text-violet-700 mt-1">{stats.bedroomWiseCount ?? 0}</p>
-                    <p className="text-xs text-slate-500 mt-1">Rooms rented individually</p>
+                    <p className="text-xs text-slate-500 mt-1 leading-normal">Rooms rented individually</p>
                   </div>
                 </div>
                 {(stats.bedroomWiseCount ?? 0) > 0 && (
