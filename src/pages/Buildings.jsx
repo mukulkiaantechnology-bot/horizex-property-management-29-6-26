@@ -33,14 +33,23 @@ export const Buildings = () => {
   useEffect(() => {
     fetchBuildings(currentPage, search);
     fetchOwners();
-  }, [currentPage, itemsPerPage]); // Re-fetch when page changes. Search is handled by explicit enter/debounce usually, but here we can add it to deps with debounce or use a specific trigger. For now, let's trigger on debounce or form submit. 
-  // BETTER UX: Trigger on search change with debounce.
+  }, [currentPage, itemsPerPage]);
+  
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       setCurrentPage(1); // Reset to page 1 on search
       fetchBuildings(1, search);
     }, 500);
     return () => clearTimeout(delayDebounceFn);
+  }, [search]);
+
+  useEffect(() => {
+    const handleCompanyChange = () => {
+      setCurrentPage(1);
+      fetchBuildings(1, search);
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
   }, [search]);
 
 
@@ -243,7 +252,8 @@ export const Buildings = () => {
           <div className="w-full overflow-x-auto flex-1">
             <div className="hidden md:grid grid-cols-12 min-w-[1300px] bg-slate-50/80 px-6 py-4 border-b border-slate-100">
               <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Building Details</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Owner(s)</div>
+              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1">Company</div>
+              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1">Owner(s)</div>
               <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Street</div>
               <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Location</div>
               <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1">Postal Code</div>
@@ -271,9 +281,12 @@ export const Buildings = () => {
                         <span className="text-[10px] text-[#667eea] font-black uppercase tracking-tighter">B-{building.id}</span>
                       </div>
                     </div>
-                    <div className="col-span-2 flex flex-wrap gap-1 pr-4">
+                    <div className="col-span-1 font-bold text-slate-700 text-xs truncate pr-2">
+                      {building.companyName || '-'}
+                    </div>
+                    <div className="col-span-1 flex flex-wrap gap-1 pr-4">
                       {building.ownerNames ? (
-                        building.ownerNames.split(', ').map((owner, oIdx) => (
+                        building.ownerNames.split(', ').slice(0, 1).map((owner, oIdx) => (
                           <span key={oIdx} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-bold border border-indigo-100 whitespace-nowrap">
                             {owner}
                           </span>

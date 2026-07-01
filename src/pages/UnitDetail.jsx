@@ -84,6 +84,18 @@ export const UnitDetail = () => {
     return (
         <MainLayout title={`Unit ${unit.unitNumber}`}>
             <div className="flex flex-col gap-6">
+                {/* Breadcrumbs */}
+                <nav className="text-xs text-slate-500 font-medium flex items-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200/60 w-fit">
+                    <span className="text-slate-400">Company:</span>
+                    <span className="font-bold text-slate-700">{unit.companyName || '-'}</span>
+                    <span className="text-slate-300">/</span>
+                    <span className="text-slate-400">Building:</span>
+                    <span className="font-bold text-slate-700">{unit.buildingName || unit.civicNumber || unit.building || '-'}</span>
+                    <span className="text-slate-300">/</span>
+                    <span className="text-slate-400">Apartment (Unit):</span>
+                    <span className="font-bold text-indigo-600">{unit.unitNumber}</span>
+                </nav>
+
                 {/* Back Button */}
                 <div>
                 <div className="flex gap-3">

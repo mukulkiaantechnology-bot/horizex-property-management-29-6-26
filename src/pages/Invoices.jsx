@@ -55,6 +55,15 @@ export const Invoices = () => {
         fetchServiceItems();
     }, []);
 
+    useEffect(() => {
+        const handleCompanyChange = () => {
+            fetchInvoices();
+            fetchBuildings();
+        };
+        window.addEventListener('companyChanged', handleCompanyChange);
+        return () => window.removeEventListener('companyChanged', handleCompanyChange);
+    }, []);
+
     const fetchServiceItems = async () => {
         try {
             const res = await api.get('/api/admin/service-items');
@@ -523,6 +532,7 @@ export const Invoices = () => {
                             <thead>
                                 <tr className="bg-slate-50 border-b border-gray-100">
                                     <th className="p-4 text-xs text-left uppercase text-slate-500 font-bold tracking-wider whitespace-nowrap">Invoice No</th>
+                                    <th className="p-4 text-xs text-left uppercase text-slate-500 font-bold tracking-wider whitespace-nowrap">Company</th>
                                     <th className="p-4 text-xs text-left uppercase text-slate-500 font-bold tracking-wider whitespace-nowrap">Tenant</th>
                                     <th className="p-4 text-xs text-left uppercase text-slate-500 font-bold tracking-wider whitespace-nowrap">Unit</th>
                                     <th className="p-4 text-xs text-left uppercase text-slate-500 font-bold tracking-wider whitespace-nowrap">Type</th>
@@ -536,6 +546,7 @@ export const Invoices = () => {
                                 {currentInvoices.map(inv => (
                                     <tr key={inv.id} className="hover:bg-slate-50/80 transition-colors border-b border-gray-100 last:border-0 hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] group/row">
                                         <td className="p-4 text-sm text-slate-700 font-bold font-mono whitespace-nowrap">{inv.invoiceNo}</td>
+                                        <td className="p-4 text-sm text-slate-600 font-bold whitespace-nowrap">{inv.companyName || '-'}</td>
                                         <td className="p-4 text-sm text-slate-600 font-medium whitespace-nowrap">{inv.tenant}</td>
                                         <td className="p-4 text-sm text-slate-600 whitespace-nowrap">{inv.unit}</td>
                                         <td className="p-4 text-sm">

@@ -51,12 +51,12 @@ export const OwnerLogin = () => {
                 <div className="w-full max-w-[400px] bg-white/95 backdrop-blur-md border border-slate-100 rounded-[22px] p-6 md:p-8 shadow-float flex flex-col my-auto">
 
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="bg-white border border-slate-200 shadow-md rounded-xl p-2 shrink-0 flex items-center justify-center">
-                            <img src="/assets/logo.png" alt="Horizex Logo" className="h-10 w-10 object-contain" />
+                        <div className="bg-white border border-slate-200 shadow-md rounded-full p-0.5 shrink-0 w-20 h-20 flex items-center justify-center overflow-hidden">
+                            <img src="/assets/logo.png" alt="Horizex Logo" className="h-19 w-19 object-contain" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-sm font-black text-slate-800 uppercase tracking-wider">Horizex Group</span>
-                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Real Estate</span>
+                            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Real Estate</span>
                         </div>
                     </div>
 

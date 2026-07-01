@@ -51,6 +51,16 @@ const UnitReadiness = () => {
   }, [searchTerm, statusFilter, page, propertyFilter, showLeasedUnits]);
 
   useEffect(() => {
+    const handleCompanyChange = () => {
+      setPage(1);
+      fetchData();
+      fetchBuildings();
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
+  }, [searchTerm, statusFilter, propertyFilter, showLeasedUnits]);
+
+  useEffect(() => {
     fetchBuildings();
   }, []);
 

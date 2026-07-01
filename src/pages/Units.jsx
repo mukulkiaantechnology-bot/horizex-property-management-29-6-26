@@ -76,6 +76,15 @@ export const Units = () => {
   }, [pagination.page, typeFilter, buildingFilter, search, showInactive]);
 
   useEffect(() => {
+    const handleCompanyChange = () => {
+      setPagination(prev => ({ ...prev, page: 1 }));
+      fetchData(1);
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
+  }, [typeFilter, buildingFilter, search, showInactive]);
+
+  useEffect(() => {
     if (showModal || viewUnit || editUnit || deleteConfirm) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -489,8 +498,9 @@ export const Units = () => {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-7 min-w-[800px] p-3.5 px-5 font-semibold bg-slate-50 text-slate-500 text-sm border-b border-slate-100 uppercase tracking-wide">
+                <div className="grid grid-cols-8 min-w-[900px] p-3.5 px-5 font-semibold bg-slate-50 text-slate-500 text-sm border-b border-slate-100 uppercase tracking-wide">
                   <span>Unit Identifier</span>
+                  <span>Company</span>
                   <span>Building Name</span>
                   <span>Unit Type</span>
                   <span>Floor</span>
@@ -505,10 +515,11 @@ export const Units = () => {
                   </div>
                 ) : (
                   filteredUnits.map((unit) => (
-                    <div key={unit.id} className="grid grid-cols-7 min-w-[800px] p-3.5 px-5 transition-all duration-300 hover:bg-slate-50 bg-white border-b border-slate-50 last:border-0 text-sm items-center">
+                    <div key={unit.id} className="grid grid-cols-8 min-w-[900px] p-3.5 px-5 transition-all duration-300 hover:bg-slate-50 bg-white border-b border-slate-50 last:border-0 text-sm items-center">
                       <Link to={`/units/${unit.id}`} className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline transition-all">
                         {unit.unitNumber}
                       </Link>
+                      <span className="text-slate-600 font-bold">{unit.companyName || '-'}</span>
                       <span className="font-bold text-indigo-600">{unit.buildingName || unit.civicNumber}</span>
                       <span className="text-slate-600">{unit.unitType || '-'}</span>
                       <span className="text-slate-600">{unit.floor || '-'}</span>

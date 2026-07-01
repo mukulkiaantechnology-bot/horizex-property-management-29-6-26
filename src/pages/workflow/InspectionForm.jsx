@@ -394,7 +394,7 @@ const InspectionForm = () => {
 
             if (res.data.success) {
                 alert(inspection.status === 'COMPLETED' ? 'Changes saved with audit log.' : 'Inspection Finalized Successfully!');
-                navigate('/admin/workflow/move-in');
+                navigate('/admin/workflow/inspections');
             }
         } catch (error) {
             console.error('Finalize error:', error);

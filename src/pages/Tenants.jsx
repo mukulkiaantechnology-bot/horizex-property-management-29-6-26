@@ -67,6 +67,15 @@ export const Tenants = () => {
     return () => clearTimeout(timer);
   }, [pagination.page, search, tenantBuildingFilter]);
 
+  useEffect(() => {
+    const handleCompanyChange = () => {
+      setPagination(prev => ({ ...prev, page: 1 }));
+      fetchTenants(1);
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
+  }, [search, tenantBuildingFilter]);
+
   const fetchTenants = async (page = 1) => {
     try {
       const params = new URLSearchParams({
@@ -665,6 +674,12 @@ export const Tenants = () => {
                         </div>
 
                         <div className="space-y-1.5 mb-3 text-xs">
+                          <div className="flex items-center gap-2">
+                            <Building2 size={12} className="text-slate-400 shrink-0" />
+                            <span className="text-slate-600 font-bold uppercase tracking-wider text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-100 px-1.5 py-0.5 rounded-md">
+                              {tenant.companyName || '-'}
+                            </span>
+                          </div>
                           {(tenant.type === 'COMPANY' || tenant.type === 'Company') && tenant.companyName && (
                             <div className="flex items-center gap-2">
                               <Building2 size={12} className="text-slate-400" />
@@ -1487,6 +1502,10 @@ const TenantDetail = ({ tenant, onBack, onSendInvite, onEdit, allUnits = [] }) =
               <div>
                 <h2 className="text-2xl font-bold text-slate-800">{tenantData.name}</h2>
                 <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#667eea] bg-[#667eea]/10 border border-[#667eea]/20 px-1.5 py-0.5 rounded-md">
+                    {tenantData.companyName || '-'}
+                  </span>
+                  <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
                   <span className="text-sm text-slate-500 font-medium">{tenantData.property}</span>
                   <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
                   <span className="text-sm text-slate-500 font-medium">{tenantData.unit}</span>

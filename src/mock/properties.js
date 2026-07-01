@@ -1,6 +1,8 @@
 export const mockProperties = [
   {
     id: 1,
+    companyId: 1,
+    companyName: 'Apex Real Estate Partners',
     name: 'Parkview Heights',
     address: '1250 Pine Avenue, Montreal, QC',
     status: 'Active',
@@ -14,6 +16,8 @@ export const mockProperties = [
   },
   {
     id: 2,
+    companyId: 1,
+    companyName: 'Apex Real Estate Partners',
     name: 'Sunset Towers',
     address: '450 Sherbrooke St W, Montreal, QC',
     status: 'Active',
@@ -27,6 +31,8 @@ export const mockProperties = [
   },
   {
     id: 3,
+    companyId: 2,
+    companyName: 'Soros Capital LLC',
     name: 'Greenfield Commons',
     address: '888 De Maisonneuve Blvd E, Montreal, QC',
     status: 'Active',
@@ -40,6 +46,8 @@ export const mockProperties = [
   },
   {
     id: 4,
+    companyId: 3,
+    companyName: 'Masteko Group',
     name: 'Lakeside Villas',
     address: '320 Lakeshore Road, Dorval, QC',
     status: 'Active',

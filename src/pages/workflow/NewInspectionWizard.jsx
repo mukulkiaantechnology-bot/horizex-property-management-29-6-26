@@ -138,8 +138,7 @@ const NewInspectionWizard = () => {
             });
 
             if (res.data.success) {
-                const targetDashboard = formData.type === 'MOVE_IN' ? 'move-in' : 'move-out';
-                navigate(`/admin/workflow/${targetDashboard}`);
+                navigate('/admin/workflow/inspections');
             }
         } catch (error) {
             alert('Failed to create inspection: ' + (error.response?.data?.message || error.message));

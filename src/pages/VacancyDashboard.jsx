@@ -5,7 +5,7 @@ import { Card } from '../components/Card';
 import { useState, useEffect } from 'react';
 import api from '../api/client';
 
-import { OwnerSelector } from '../components/OwnerSelector';
+
 
 export const VacancyDashboard = () => {
   const [__forceUpdate, __setForceUpdate] = useState(0);
@@ -50,17 +50,19 @@ export const VacancyDashboard = () => {
   };
 
   useEffect(() => {
-    fetchStats(selectedOwnerId);
-  }, [selectedOwnerId]);
+    fetchStats();
+    const handleCompanyChange = () => {
+      fetchStats();
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
+  }, []);
 
   return (
     <MainLayout title="Vacancy Dashboard">
       <div className="flex flex-col gap-8">
 
         {/* TOP BAR / FILTERS */}
-        <section className="flex justify-end sticky top-0 z-10 py-2 bg-slate-50/80 backdrop-blur-sm -mx-4 px-4">
-          <OwnerSelector value={selectedOwnerId} onOwnerChange={(id) => setSelectedOwnerId(id)} />
-        </section>
 
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">

@@ -45,6 +45,12 @@ export const Tickets = () => {
     useEffect(() => {
         fetchTickets();
         fetchBuildings();
+        const handleCompanyChange = () => {
+            fetchTickets();
+            fetchBuildings();
+        };
+        window.addEventListener('companyChanged', handleCompanyChange);
+        return () => window.removeEventListener('companyChanged', handleCompanyChange);
     }, []);
 
     useEffect(() => {

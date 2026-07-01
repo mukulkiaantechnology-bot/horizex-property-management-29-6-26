@@ -9,9 +9,9 @@ export const mockDashboardStats = {
   insuranceAlerts: { missing: 2, expired: 1, expiringSoon: 3 },
   leaseAlerts: { expired: 1, expiringSoon: 4 },
   leaseAlertList: [
-    { id: 1, tenantName: "John Doe", unitName: "Apt 301", endDate: "2026-07-15", status: "Expires soon", daysLeft: 16 },
-    { id: 2, tenantName: "Jane Miller", unitName: "Apt 104", endDate: "2026-07-28", status: "Expires soon", daysLeft: 29 },
-    { id: 3, tenantName: "Robert Dow", unitName: "Apt 202", endDate: "2026-08-01", status: "Pending action", daysLeft: 33 }
+    { id: 1, tenant: "John Doe", type: "Short-term", unit: "Apt 301", expiryDate: "2026-07-15T00:00:00.000Z", status: "Expires soon", daysLeft: 16 },
+    { id: 2, tenant: "Jane Miller", type: "Long-term", unit: "Apt 104", expiryDate: "2026-07-28T00:00:00.000Z", status: "Expires soon", daysLeft: 29 },
+    { id: 3, tenant: "Robert Dow", type: "Long-term", unit: "Apt 202", expiryDate: "2026-08-01T00:00:00.000Z", status: "Pending action", daysLeft: 33 }
   ],
   refundAlerts: [
     { id: 1, tenantId: 101, tenantName: "Alice Cooper", unitName: "Apt 410", amount: 1500, status: "Pending" },

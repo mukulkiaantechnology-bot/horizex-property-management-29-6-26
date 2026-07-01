@@ -136,22 +136,6 @@ export const OwnerDashboard = () => {
     return (
         <OwnerLayout title="Portfolio Overview">
             <div className="space-y-8 pb-12">
-                {/* WELCOME BANNER */}
-                <section className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[22px] p-8 text-white relative overflow-hidden shadow-xl shadow-blue-200 mb-6">
-                    <div className="relative z-10 space-y-2">
-                        <h2 className="text-3xl font-bold">{greeting}, {ownerName.split(' ')[0]}! 👋</h2>
-                        <p className="text-blue-100 font-medium text-lg">Here is the update on your property portfolio performance.</p>
-                        <div className="pt-4">
-                            <Link to="/owner/properties" className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all shadow-lg hover:translate-y-[-2px] active:scale-95">
-                                View Overview
-                                <ArrowUpRight size={20} />
-                            </Link>
-                        </div>
-                    </div>
-                    {/* Abstract background shapes */}
-                    <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-blue-500 rounded-full blur-3xl opacity-50"></div>
-                    <div className="absolute bottom-[-20%] left-[-5%] w-48 h-48 bg-indigo-400 rounded-full blur-2xl opacity-30"></div>
-                </section>
 
                 {/* STAT CARDS */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

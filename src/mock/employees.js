@@ -14,6 +14,8 @@ export const mockEmployees = [
       { moduleName: 'Properties', canView: true, canAdd: true, canEdit: true, canDelete: false },
       { moduleName: 'Tenants', canView: true, canAdd: true, canEdit: true, canDelete: false },
       { moduleName: 'Leases', canView: true, canAdd: true, canEdit: true, canDelete: false },
+      { moduleName: 'TAL Cases', canView: true, canAdd: true, canEdit: true, canDelete: false },
+      { moduleName: 'Notes Hub', canView: true, canAdd: true, canEdit: true, canDelete: false },
       { moduleName: 'Maintenance', canView: true, canAdd: true, canEdit: true, canDelete: true },
       { moduleName: 'Accounting', canView: false, canAdd: false, canEdit: false, canDelete: false },
       { moduleName: 'Settings', canView: false, canAdd: false, canEdit: false, canDelete: false }

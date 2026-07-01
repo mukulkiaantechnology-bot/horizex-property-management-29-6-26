@@ -22,6 +22,11 @@ const PaymentsReceived = () => {
 
   useEffect(() => {
     fetchPayments();
+    const handleCompanyChange = () => {
+      fetchPayments();
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
   }, []);
 
   const fetchPayments = async () => {

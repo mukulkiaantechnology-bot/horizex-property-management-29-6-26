@@ -28,6 +28,12 @@ const OutstandingDues = () => {
   useEffect(() => {
     fetchDues();
     fetchBuildings();
+    const handleCompanyChange = () => {
+      fetchDues();
+      fetchBuildings();
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
   }, []);
 
   const fetchBuildings = async () => {

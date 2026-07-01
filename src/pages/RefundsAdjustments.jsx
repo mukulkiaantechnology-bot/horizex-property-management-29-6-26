@@ -61,6 +61,12 @@ const RefundsAdjustments = () => {
     if (urlTenantId) setShowModal(true);
 
     fetchInitialData();
+
+    const handleCompanyChange = () => {
+      fetchInitialData();
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
   }, [location.search]);
 
   const fetchInitialData = async () => {

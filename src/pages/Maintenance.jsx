@@ -68,6 +68,15 @@ export const Maintenance = () => {
     }, [filterBuildingId]);
 
     useEffect(() => {
+        const handleCompanyChange = () => {
+            fetchTasks();
+            fetchBuildings();
+        };
+        window.addEventListener('companyChanged', handleCompanyChange);
+        return () => window.removeEventListener('companyChanged', handleCompanyChange);
+    }, [filterBuildingId]);
+
+    useEffect(() => {
         setCurrentPage(1);
     }, [search, filterBuildingId]);
 

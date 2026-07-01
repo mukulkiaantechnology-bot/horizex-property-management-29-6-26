@@ -21,10 +21,10 @@ import {
   Mail,
   User,
   Car,
-  Hammer,
-  Clock,
-  Home,
-  LogOut
+  LogOut,
+  Gavel,
+  StickyNote,
+  Clock
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -39,18 +39,18 @@ const NAV_ITEMS = [
     tKey: "sidebar.dashboard",
     path: "/dashboard",
     children: [
-      { label: "Overview", tKey: "sidebar.overview", path: "/dashboard" },
+      { label: "Overview Dashboard", tKey: "sidebar.overview", path: "/dashboard" },
       { label: "Vacancy Dashboard", tKey: "sidebar.vacancy", path: "/vacancy" },
       { label: "Revenue Dashboard", tKey: "sidebar.revenue", path: "/revenue" }
     ]
   },
   {
     icon: Building2,
-    label: "Properties",
+    label: "Buildings",
     tKey: "sidebar.properties",
     path: "/properties/buildings",
     children: [
-      { label: "Buildings", tKey: "sidebar.buildings", path: "/properties/buildings" },
+      { label: "Buildings List", tKey: "sidebar.buildings", path: "/properties/buildings" },
       { label: "Units", tKey: "sidebar.units", path: "/units" },
       { label: "Unit Readiness", path: "/unit-readiness" }
     ]
@@ -83,7 +83,11 @@ const NAV_ITEMS = [
     icon: FileText,
     label: "Leases",
     tKey: "sidebar.leases",
-    path: "/leases"
+    path: "/leases",
+    children: [
+      { label: "Lease History", tKey: "sidebar.lease_history", path: "/leases" },
+      { label: "Lease Renewals", tKey: "sidebar.renewals", path: "/leases/renewals" }
+    ]
   },
   {
     icon: FileText,
@@ -101,9 +105,9 @@ const NAV_ITEMS = [
     icon: CreditCard,
     label: "Payments",
     tKey: "sidebar.payments",
-    path: "/payments/invoices",
+    path: "/payments/collection",
     children: [
-      { label: "Rent Invoices", tKey: "sidebar.invoices", path: "/payments/invoices" },
+      { label: "Rent Collection & Ledger", tKey: "sidebar.collection", path: "/payments/collection" },
       { label: "Payments Received", tKey: "sidebar.received", path: "/payments/received" },
       { label: "Outstanding Dues", tKey: "sidebar.outstanding", path: "/payments/outstanding" },
       { label: "Refunds & Adjustments", tKey: "sidebar.refunds", path: "/payments/refunds" }
@@ -120,6 +124,34 @@ const NAV_ITEMS = [
       { label: "Chart of Accounts", tKey: "sidebar.chart_of_accounts", path: "/accounting/chart-of-accounts" },
       { label: "Tax Settings", tKey: "sidebar.tax_settings", path: "/accounting/tax-settings" }
     ]
+  },
+  {
+    icon: Clock,
+    label: "Time & Payroll",
+    tKey: "sidebar.time_payroll",
+    path: "/payroll/dashboard",
+    children: [
+      { label: "Dashboard", tKey: "sidebar.payroll_dash", path: "/payroll/dashboard" },
+      { label: "Employees", tKey: "sidebar.employees", path: "/payroll/employees" },
+      { label: "Attendance", tKey: "sidebar.attendance", path: "/payroll/attendance" },
+      { label: "Shifts", tKey: "sidebar.shifts", path: "/payroll/shifts" },
+      { label: "Leaves", tKey: "sidebar.leaves", path: "/payroll/leaves" },
+      { label: "Overtime", tKey: "sidebar.overtime", path: "/payroll/overtime" },
+      { label: "Run Payroll", tKey: "sidebar.run_payroll", path: "/payroll/run" },
+      { label: "Audit Timeline", tKey: "sidebar.payroll_timeline", path: "/payroll/timeline" }
+    ]
+  },
+  {
+    icon: Gavel,
+    label: "TAL Cases",
+    tKey: "sidebar.tal_cases",
+    path: "/tal-cases"
+  },
+  {
+    icon: StickyNote,
+    label: "Notes Hub",
+    tKey: "sidebar.notes_hub",
+    path: "/notes-hub"
   },
   {
     icon: PieChart,
@@ -178,24 +210,6 @@ const NAV_ITEMS = [
     ]
   },
   {
-    icon: Hammer,
-    label: "Unit Preparation",
-    tKey: "sidebar.unit_prep",
-    path: "/admin/workflow/unit-prep"
-  },
-  {
-    icon: Clock,
-    label: "Move-Out",
-    tKey: "sidebar.move_out",
-    path: "/admin/workflow/move-out"
-  },
-  {
-    icon: Home,
-    label: "Move-In",
-    tKey: "sidebar.move_in",
-    path: "/admin/workflow/move-in"
-  },
-  {
     icon: SettingsIcon,
     label: "Settings",
     tKey: "sidebar.settings",
@@ -241,7 +255,7 @@ const NavItem = ({ item, depth = 0, onClose }) => {
     <>
       <NavLink
         to={item.path}
-        end={item.path === '/tenants' || item.path === '/dashboard' || item.path === '/properties/buildings' || item.path === '/accounting'}
+        end={item.path === '/leases' || item.path === '/tenants' || item.path === '/dashboard' || item.path === '/properties/buildings' || item.path === '/accounting' || item.path === '/tal-cases' || item.path === '/notes-hub' || item.path === '/payments/collection' || item.path === '/payroll/dashboard'}
         onClick={handleClick}
         className={({ isActive }) =>
           clsx(
@@ -334,8 +348,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
       )}>
         <div className="h-16 flex items-center px-5 justify-between shrink-0 border-b border-slate-800/60">
           <div className="flex items-center gap-3">
-            <div className="bg-white rounded-xl p-1.5 shadow-md shrink-0 flex items-center justify-center">
-              <img src="/assets/logo.png" alt="Horizex Logo" className="h-8 w-8 object-contain" />
+            <div className="bg-white rounded-full p-0.5 shadow-md shrink-0 w-14 h-14 flex items-center justify-center overflow-hidden">
+              <img src="/assets/logo.png" alt="Horizex Logo" className="h-13 w-13 object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-black text-white uppercase tracking-wider leading-none">Horizex</span>
@@ -391,6 +405,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
               'QuickBooks Sync': 'QuickBooks Sync',
               'Chart of Accounts': 'Chart of Accounts',
               'Tax Settings': 'Tax Settings',
+              'TAL Cases': 'TAL Cases',
+              'Notes Hub': 'Notes Hub',
               'Reports': 'Reports',
               'SMS Hub': 'Communication',
               'Inbox': 'Inbox',
@@ -405,9 +421,6 @@ export const Sidebar = ({ isOpen, onClose }) => {
               'Inspections': 'Inspections',
               'Inspection List': 'Inspection List',
               'Inspection Templates': 'Inspection Templates',
-              'Unit Preparation': 'Unit Preparation',
-              'Move-Out': 'Move-Out',
-              'Move-In': 'Move-In',
               'Team Access Control': 'Settings',
               'Settings': 'Settings'
             };

@@ -4,13 +4,13 @@ import { mockApartments, mockUnitTypes } from './apartments';
 import { mockTenants } from './tenants';
 import { mockLeases } from './leases';
 import { mockRenewals } from './renewals';
-import { mockInvoices, mockPaymentsReceived, mockOutstandingDues, mockRefunds } from './rentCollection';
+import { mockInvoices, mockPayments, mockCredits, mockAdjustments, mockRefunds } from './rentCollection';
 import { mockEmployees, mockClockLogs } from './employees';
 import { mockMaintenanceTickets } from './maintenance';
 import { mockMoveIns, mockMoveOuts, mockPrepUnits, mockInspections, mockInspectionTemplates, mockResponseGroups } from './tasks';
 import { mockDocuments } from './documents';
 import { mockNotifications } from './notifications';
-import { mockTalCases } from './talCases';
+import { mockTalCases, mockCaseHearings, mockCaseDocuments, mockCaseNotes, mockCaseTasks, mockLawyers, mockJudges } from './talCases';
 import { mockCalendarEvents } from './calendar';
 import { mockReports, mockReportsAnalytics } from './reports';
 import { mockTaxSettings, mockQuickBooksSettings, mockChartOfAccounts } from './settings';
@@ -20,11 +20,15 @@ import { mockInsuranceCompliance, mockInsuranceStats } from './insurance';
 import { mockRentRollData } from './rentRoll';
 import { mockGeneralSettings, mockServiceItems } from './generalSettings';
 import { mockLedgerData } from './accounting';
-export { mockUsers, mockPermissions, mockReadinessUnits, mockReadinessSettings, mockReadinessHolidays, mockInsuranceCompliance, mockInsuranceStats, mockRentRollData, mockGeneralSettings, mockServiceItems, mockLedgerData };
+import { mockCompanies } from './companies';
+import { mockNotes, mockNoteComments, mockNoteAttachments, mockCommTimeline } from './notes';
+import { activityService } from '../services/activityService';
+export { mockUsers, mockPermissions, mockReadinessUnits, mockReadinessSettings, mockReadinessHolidays, mockInsuranceCompliance, mockInsuranceStats, mockRentRollData, mockGeneralSettings, mockServiceItems, mockLedgerData, mockCompanies };
+export { mockNotes, mockNoteComments, mockNoteAttachments, mockCommTimeline };
 
 // Initialize localStorage databases with mock seed data if empty
 export const initMockDatabase = () => {
-  if (localStorage.getItem('mock_db_version') !== '1.9') {
+  if (localStorage.getItem('mock_db_version') !== '2.4') {
     localStorage.removeItem('mock_dashboard_stats');
     localStorage.removeItem('mock_revenue_analytics');
     localStorage.removeItem('mock_properties');
@@ -34,8 +38,9 @@ export const initMockDatabase = () => {
     localStorage.removeItem('mock_leases');
     localStorage.removeItem('mock_renewals');
     localStorage.removeItem('mock_invoices');
-    localStorage.removeItem('mock_payments_received');
-    localStorage.removeItem('mock_outstanding_dues');
+    localStorage.removeItem('mock_payments');
+    localStorage.removeItem('mock_credits');
+    localStorage.removeItem('mock_adjustments');
     localStorage.removeItem('mock_refunds');
     localStorage.removeItem('mock_employees');
     localStorage.removeItem('mock_clock_logs');
@@ -49,6 +54,12 @@ export const initMockDatabase = () => {
     localStorage.removeItem('mock_documents');
     localStorage.removeItem('mock_notifications');
     localStorage.removeItem('mock_tal_cases');
+    localStorage.removeItem('mock_case_hearings');
+    localStorage.removeItem('mock_case_documents');
+    localStorage.removeItem('mock_case_notes');
+    localStorage.removeItem('mock_case_tasks');
+    localStorage.removeItem('tal_case_seq');
+    localStorage.removeItem('task_seq');
     localStorage.removeItem('mock_calendar_events');
     localStorage.removeItem('mock_reports');
     localStorage.removeItem('mock_tax_settings');
@@ -66,7 +77,8 @@ export const initMockDatabase = () => {
     localStorage.removeItem('mock_service_items');
     localStorage.removeItem('mock_ledger');
     localStorage.removeItem('mock_reports_analytics');
-    localStorage.setItem('mock_db_version', '1.9');
+    localStorage.removeItem('mock_companies');
+    localStorage.setItem('mock_db_version', '2.4');
   }
 
   const checkAndSeed = (key, initialData) => {
@@ -84,8 +96,9 @@ export const initMockDatabase = () => {
   checkAndSeed('mock_leases', mockLeases);
   checkAndSeed('mock_renewals', mockRenewals);
   checkAndSeed('mock_invoices', mockInvoices);
-  checkAndSeed('mock_payments_received', mockPaymentsReceived);
-  checkAndSeed('mock_outstanding_dues', mockOutstandingDues);
+  checkAndSeed('mock_payments', mockPayments);
+  checkAndSeed('mock_credits', mockCredits);
+  checkAndSeed('mock_adjustments', mockAdjustments);
   checkAndSeed('mock_refunds', mockRefunds);
   checkAndSeed('mock_employees', mockEmployees);
   checkAndSeed('mock_clock_logs', mockClockLogs);
@@ -99,6 +112,16 @@ export const initMockDatabase = () => {
   checkAndSeed('mock_documents', mockDocuments);
   checkAndSeed('mock_notifications', mockNotifications);
   checkAndSeed('mock_tal_cases', mockTalCases);
+  checkAndSeed('mock_case_hearings', mockCaseHearings);
+  checkAndSeed('mock_case_documents', mockCaseDocuments);
+  checkAndSeed('mock_case_notes', mockCaseNotes);
+  checkAndSeed('mock_case_tasks', mockCaseTasks);
+  if (!localStorage.getItem('tal_case_seq')) {
+    localStorage.setItem('tal_case_seq', '3');
+  }
+  if (!localStorage.getItem('task_seq')) {
+    localStorage.setItem('task_seq', '4');
+  }
   checkAndSeed('mock_calendar_events', mockCalendarEvents);
   checkAndSeed('mock_reports', mockReports);
   checkAndSeed('mock_tax_settings', mockTaxSettings);
@@ -116,6 +139,15 @@ export const initMockDatabase = () => {
   checkAndSeed('mock_service_items', mockServiceItems);
   checkAndSeed('mock_ledger', mockLedgerData);
   checkAndSeed('mock_reports_analytics', mockReportsAnalytics);
+  checkAndSeed('mock_companies', mockCompanies);
+  // ── Phase 6: Non-destructive seed (only creates if missing) ──
+  checkAndSeed('mock_notes', mockNotes);
+  checkAndSeed('mock_note_comments', mockNoteComments);
+  checkAndSeed('mock_note_attachments', mockNoteAttachments);
+  checkAndSeed('mock_comm_timeline', mockCommTimeline);
+  if (!localStorage.getItem('note_seq')) {
+    localStorage.setItem('note_seq', '6');
+  }
 };
 
 // Auto-init database on load
@@ -292,13 +324,37 @@ export const mockDashboardService = {
   })
 };
 
+export const getAllowedPropertyIds = () => {
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const selectedCompanyId = localStorage.getItem('global_selected_company_id');
+  
+  let properties = getStore('mock_properties');
+  
+  if (currentUser.role === 'ADMIN' && currentUser.assignedCompanyIds && currentUser.assignedCompanyIds.length > 0) {
+    if (currentUser.assignedCompanyIds.length < 3) {
+      properties = properties.filter(p => currentUser.assignedCompanyIds.includes(p.companyId));
+    }
+  } else if (currentUser.role === 'OWNER' && currentUser.assignedBuildingIds && currentUser.assignedBuildingIds.length > 0) {
+    properties = properties.filter(p => currentUser.assignedBuildingIds.includes(p.id));
+  } else if (currentUser.role === 'COWORKER' && currentUser.assignedBuildingIds && currentUser.assignedBuildingIds.length > 0) {
+    properties = properties.filter(p => currentUser.assignedBuildingIds.includes(p.id));
+  }
+
+  if (selectedCompanyId && selectedCompanyId !== 'all' && selectedCompanyId !== '') {
+    properties = properties.filter(p => p.companyId === parseInt(selectedCompanyId));
+  }
+
+  return properties.map(p => p.id);
+};
+
 export const mockPropertyService = {
   getAll: (search = '') => withDelay(() => {
     let list = getStore('mock_properties');
+    const allowedIds = getAllowedPropertyIds();
+    list = list.filter(p => allowedIds.includes(p.id));
     if (search) {
       list = list.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.address.toLowerCase().includes(search.toLowerCase()));
     }
-    // Update unit count and occupancy dynamically
     const allUnits = getStore('mock_apartments');
     return list.map(p => {
       const pUnits = allUnits.filter(u => u.propertyId === p.id);
@@ -379,6 +435,8 @@ export const mockPropertyService = {
 export const mockTenantService = {
   getAll: (search = '') => withDelay(() => {
     let list = getStore('mock_tenants');
+    const allowedPropertyIds = getAllowedPropertyIds();
+    list = list.filter(t => allowedPropertyIds.includes(t.propertyId));
     if (search) {
       list = list.filter(t => 
         t.firstName.toLowerCase().includes(search.toLowerCase()) || 
@@ -386,10 +444,15 @@ export const mockTenantService = {
         t.email.toLowerCase().includes(search.toLowerCase())
       );
     }
-    return list.map(t => ({
-      ...t,
-      name: t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim() || 'Unknown Tenant'
-    }));
+    const properties = getStore('mock_properties');
+    return list.map(t => {
+      const prop = properties.find(p => p.id === t.propertyId);
+      return {
+        ...t,
+        companyName: prop ? prop.companyName : '-',
+        name: t.name || `${t.firstName || ''} ${t.lastName || ''}`.trim() || 'Unknown Tenant'
+      };
+    });
   }),
   getById: (id) => withDelay(() => {
     const list = getStore('mock_tenants');
@@ -447,6 +510,8 @@ export const mockTenantService = {
 export const mockApartmentService = {
   getAll: (filters = {}) => withDelay(() => {
     let list = getStore('mock_apartments');
+    const allowedPropertyIds = getAllowedPropertyIds();
+    list = list.filter(u => allowedPropertyIds.includes(u.propertyId));
     if (filters.search) {
       list = list.filter(u => u.unitNumber.toLowerCase().includes(filters.search.toLowerCase()));
     }
@@ -466,8 +531,18 @@ export const mockApartmentService = {
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     
+    const properties = getStore('mock_properties');
+    const mappedList = list.map(u => {
+      const prop = properties.find(p => p.id === u.propertyId);
+      return {
+        ...u,
+        companyName: prop ? prop.companyName : '-',
+        buildingName: prop ? prop.name : u.propertyName
+      };
+    });
+
     return {
-      data: list.slice(startIndex, endIndex),
+      data: mappedList.slice(startIndex, endIndex),
       pagination: {
         total: list.length,
         totalPages: Math.ceil(list.length / limit),
@@ -480,7 +555,13 @@ export const mockApartmentService = {
     const list = getStore('mock_apartments');
     const unit = list.find(u => u.id === parseInt(id));
     if (!unit) throw new Error('Unit not found');
-    return unit;
+    const properties = getStore('mock_properties');
+    const prop = properties.find(p => p.id === unit.propertyId);
+    return {
+      ...unit,
+      companyName: prop ? prop.companyName : '-',
+      buildingName: prop ? prop.name : unit.propertyName
+    };
   }),
   create: (data) => withDelay(() => {
     const list = getStore('mock_apartments');
@@ -535,7 +616,39 @@ export const mockApartmentService = {
 };
 
 export const mockLeaseService = {
-  getAll: () => withDelay(() => getStore('mock_leases')),
+  getAll: () => withDelay(() => {
+    let list = getStore('mock_leases');
+    const allowedPropertyIds = getAllowedPropertyIds();
+    const properties = getStore('mock_properties');
+    const apartments = getStore('mock_apartments');
+    const tenants = getStore('mock_tenants');
+    
+    list = list.filter(l => {
+      const unit = apartments.find(u => u.id === l.unitId || u.unitNumber === l.unitNumber);
+      const propId = unit ? unit.propertyId : l.propertyId;
+      return allowedPropertyIds.includes(propId);
+    });
+
+    return list.map(l => {
+      const unit = apartments.find(u => u.id === l.unitId || u.unitNumber === l.unitNumber);
+      const prop = properties.find(p => p.id === (unit ? unit.propertyId : l.propertyId));
+      const tenant = tenants.find(t => t.id === l.tenantId);
+      const tenantName = tenant ? `${tenant.firstName} ${tenant.lastName}` : l.tenantName || 'Unknown Tenant';
+      return {
+        ...l,
+        id: l.id,
+        leaseType: unit && unit.rentalMode === 'BEDROOM' ? 'Bedroom Lease' : 'Full Unit Lease',
+        companyName: prop ? prop.companyName : '-',
+        buildingName: prop ? prop.name : l.propertyName || 'Parkview Heights',
+        unit: unit ? unit.unitNumber : l.unitNumber || 'Apt 101',
+        bedroom: l.bedroomNumber || l.bedroom || '-',
+        tenant: tenantName,
+        term: `${l.startDate} to ${l.endDate}`,
+        monthlyRent: l.rentAmount || l.monthlyRent || 0,
+        status: l.status || 'Active'
+      };
+    });
+  }),
   create: (data) => withDelay(() => {
     const list = getStore('mock_leases');
     const tenants = getStore('mock_tenants');
@@ -602,6 +715,10 @@ export const mockLeaseService = {
 export const mockMaintenanceService = {
   getAll: (filters = {}) => withDelay(() => {
     let list = getStore('mock_maintenance_tickets');
+    const allowedPropertyIds = getAllowedPropertyIds();
+    const properties = getStore('mock_properties');
+    const allowedPropertyNames = properties.filter(p => allowedPropertyIds.includes(p.id)).map(p => p.name);
+    list = list.filter(t => allowedPropertyNames.includes(t.building || t.propertyName));
     if (filters.status && filters.status !== 'All') {
       list = list.filter(t => t.status.toLowerCase() === filters.status.toLowerCase());
     }
@@ -832,7 +949,27 @@ export const mockDocumentService = {
 };
 
 export const mockInvoiceService = {
-  getAll: () => withDelay(() => getStore('mock_invoices')),
+  getAll: () => withDelay(() => {
+    const list = getStore('mock_invoices');
+    const allowedPropertyIds = getAllowedPropertyIds();
+    const apartments = getStore('mock_apartments');
+    const properties = getStore('mock_properties');
+    return list.filter(inv => {
+      const apt = apartments.find(a => a.unitNumber === inv.unitNumber || a.id === inv.unitId);
+      return apt ? allowedPropertyIds.includes(apt.propertyId) : true;
+    }).map(inv => {
+      const apt = apartments.find(a => a.unitNumber === inv.unitNumber || a.id === inv.unitId);
+      const prop = properties.find(p => p.id === (apt ? apt.propertyId : inv.propertyId));
+      return {
+        ...inv,
+        id: inv.id,
+        invoiceNo: inv.invoiceNo || inv.invoiceNumber,
+        companyName: prop ? prop.companyName : '-',
+        tenant: inv.tenant || inv.tenantName,
+        unit: inv.unit || inv.unitNumber
+      };
+    });
+  }),
   create: (data) => withDelay(() => {
     const list = getStore('mock_invoices');
     const tenants = getStore('mock_tenants');
@@ -1174,6 +1311,23 @@ export const mockWorkflowService = {
   })
 };
 
+export const mockCompanyService = {
+  getAll: () => withDelay(() => {
+    const list = getStore('mock_companies');
+    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (currentUser.role === 'ADMIN' && currentUser.assignedCompanyIds) {
+      return list.filter(c => currentUser.assignedCompanyIds.includes(c.id));
+    }
+    if (currentUser.role === 'OWNER' && currentUser.assignedCompanyIds) {
+      return list.filter(c => currentUser.assignedCompanyIds.includes(c.id));
+    }
+    if (currentUser.role === 'COWORKER' && currentUser.assignedCompanyIds) {
+      return list.filter(c => currentUser.assignedCompanyIds.includes(c.id));
+    }
+    return list;
+  })
+};
+
 export const mockOwnerService = {
   getAll: () => withDelay(() => {
     const list = getStore('mock_users').filter(u => u.role === 'OWNER');
@@ -1293,7 +1447,37 @@ export const mockCalendarService = {
 
 export const mockReportsService = {
   getAll: () => withDelay(() => getStore('mock_reports_analytics')),
-  getRentRoll: () => withDelay(() => getStore('mock_rent_roll'))
+  getRentRoll: () => withDelay(() => {
+    const raw = getStore('mock_rent_roll') || {};
+    const list = raw.rentRoll || [];
+    const allowedPropertyIds = getAllowedPropertyIds();
+    const properties = getStore('mock_properties');
+    
+    const filtered = list.filter(row => {
+      const prop = properties.find(p => p.name === row.buildingName);
+      return prop && allowedPropertyIds.includes(prop.id);
+    });
+
+    const enriched = filtered.map(row => {
+      const prop = properties.find(p => p.name === row.buildingName);
+      return {
+        ...row,
+        companyName: prop ? prop.companyName : '-'
+      };
+    });
+
+    const summary = {
+      totalRentCollected: enriched.reduce((sum, r) => sum + (r.rentAmount || 0), 0),
+      totalDepositsHeld: enriched.reduce((sum, r) => sum + (r.depositBalance || 0), 0),
+      totalOutstandingBalance: enriched.reduce((sum, r) => sum + (r.rentBalance || 0), 0),
+      occupancyRate: enriched.length ? Math.round((enriched.filter(r => r.tenantName !== 'Vacant').length / enriched.length) * 100) : 0
+    };
+
+    return {
+      summary,
+      rentRoll: enriched
+    };
+  })
 };
 
 export const mockCommunicationService = {
@@ -1569,7 +1753,11 @@ export const mockLedgerService = {
 
 export const mockTicketsService = {
   getAll: () => withDelay(() => {
-    const list = getStore('mock_maintenance_tickets');
+    let list = getStore('mock_maintenance_tickets');
+    const allowedPropertyIds = getAllowedPropertyIds();
+    const properties = getStore('mock_properties');
+    const allowedPropertyNames = properties.filter(p => allowedPropertyIds.includes(p.id)).map(p => p.name);
+    list = list.filter(t => allowedPropertyNames.includes(t.propertyName || t.building));
     return list.map(t => ({
       ...t,
       dbId: t.id,
@@ -1884,4 +2072,1535 @@ export const mockOwnerDashboardService = {
       { id: 1, name: 'Monthly Owner Statement - Jun 2026', type: 'Owner Statement', generatedAt: '2026-06-25T16:00:00Z', url: '#' }
     ];
   })
+};
+
+export const mockRenewalService = {
+  getAll: () => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const leases = getStore('mock_leases') || [];
+    const apartments = getStore('mock_apartments') || [];
+    const properties = getStore('mock_properties') || [];
+    const tenants = getStore('mock_tenants') || [];
+    const allowedPropertyIds = getAllowedPropertyIds();
+
+    const joined = list.map(ren => {
+      const lease = leases.find(l => l.id === ren.leaseId);
+      if (!lease) return null;
+      const apt = apartments.find(a => a.id === lease.unitId);
+      const prop = properties.find(p => p.id === lease.propertyId);
+      const tenant = tenants.find(t => t.id === lease.tenantId);
+
+      return {
+        ...ren,
+        lease,
+        companyId: prop ? prop.companyId : 1,
+        companyName: prop ? prop.companyName : '-',
+        propertyId: lease.propertyId,
+        propertyName: prop ? prop.name : lease.propertyName,
+        unitId: lease.unitId,
+        unitNumber: apt ? apt.unitNumber : lease.unitNumber,
+        tenantId: lease.tenantId,
+        tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : lease.tenantName,
+        leaseStart: lease.startDate,
+        leaseEnd: lease.endDate,
+        currentRent: lease.rentAmount
+      };
+    }).filter(Boolean);
+
+    return joined.filter(r => allowedPropertyIds.includes(r.propertyId));
+  }),
+
+  getById: (id) => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const ren = list.find(r => r.id === parseInt(id));
+    if (!ren) throw new Error('Renewal not found');
+
+    const leases = getStore('mock_leases') || [];
+    const apartments = getStore('mock_apartments') || [];
+    const properties = getStore('mock_properties') || [];
+    const tenants = getStore('mock_tenants') || [];
+
+    const lease = leases.find(l => l.id === ren.leaseId);
+    const apt = apartments.find(a => a.id === (lease ? lease.unitId : 0));
+    const prop = properties.find(p => p.id === (lease ? lease.propertyId : 0));
+    const tenant = tenants.find(t => t.id === (lease ? lease.tenantId : 0));
+
+    const previousRenewals = list.filter(r => r.leaseId === ren.leaseId && r.id !== ren.id);
+
+    return {
+      ...ren,
+      lease,
+      companyId: prop ? prop.companyId : 1,
+      companyName: prop ? prop.companyName : '-',
+      propertyId: lease ? lease.propertyId : 0,
+      propertyName: prop ? prop.name : (lease ? lease.propertyName : '-'),
+      unitId: lease ? lease.unitId : 0,
+      unitNumber: apt ? apt.unitNumber : (lease ? lease.unitNumber : '-'),
+      tenantId: lease ? lease.tenantId : 0,
+      tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : (lease ? lease.tenantName : '-'),
+      leaseStart: lease ? lease.startDate : '-',
+      leaseEnd: lease ? lease.endDate : '-',
+      currentRent: lease ? lease.rentAmount : 0,
+      previousRenewals
+    };
+  }),
+
+  updateStatus: (id, status) => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const index = list.findIndex(r => r.id === parseInt(id));
+    if (index === -1) throw new Error('Renewal not found');
+
+    const prevStatus = list[index].status;
+    list[index].status = status;
+    
+    if (!list[index].history) list[index].history = [];
+    list[index].history.push({
+      date: new Date().toLocaleDateString('en-CA'),
+      activity: `Status changed from ${prevStatus} to ${status}`
+    });
+
+    setStore('mock_renewals', list);
+    return list[index];
+  }),
+
+  addNote: (id, text, author = 'Admin') => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const index = list.findIndex(r => r.id === parseInt(id));
+    if (index === -1) throw new Error('Renewal not found');
+
+    if (!list[index].notes) list[index].notes = [];
+    const noteId = list[index].notes.length ? Math.max(...list[index].notes.map(n => n.id)) + 1 : 1;
+    list[index].notes.push({
+      id: noteId,
+      text,
+      timestamp: new Date().toLocaleString(),
+      author
+    });
+
+    setStore('mock_renewals', list);
+    return list[index];
+  }),
+
+  uploadDocument: (id, docName, docType = 'Agreement') => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const index = list.findIndex(r => r.id === parseInt(id));
+    if (index === -1) throw new Error('Renewal not found');
+
+    if (!list[index].documents) list[index].documents = [];
+    const docId = list[index].documents.length ? Math.max(...list[index].documents.map(d => d.id)) + 1 : 1;
+    list[index].documents.push({
+      id: docId,
+      name: docName,
+      type: docType,
+      uploadDate: new Date().toLocaleDateString('en-CA'),
+      size: '1.5 MB'
+    });
+
+    setStore('mock_renewals', list);
+    return list[index];
+  }),
+
+  deleteDocument: (id, docId) => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const index = list.findIndex(r => r.id === parseInt(id));
+    if (index === -1) throw new Error('Renewal not found');
+
+    if (list[index].documents) {
+      list[index].documents = list[index].documents.filter(d => d.id !== parseInt(docId));
+    }
+
+    setStore('mock_renewals', list);
+    return list[index];
+  }),
+
+  sendNotice: (id) => withDelay(() => {
+    const list = getStore('mock_renewals') || [];
+    const index = list.findIndex(r => r.id === parseInt(id));
+    if (index === -1) throw new Error('Renewal not found');
+
+    list[index].noticeSent = true;
+    list[index].noticeDate = new Date().toLocaleDateString('en-CA');
+    list[index].status = 'Notice Sent';
+
+    if (!list[index].history) list[index].history = [];
+    list[index].history.push({
+      date: new Date().toLocaleDateString('en-CA'),
+      activity: 'Lease Renewal Notice Sent to Tenant (Email / PDF)'
+    });
+
+    if (!list[index].reminders) list[index].reminders = [];
+    list[index].reminders.push({
+      id: list[index].reminders.length + 1,
+      type: 'Initial Notice',
+      status: 'Reminder Sent',
+      dateScheduled: new Date().toLocaleDateString('en-CA'),
+      dateSent: new Date().toLocaleDateString('en-CA')
+    });
+
+    setStore('mock_renewals', list);
+    return list[index];
+  })
+};
+
+// ==========================================
+// PHASE 4 - RENT COLLECTION & LEDGER SERVICES
+// ==========================================
+
+export const invoiceService = {
+  getAll: () => {
+    const invoices = getStore('mock_invoices') || [];
+    const payments = getStore('mock_payments') || [];
+    const credits = getStore('mock_credits') || [];
+    const adjustments = getStore('mock_adjustments') || [];
+    const properties = getStore('mock_properties') || [];
+    const allowedPropertyIds = getAllowedPropertyIds();
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const enriched = invoices.map(inv => {
+      const prop = properties.find(p => p.id === inv.propertyId);
+      const companyId = prop ? prop.companyId : 1;
+      const companyName = prop ? prop.companyName : '-';
+
+      // Sum allocations
+      const invPayments = payments.filter(p => p.invoiceId === inv.id);
+      const totalPaid = invPayments.reduce((sum, p) => sum + (p.amountPaid || 0), 0);
+      
+      const invCredits = credits.filter(c => c.invoiceId === inv.id);
+      const totalCredits = invCredits.reduce((sum, c) => sum + (c.amount || 0), 0);
+
+      const invAdjs = adjustments.filter(a => a.invoiceId === inv.id);
+      const totalAdjustments = invAdjs.reduce((sum, a) => sum + (a.amount || 0), 0);
+
+      const outstanding = inv.amountDue - totalPaid - totalCredits + totalAdjustments;
+
+      // Status Allocation Engine
+      let status = inv.status;
+      if (outstanding <= 0) {
+        status = 'Paid';
+      } else if (totalPaid > 0) {
+        status = 'Partial Payment';
+      } else if (inv.dueDate < today && ['Pending', 'Sent', 'Generated'].includes(inv.status)) {
+        status = 'Overdue';
+      }
+
+      return {
+        ...inv,
+        companyId,
+        companyName,
+        totalPaid,
+        totalCredits,
+        totalAdjustments,
+        outstandingBalance: outstanding,
+        status,
+        paymentsList: invPayments,
+        creditsList: invCredits,
+        adjustmentsList: invAdjs
+      };
+    });
+
+    return enriched.filter(inv => allowedPropertyIds.includes(inv.propertyId));
+  },
+
+  generate: (leaseId, amount, dueDate) => {
+    const leases = getStore('mock_leases') || [];
+    const tenants = getStore('mock_tenants') || [];
+    const properties = getStore('mock_properties') || [];
+    const lease = leases.find(l => l.id === parseInt(leaseId));
+    if (!lease) throw new Error('Lease not found');
+
+    const tenant = tenants.find(t => t.id === lease.tenantId);
+    const prop = properties.find(p => p.id === lease.propertyId);
+
+    const invoices = getStore('mock_invoices') || [];
+    const nextId = invoices.length ? Math.max(...invoices.map(i => i.id)) + 1 : 1;
+    const year = new Date().getFullYear();
+    const invoiceNo = `INV-${year}-${String(nextId).padStart(6, '0')}`;
+
+    const newInvoice = {
+      id: nextId,
+      invoiceNo,
+      leaseId: lease.id,
+      tenantId: lease.tenantId,
+      tenantName: tenant ? `${tenant.firstName} ${tenant.lastName}` : lease.tenantName,
+      propertyName: prop ? prop.name : lease.propertyName,
+      propertyId: lease.propertyId,
+      unitNumber: lease.unitNumber,
+      unitId: lease.unitId,
+      amountDue: parseFloat(amount),
+      dueDate,
+      invoiceDate: new Date().toISOString().split('T')[0],
+      status: 'Generated',
+      category: 'Rent',
+      history: [
+        { date: new Date().toLocaleDateString('en-CA'), activity: `Invoice Generated: ${invoiceNo}` }
+      ],
+      notes: []
+    };
+
+    invoices.push(newInvoice);
+    setStore('mock_invoices', invoices);
+    return newInvoice;
+  },
+
+  regenerate: (id) => {
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(id));
+    if (idx === -1) throw new Error('Invoice not found');
+
+    invoices[idx].history.push({
+      date: new Date().toLocaleDateString('en-CA'),
+      activity: 'Invoice Regenerated and status updated'
+    });
+
+    setStore('mock_invoices', invoices);
+    return invoices[idx];
+  },
+
+  duplicate: (id) => {
+    const invoices = getStore('mock_invoices') || [];
+    const orig = invoices.find(i => i.id === parseInt(id));
+    if (!orig) throw new Error('Invoice not found');
+
+    const nextId = invoices.length ? Math.max(...invoices.map(i => i.id)) + 1 : 1;
+    const year = new Date().getFullYear();
+    const invoiceNo = `INV-${year}-${String(nextId).padStart(6, '0')}`;
+
+    const dupe = {
+      ...orig,
+      id: nextId,
+      invoiceNo,
+      invoiceDate: new Date().toISOString().split('T')[0],
+      status: 'Draft',
+      history: [
+        { date: new Date().toLocaleDateString('en-CA'), activity: `Invoice Duplicated from ${orig.invoiceNo}` }
+      ],
+      notes: []
+    };
+
+    invoices.push(dupe);
+    setStore('mock_invoices', invoices);
+    return dupe;
+  },
+
+  markSent: (id) => {
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(id));
+    if (idx === -1) throw new Error('Invoice not found');
+
+    invoices[idx].status = 'Sent';
+    invoices[idx].history.push({
+      date: new Date().toLocaleDateString('en-CA'),
+      activity: 'Invoice marked as Sent to Tenant'
+    });
+
+    setStore('mock_invoices', invoices);
+    return invoices[idx];
+  },
+
+  emailInvoice: (id) => {
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(id));
+    if (idx === -1) throw new Error('Invoice not found');
+
+    invoices[idx].history.push({
+      date: new Date().toLocaleDateString('en-CA'),
+      activity: 'Invoice Sent via Email (Mock dispatch)'
+    });
+
+    setStore('mock_invoices', invoices);
+    return invoices[idx];
+  },
+
+  addAdjustment: (invoiceId, amount, type, reason) => {
+    const adjs = getStore('mock_adjustments') || [];
+    const nextId = adjs.length ? Math.max(...adjs.map(a => a.id)) + 1 : 1;
+
+    const newAdj = {
+      id: nextId,
+      invoiceId: parseInt(invoiceId),
+      amount: parseFloat(amount),
+      type,
+      reason,
+      date: new Date().toLocaleDateString('en-CA')
+    };
+
+    adjs.push(newAdj);
+    setStore('mock_adjustments', adjs);
+
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(invoiceId));
+    if (idx !== -1) {
+      if (!invoices[idx].history) invoices[idx].history = [];
+      invoices[idx].history.push({
+        date: new Date().toLocaleDateString('en-CA'),
+        activity: `Adjustment Added: $${amount} (${type} - ${reason})`
+      });
+      setStore('mock_invoices', invoices);
+    }
+    return newAdj;
+  },
+
+  addCredit: (invoiceId, amount, reason) => {
+    const credits = getStore('mock_credits') || [];
+    const nextId = credits.length ? Math.max(...credits.map(c => c.id)) + 1 : 1;
+
+    const newCredit = {
+      id: nextId,
+      invoiceId: parseInt(invoiceId),
+      amount: parseFloat(amount),
+      date: new Date().toLocaleDateString('en-CA'),
+      reason
+    };
+
+    credits.push(newCredit);
+    setStore('mock_credits', credits);
+
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(invoiceId));
+    if (idx !== -1) {
+      if (!invoices[idx].history) invoices[idx].history = [];
+      invoices[idx].history.push({
+        date: new Date().toLocaleDateString('en-CA'),
+        activity: `Credit Applied: $${amount} (${reason})`
+      });
+      setStore('mock_invoices', invoices);
+    }
+    return newCredit;
+  },
+
+  addNote: (invoiceId, text, author = 'Admin') => {
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(invoiceId));
+    if (idx === -1) throw new Error('Invoice not found');
+
+    if (!invoices[idx].notes) invoices[idx].notes = [];
+    const nextNoteId = invoices[idx].notes.length ? Math.max(...invoices[idx].notes.map(n => n.id)) + 1 : 1;
+    invoices[idx].notes.push({
+      id: nextNoteId,
+      author,
+      text,
+      timestamp: new Date().toLocaleString()
+    });
+
+    setStore('mock_invoices', invoices);
+    return invoices[idx];
+  }
+};
+
+export const paymentService = {
+  record: (invoiceId, amount, method) => {
+    const payments = getStore('mock_payments') || [];
+    const nextId = payments.length ? Math.max(...payments.map(p => p.id)) + 1 : 1;
+
+    const newPayment = {
+      id: nextId,
+      invoiceId: parseInt(invoiceId),
+      amountPaid: parseFloat(amount),
+      paymentDate: new Date().toLocaleDateString('en-CA'),
+      paymentMethod: method,
+      transactionId: `TXN-${Math.floor(100000 + Math.random() * 900000)}`
+    };
+
+    payments.push(newPayment);
+    setStore('mock_payments', payments);
+
+    const invoices = getStore('mock_invoices') || [];
+    const idx = invoices.findIndex(i => i.id === parseInt(invoiceId));
+    if (idx !== -1) {
+      if (!invoices[idx].history) invoices[idx].history = [];
+      invoices[idx].history.push({
+        date: new Date().toLocaleDateString('en-CA'),
+        activity: `Payment Received: $${amount} via ${method}`
+      });
+      setStore('mock_invoices', invoices);
+    }
+
+    return newPayment;
+  }
+};
+
+export const ledgerService = {
+  getLedger: (tenantId) => {
+    const allInvoices = invoiceService.getAll();
+    const tenantInvoices = allInvoices.filter(i => i.tenantId === parseInt(tenantId));
+
+    const ledgerRows = [];
+    let runningBalance = 0;
+
+    tenantInvoices.forEach(inv => {
+      runningBalance += inv.amountDue;
+      ledgerRows.push({
+        date: inv.invoiceDate,
+        type: 'Invoice',
+        reference: inv.invoiceNo,
+        description: 'Monthly Rent Invoice',
+        debit: inv.amountDue,
+        credit: 0,
+        runningBalance
+      });
+
+      inv.adjustmentsList?.forEach(adj => {
+        runningBalance += adj.amount;
+        ledgerRows.push({
+          date: adj.date,
+          type: 'Adjustment',
+          reference: `ADJ-${adj.id}`,
+          description: `${adj.type} - ${adj.reason}`,
+          debit: adj.amount > 0 ? adj.amount : 0,
+          credit: adj.amount < 0 ? Math.abs(adj.amount) : 0,
+          runningBalance
+        });
+      });
+
+      inv.creditsList?.forEach(cred => {
+        runningBalance -= cred.amount;
+        ledgerRows.push({
+          date: cred.date,
+          type: 'Credit',
+          reference: `CRD-${cred.id}`,
+          description: cred.reason,
+          debit: 0,
+          credit: cred.amount,
+          runningBalance
+        });
+      });
+
+      inv.paymentsList?.forEach(pay => {
+        runningBalance -= pay.amountPaid;
+        ledgerRows.push({
+          date: pay.paymentDate,
+          type: 'Payment',
+          reference: pay.transactionId,
+          description: `Payment Received via ${pay.paymentMethod}`,
+          debit: 0,
+          credit: pay.amountPaid,
+          runningBalance
+        });
+      });
+    });
+
+    ledgerRows.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    let currentBalance = 0;
+    const finalRows = ledgerRows.map(row => {
+      currentBalance = currentBalance + row.debit - row.credit;
+      return {
+        ...row,
+        runningBalance: currentBalance
+      };
+    });
+
+    return {
+      openingBalance: 0,
+      closingBalance: currentBalance,
+      rows: finalRows
+    };
+  }
+};
+
+export const agingService = {
+  getAgingReport: () => {
+    const invoices = invoiceService.getAll();
+    const today = new Date();
+
+    const report = {
+      current: 0,
+      thirty: 0,
+      sixty: 0,
+      ninety: 0,
+      ninetyPlus: 0,
+      highestTenants: [],
+      highestBuildings: [],
+      highestCompanies: []
+    };
+
+    const tenantBalances = {};
+    const buildingBalances = {};
+    const companyBalances = {};
+
+    invoices.forEach(inv => {
+      const bal = inv.outstandingBalance;
+      if (bal <= 0) return;
+
+      const dueDate = new Date(inv.dueDate);
+      const diffTime = today - dueDate;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 0) {
+        report.current += bal;
+      } else if (diffDays <= 30) {
+        report.thirty += bal;
+      } else if (diffDays <= 60) {
+        report.sixty += bal;
+      } else if (diffDays <= 90) {
+        report.ninety += bal;
+      } else {
+        report.ninetyPlus += bal;
+      }
+
+      tenantBalances[inv.tenantName] = (tenantBalances[inv.tenantName] || 0) + bal;
+      buildingBalances[inv.propertyName] = (buildingBalances[inv.propertyName] || 0) + bal;
+      companyBalances[inv.companyName] = (companyBalances[inv.companyName] || 0) + bal;
+    });
+
+    report.highestTenants = Object.keys(tenantBalances).map(k => ({ name: k, amount: tenantBalances[k] })).sort((a, b) => b.amount - a.amount).slice(0, 5);
+    report.highestBuildings = Object.keys(buildingBalances).map(k => ({ name: k, amount: buildingBalances[k] })).sort((a, b) => b.amount - a.amount).slice(0, 5);
+    report.highestCompanies = Object.keys(companyBalances).map(k => ({ name: k, amount: companyBalances[k] })).sort((a, b) => b.amount - a.amount).slice(0, 5);
+
+    return report;
+  }
+};
+
+export const collectionAnalyticsService = {
+  getMetrics: () => {
+    const invoices = invoiceService.getAll();
+    const payments = getStore('mock_payments') || [];
+
+    const totalDue = invoices.reduce((sum, i) => sum + i.amountDue, 0);
+    const totalCollected = payments.reduce((sum, p) => sum + p.amountPaid, 0);
+    const totalOutstanding = invoices.reduce((sum, i) => sum + i.outstandingBalance, 0);
+    const overdueCount = invoices.filter(i => i.status === 'Overdue').length;
+
+    const rate = totalDue ? Math.round((totalCollected / totalDue) * 100) : 100;
+
+    const now = new Date();
+    const thisMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthStr = `${prevMonth.getFullYear()}-${String(prevMonth.getMonth() + 1).padStart(2, '0')}`;
+
+    const thisMonthCollection = payments
+      .filter(p => p.paymentDate && p.paymentDate.startsWith(thisMonthStr))
+      .reduce((sum, p) => sum + p.amountPaid, 0);
+
+    const lastMonthCollection = payments
+      .filter(p => p.paymentDate && p.paymentDate.startsWith(lastMonthStr))
+      .reduce((sum, p) => sum + p.amountPaid, 0);
+
+    const trend = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const mStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const monthName = d.toLocaleString('en-US', { month: 'short' });
+
+      const dueInMonth = invoices
+        .filter(inv => inv.dueDate && inv.dueDate.startsWith(mStr))
+        .reduce((sum, inv) => sum + inv.amountDue, 0);
+
+      const paidInMonth = payments
+        .filter(p => p.paymentDate && p.paymentDate.startsWith(mStr))
+        .reduce((sum, p) => sum + p.amountPaid, 0);
+
+      trend.push({
+        month: monthName,
+        expected: dueInMonth,
+        collected: paidInMonth
+      });
+    }
+
+    return {
+      totalDue,
+      totalCollected,
+      totalOutstanding,
+      overdueCount,
+      collectionRate: rate,
+      thisMonthCollection,
+      lastMonthCollection,
+      trend
+    };
+  }
+};
+
+// ─── CASE AND TASK NUMBER GENERATORS ────────────────────────
+export const generateCaseNumber = (companyCode = 'TAL') => {
+  const year = new Date().getFullYear();
+  const seq = (parseInt(localStorage.getItem('tal_case_seq') || '0') + 1);
+  localStorage.setItem('tal_case_seq', String(seq));
+  return `${companyCode}-${year}-${String(seq).padStart(6, '0')}`;
+};
+
+export const generateTaskNumber = () => {
+  const seq = (parseInt(localStorage.getItem('task_seq') || '0') + 1);
+  localStorage.setItem('task_seq', String(seq));
+  return `TASK-${new Date().getFullYear()}-${String(seq).padStart(6, '0')}`;
+};
+
+// ─── TAL CASE & LEGAL MANAGEMENT SERVICES ───────────────────
+export const talCaseService = {
+  getAll: () => {
+    const cases = getStore('mock_tal_cases') || [];
+    const activeCompanyId = localStorage.getItem('global_selected_company_id');
+    const filtered = activeCompanyId
+      ? cases.filter(c => c.companyId === parseInt(activeCompanyId))
+      : cases;
+    
+    return filtered.map(c => {
+      const ledger = ledgerService.getLedger(c.tenantId);
+      return {
+        ...c,
+        outstandingBalance: ledger ? ledger.closingBalance : 0
+      };
+    });
+  },
+
+  getById: (id) => {
+    const cases = talCaseService.getAll();
+    const c = cases.find(item => item.id === parseInt(id));
+    if (!c) return null;
+
+    const hearings = getStore('mock_case_hearings') || [];
+    const documents = getStore('mock_case_documents') || [];
+    const notes = getStore('mock_case_notes') || [];
+    const tasks = getStore('mock_case_tasks') || [];
+    const invoices = getStore('mock_invoices') || [];
+
+    return {
+      ...c,
+      hearings: hearings.filter(h => c.hearingIds?.includes(h.id)),
+      documents: documents.filter(d => c.documentIds?.includes(d.id)),
+      notes: notes.filter(n => c.noteIds?.includes(n.id)),
+      tasks: tasks.filter(t => c.taskIds?.includes(t.id)),
+      invoices: invoices.filter(inv => c.invoiceIds?.includes(inv.id))
+    };
+  },
+
+  create: (data) => {
+    const cases = getStore('mock_tal_cases') || [];
+    const nextId = cases.length ? Math.max(...cases.map(c => c.id)) + 1 : 1;
+    const newCaseNumber = generateCaseNumber();
+
+    const newCase = {
+      ...data,
+      id: nextId,
+      caseNumber: newCaseNumber,
+      invoiceIds: data.invoiceIds || [],
+      hearingIds: [],
+      documentIds: [],
+      noteIds: [],
+      taskIds: [],
+      timeline: [
+        {
+          id: Date.now(),
+          date: new Date().toISOString(),
+          event: `Case Created: ${newCaseNumber}`,
+          actor: 'Admin User',
+          createdAt: new Date().toISOString()
+        }
+      ],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'Admin User',
+      updatedBy: 'Admin User'
+    };
+
+    cases.push(newCase);
+    setStore('mock_tal_cases', cases);
+    return newCase;
+  },
+
+  update: (id, data) => {
+    const cases = getStore('mock_tal_cases') || [];
+    const idx = cases.findIndex(c => c.id === parseInt(id));
+    if (idx === -1) throw new Error('Case not found');
+
+    const oldCase = cases[idx];
+    const updatedTimeline = [...(oldCase.timeline || [])];
+
+    if (data.status && data.status !== oldCase.status) {
+      updatedTimeline.push({
+        id: Date.now(),
+        date: new Date().toISOString(),
+        event: `Status changed: ${oldCase.status} → ${data.status}`,
+        actor: 'Admin User',
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    const updatedCase = {
+      ...oldCase,
+      ...data,
+      timeline: updatedTimeline,
+      updatedAt: new Date().toISOString(),
+      updatedBy: 'Admin User'
+    };
+
+    cases[idx] = updatedCase;
+    setStore('mock_tal_cases', cases);
+    return updatedCase;
+  },
+
+  addHearing: (caseId, hearingData) => {
+    const hearings = getStore('mock_case_hearings') || [];
+    const nextId = hearings.length ? Math.max(...hearings.map(h => h.id)) + 1 : 1;
+
+    const newHearing = {
+      ...hearingData,
+      id: nextId,
+      caseId: parseInt(caseId),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'Admin User',
+      updatedBy: 'Admin User'
+    };
+
+    hearings.push(newHearing);
+    setStore('mock_case_hearings', hearings);
+
+    const cases = getStore('mock_tal_cases') || [];
+    const idx = cases.findIndex(c => c.id === parseInt(caseId));
+    if (idx !== -1) {
+      const c = cases[idx];
+      const hIds = c.hearingIds || [];
+      hIds.push(nextId);
+
+      const timeline = c.timeline || [];
+      timeline.push({
+        id: Date.now(),
+        date: new Date().toISOString(),
+        event: `Hearing scheduled for ${new Date(hearingData.date).toLocaleDateString()} in ${hearingData.courtRoom || 'TBD'}`,
+        actor: 'Admin User',
+        createdAt: new Date().toISOString()
+      });
+
+      cases[idx] = {
+        ...c,
+        hearingIds: hIds,
+        nextHearingDate: hearingData.date,
+        courtRoom: hearingData.courtRoom,
+        judgeId: hearingData.judgeId,
+        judgeName: hearingData.judgeName,
+        timeline,
+        updatedAt: new Date().toISOString()
+      };
+      setStore('mock_tal_cases', cases);
+    }
+
+    return newHearing;
+  },
+
+  addDocument: (caseId, docData) => {
+    const docs = getStore('mock_case_documents') || [];
+    const nextId = docs.length ? Math.max(...docs.map(d => d.id)) + 1 : 1;
+
+    const newDoc = {
+      ...docData,
+      id: nextId,
+      caseId: parseInt(caseId),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'Admin User',
+      updatedBy: 'Admin User'
+    };
+
+    docs.push(newDoc);
+    setStore('mock_case_documents', docs);
+
+    const cases = getStore('mock_tal_cases') || [];
+    const idx = cases.findIndex(c => c.id === parseInt(caseId));
+    if (idx !== -1) {
+      const c = cases[idx];
+      const docIds = c.documentIds || [];
+      docIds.push(nextId);
+
+      const timeline = c.timeline || [];
+      timeline.push({
+        id: Date.now(),
+        date: new Date().toISOString(),
+        event: `Document uploaded: ${docData.name}`,
+        actor: 'Admin User',
+        createdAt: new Date().toISOString()
+      });
+
+      cases[idx] = {
+        ...c,
+        documentIds: docIds,
+        timeline,
+        updatedAt: new Date().toISOString()
+      };
+      setStore('mock_tal_cases', cases);
+    }
+
+    return newDoc;
+  },
+
+  deleteDocument: (caseId, docId) => {
+    const docs = getStore('mock_case_documents') || [];
+    const filteredDocs = docs.filter(d => d.id !== parseInt(docId));
+    setStore('mock_case_documents', filteredDocs);
+
+    const cases = getStore('mock_tal_cases') || [];
+    const idx = cases.findIndex(c => c.id === parseInt(caseId));
+    if (idx !== -1) {
+      const c = cases[idx];
+      const docIds = (c.documentIds || []).filter(id => id !== parseInt(docId));
+      
+      const timeline = c.timeline || [];
+      timeline.push({
+        id: Date.now(),
+        date: new Date().toISOString(),
+        event: `Document deleted`,
+        actor: 'Admin User',
+        createdAt: new Date().toISOString()
+      });
+
+      cases[idx] = {
+        ...c,
+        documentIds: docIds,
+        timeline,
+        updatedAt: new Date().toISOString()
+      };
+      setStore('mock_tal_cases', cases);
+    }
+  },
+
+  addNote: (caseId, noteData) => {
+    const notes = getStore('mock_case_notes') || [];
+    const nextId = notes.length ? Math.max(...notes.map(n => n.id)) + 1 : 1;
+
+    const newNote = {
+      ...noteData,
+      id: nextId,
+      caseId: parseInt(caseId),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'Admin User',
+      updatedBy: 'Admin User'
+    };
+
+    notes.push(newNote);
+    setStore('mock_case_notes', notes);
+
+    const cases = getStore('mock_tal_cases') || [];
+    const idx = cases.findIndex(c => c.id === parseInt(caseId));
+    if (idx !== -1) {
+      const c = cases[idx];
+      const noteIds = c.noteIds || [];
+      noteIds.push(nextId);
+
+      cases[idx] = {
+        ...c,
+        noteIds,
+        updatedAt: new Date().toISOString()
+      };
+      setStore('mock_tal_cases', cases);
+    }
+
+    return newNote;
+  },
+
+  appendTimeline: (caseId, eventText) => {
+    const cases = getStore('mock_tal_cases') || [];
+    const idx = cases.findIndex(c => c.id === parseInt(caseId));
+    if (idx !== -1) {
+      const c = cases[idx];
+      const timeline = c.timeline || [];
+      timeline.push({
+        id: Date.now(),
+        date: new Date().toISOString(),
+        event: eventText,
+        actor: 'Admin User',
+        createdAt: new Date().toISOString()
+      });
+
+      cases[idx] = {
+        ...c,
+        timeline,
+        updatedAt: new Date().toISOString()
+      };
+      setStore('mock_tal_cases', cases);
+    }
+  }
+};
+
+// ============================================================
+// PHASE 6 — NOTES & COMMUNICATION SERVICES
+// All business logic inside services. Zero component logic.
+// ============================================================
+
+// ─── AUTO-NUMBER GENERATOR ───────────────────────────────────
+const generateNoteNumber = () => {
+  const seq = parseInt(localStorage.getItem('note_seq') || '0', 10) + 1;
+  localStorage.setItem('note_seq', String(seq));
+  const year = new Date().getFullYear();
+  return `NOTE-${year}-${String(seq).padStart(6, '0')}`;
+};
+
+// ─── NOTE SERVICE ────────────────────────────────────────────
+export const noteService = {
+  getAll: (filters = {}) => {
+    let notes = getStore('mock_notes');
+    if (filters.companyId) notes = notes.filter(n => n.companyId === filters.companyId);
+    if (filters.entityType) notes = notes.filter(n => n.entityType === filters.entityType);
+    if (filters.entityId !== undefined) notes = notes.filter(n => String(n.entityId) === String(filters.entityId));
+    if (filters.category) notes = notes.filter(n => n.category === filters.category);
+    if (filters.priority) notes = notes.filter(n => n.priority === filters.priority);
+    if (filters.author) notes = notes.filter(n => n.createdBy === filters.author);
+    if (filters.tag) notes = notes.filter(n => (n.tags || []).includes(filters.tag));
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      notes = notes.filter(n =>
+        (n.title || '').toLowerCase().includes(q) ||
+        (n.content || '').toLowerCase().includes(q) ||
+        (n.tags || []).some(t => t.toLowerCase().includes(q))
+      );
+    }
+    if (filters.dateFrom) notes = notes.filter(n => new Date(n.createdAt) >= new Date(filters.dateFrom));
+    if (filters.dateTo) notes = notes.filter(n => new Date(n.createdAt) <= new Date(filters.dateTo));
+    // Pinned first, then newest
+    return notes.sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  },
+
+  getByEntity: (entityType, entityId) => {
+    const notes = getStore('mock_notes');
+    return notes
+      .filter(n => n.entityType === entityType && String(n.entityId) === String(entityId))
+      .sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+  },
+
+  getById: (id) => {
+    return getStore('mock_notes').find(n => n.id === id) || null;
+  },
+
+  create: (payload) => {
+    const notes = getStore('mock_notes');
+    const now = new Date().toISOString();
+    const newNote = {
+      id: `note-${Date.now()}`,
+      noteNumber: generateNoteNumber(),
+      entityType: payload.entityType || 'GENERAL',
+      entityId: payload.entityId || null,
+      companyId: payload.companyId || 1,
+      title: payload.title || 'Untitled Note',
+      content: payload.content || '',
+      category: payload.category || 'GENERAL',
+      priority: payload.priority || 'MEDIUM',
+      tags: payload.tags || [],
+      isPinned: payload.isPinned || false,
+      isPrivate: payload.isPrivate || false,
+      mentions: payload.mentions || [],
+      attachmentIds: [],
+      commentIds: [],
+      createdAt: now,
+      updatedAt: now,
+      createdBy: payload.createdBy || 'Admin User',
+      updatedBy: payload.createdBy || 'Admin User',
+    };
+    notes.unshift(newNote);
+    setStore('mock_notes', notes);
+    activityService.publish('NOTE_CREATED', {
+      noteId: newNote.id,
+      entityType: newNote.entityType,
+      entityId: newNote.entityId,
+      companyId: newNote.companyId,
+      description: `Note "${newNote.title}" was created.`,
+      actorName: newNote.createdBy,
+    });
+    if ((newNote.mentions || []).length > 0) {
+      activityService.publish('MENTION_ADDED', {
+        noteId: newNote.id,
+        entityType: newNote.entityType,
+        entityId: newNote.entityId,
+        companyId: newNote.companyId,
+        description: `Mentioned: ${newNote.mentions.join(', ')} in note "${newNote.title}".`,
+        actorName: newNote.createdBy,
+      });
+    }
+    return newNote;
+  },
+
+  update: (id, payload) => {
+    const notes = getStore('mock_notes');
+    const idx = notes.findIndex(n => n.id === id);
+    if (idx === -1) throw new Error(`Note ${id} not found`);
+    const updated = { ...notes[idx], ...payload, id, updatedAt: new Date().toISOString() };
+    notes[idx] = updated;
+    setStore('mock_notes', notes);
+    activityService.publish('NOTE_UPDATED', {
+      noteId: id,
+      entityType: updated.entityType,
+      entityId: updated.entityId,
+      companyId: updated.companyId,
+      description: `Note "${updated.title}" was edited.`,
+      actorName: payload.updatedBy || 'Admin User',
+    });
+    return updated;
+  },
+
+  delete: (id) => {
+    const notes = getStore('mock_notes');
+    const note = notes.find(n => n.id === id);
+    setStore('mock_notes', notes.filter(n => n.id !== id));
+    if (note) {
+      activityService.publish('NOTE_DELETED', {
+        noteId: id,
+        entityType: note.entityType,
+        entityId: note.entityId,
+        companyId: note.companyId,
+        description: `Note "${note.title}" was deleted.`,
+        actorName: 'Admin User',
+      });
+    }
+  },
+
+  togglePin: (id, actorName = 'Admin User') => {
+    const notes = getStore('mock_notes');
+    const idx = notes.findIndex(n => n.id === id);
+    if (idx === -1) return;
+    notes[idx].isPinned = !notes[idx].isPinned;
+    notes[idx].updatedAt = new Date().toISOString();
+    setStore('mock_notes', notes);
+    activityService.publish(notes[idx].isPinned ? 'NOTE_PINNED' : 'NOTE_UNPINNED', {
+      noteId: id,
+      entityType: notes[idx].entityType,
+      entityId: notes[idx].entityId,
+      companyId: notes[idx].companyId,
+      description: `Note "${notes[idx].title}" was ${notes[idx].isPinned ? 'pinned' : 'unpinned'}.`,
+      actorName,
+    });
+    return notes[idx];
+  },
+
+  getMentions: (userName) => {
+    return getStore('mock_notes').filter(n => (n.mentions || []).includes(userName));
+  },
+
+  getPinnedNotes: (companyId) => {
+    let notes = getStore('mock_notes').filter(n => n.isPinned);
+    if (companyId) notes = notes.filter(n => n.companyId === companyId);
+    return notes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  },
+
+  getRecentNotes: (limit = 10) => {
+    return getStore('mock_notes')
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, limit);
+  },
+};
+
+// ─── COMMENT SERVICE ─────────────────────────────────────────
+export const commentService = {
+  getByNote: (noteId) => {
+    return getStore('mock_note_comments')
+      .filter(c => c.noteId === noteId)
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  },
+
+  create: (noteId, payload) => {
+    const comments = getStore('mock_note_comments');
+    const now = new Date().toISOString();
+    const newComment = {
+      id: `cmt-${Date.now()}`,
+      noteId,
+      content: payload.content || '',
+      createdAt: now,
+      updatedAt: now,
+      createdBy: payload.createdBy || 'Admin User',
+      updatedBy: payload.createdBy || 'Admin User',
+    };
+    comments.push(newComment);
+    setStore('mock_note_comments', comments);
+    // Update note's commentIds array
+    const notes = getStore('mock_notes');
+    const noteIdx = notes.findIndex(n => n.id === noteId);
+    if (noteIdx !== -1) {
+      notes[noteIdx].commentIds = [...(notes[noteIdx].commentIds || []), newComment.id];
+      notes[noteIdx].updatedAt = now;
+      setStore('mock_notes', notes);
+    }
+    const note = notes.find(n => n.id === noteId);
+    activityService.publish('COMMENT_ADDED', {
+      noteId,
+      entityType: note?.entityType,
+      entityId: note?.entityId,
+      companyId: note?.companyId || 1,
+      description: `Comment added to "${note?.title || 'note'}".`,
+      actorName: payload.createdBy || 'Admin User',
+    });
+    return newComment;
+  },
+
+  update: (commentId, payload) => {
+    const comments = getStore('mock_note_comments');
+    const idx = comments.findIndex(c => c.id === commentId);
+    if (idx === -1) throw new Error(`Comment ${commentId} not found`);
+    comments[idx] = { ...comments[idx], ...payload, id: commentId, updatedAt: new Date().toISOString() };
+    setStore('mock_note_comments', comments);
+    const note = getStore('mock_notes').find((n) => n.id === comments[idx].noteId);
+    activityService.publish('COMMENT_UPDATED', {
+      noteId: comments[idx].noteId,
+      entityType: note?.entityType,
+      entityId: note?.entityId,
+      companyId: note?.companyId || 1,
+      description: `A comment was edited on "${note?.title || 'note'}".`,
+      actorName: payload.updatedBy || 'Admin User',
+    });
+    return comments[idx];
+  },
+
+  delete: (commentId) => {
+    const comments = getStore('mock_note_comments');
+    const comment = comments.find(c => c.id === commentId);
+    setStore('mock_note_comments', comments.filter(c => c.id !== commentId));
+    if (comment) {
+      // Remove from note's commentIds
+      const notes = getStore('mock_notes');
+      const noteIdx = notes.findIndex(n => n.id === comment.noteId);
+      if (noteIdx !== -1) {
+        notes[noteIdx].commentIds = (notes[noteIdx].commentIds || []).filter(id => id !== commentId);
+        setStore('mock_notes', notes);
+      }
+      const note = getStore('mock_notes').find((n) => n.id === comment.noteId);
+      activityService.publish('COMMENT_DELETED', {
+        noteId: comment.noteId,
+        entityType: note?.entityType,
+        entityId: note?.entityId,
+        companyId: note?.companyId || 1,
+        description: `A comment was deleted.`,
+        actorName: 'Admin User',
+      });
+    }
+  },
+};
+
+// ─── NOTE ATTACHMENT SERVICE ─────────────────────────────────
+export const noteAttachmentService = {
+  getByNote: (noteId) => {
+    return getStore('mock_note_attachments').filter(a => a.noteId === noteId);
+  },
+
+  upload: (noteId, payload) => {
+    const attachments = getStore('mock_note_attachments');
+    const now = new Date().toISOString();
+    const newAtt = {
+      id: `att-${Date.now()}`,
+      noteId,
+      name: payload.name || 'document.pdf',
+      type: payload.type || 'PDF',
+      size: payload.size || '0 KB',
+      uploadedAt: now,
+      uploadedBy: payload.uploadedBy || 'Admin User',
+      createdAt: now,
+      updatedAt: now,
+      createdBy: payload.uploadedBy || 'Admin User',
+      updatedBy: payload.uploadedBy || 'Admin User',
+    };
+    attachments.push(newAtt);
+    setStore('mock_note_attachments', attachments);
+    // Update note's attachmentIds
+    const notes = getStore('mock_notes');
+    const noteIdx = notes.findIndex(n => n.id === noteId);
+    if (noteIdx !== -1) {
+      notes[noteIdx].attachmentIds = [...(notes[noteIdx].attachmentIds || []), newAtt.id];
+      notes[noteIdx].updatedAt = now;
+      setStore('mock_notes', notes);
+    }
+    const note = notes.find(n => n.id === noteId);
+    activityService.publish('ATTACHMENT_UPLOADED', {
+      noteId,
+      entityType: note?.entityType,
+      entityId: note?.entityId,
+      companyId: note?.companyId || 1,
+      description: `Attachment "${newAtt.name}" was uploaded.`,
+      actorName: payload.uploadedBy || 'Admin User',
+    });
+    return newAtt;
+  },
+
+  delete: (attachmentId) => {
+    const attachments = getStore('mock_note_attachments');
+    const att = attachments.find(a => a.id === attachmentId);
+    setStore('mock_note_attachments', attachments.filter(a => a.id !== attachmentId));
+    if (att) {
+      const notes = getStore('mock_notes');
+      const noteIdx = notes.findIndex(n => n.id === att.noteId);
+      if (noteIdx !== -1) {
+        notes[noteIdx].attachmentIds = (notes[noteIdx].attachmentIds || []).filter(id => id !== attachmentId);
+        setStore('mock_notes', notes);
+      }
+      const note = getStore('mock_notes').find((n) => n.id === att.noteId);
+      activityService.publish('ATTACHMENT_DELETED', {
+        noteId: att.noteId,
+        entityType: note?.entityType,
+        entityId: note?.entityId,
+        companyId: note?.companyId || 1,
+        description: `Attachment "${att.name}" was deleted.`,
+        actorName: 'Admin User',
+      });
+    }
+  },
+};
+
+// ─── COMMUNICATION ANALYTICS SERVICE ────────────────────────
+export const communicationAnalyticsService = {
+  getStats: (companyId) => {
+    let notes = getStore('mock_notes');
+    if (companyId) notes = notes.filter(n => n.companyId === companyId);
+    const pinned = notes.filter(n => n.isPinned).length;
+    const comments = getStore('mock_note_comments').length;
+    const attachments = getStore('mock_note_attachments').length;
+    const mentions = notes.reduce((acc, n) => acc + (n.mentions || []).length, 0);
+    return {
+      totalNotes: notes.length,
+      pinnedNotes: pinned,
+      totalComments: comments,
+      totalAttachments: attachments,
+      totalMentions: mentions,
+      recentCount: notes.filter(n => {
+        const d = new Date(n.createdAt);
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - 7);
+        return d >= cutoff;
+      }).length,
+    };
+  },
+
+  getRecentActivity: (limit = 20, companyId = null) => {
+    return activityService.getRecent(limit, companyId ? { companyId } : {});
+  },
+
+  getNotesByEntityType: () => {
+    const notes = getStore('mock_notes');
+    const breakdown = {};
+    notes.forEach(n => {
+      breakdown[n.entityType] = (breakdown[n.entityType] || 0) + 1;
+    });
+    return Object.entries(breakdown).map(([type, count]) => ({ type, count }));
+  },
+
+  getTimelineEvents: (entityType, entityId) => {
+    let events = getStore('mock_comm_timeline');
+    if (entityType) events = events.filter(e => e.entityType === entityType);
+    if (entityId !== undefined) events = events.filter(e => String(e.entityId) === String(entityId));
+    return events.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  },
+
+  getMentionsSummary: (userName) => {
+    const mentioned = getStore('mock_notes').filter(n => (n.mentions || []).includes(userName));
+    return {
+      count: mentioned.length,
+      notes: mentioned.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 10),
+    };
+  },
+};
+
+export const taskService = {
+  getAll: () => {
+    const tasks = getStore('mock_case_tasks') || [];
+    const activeCompanyId = localStorage.getItem('global_selected_company_id');
+    return activeCompanyId
+      ? tasks.filter(t => t.companyId === parseInt(activeCompanyId))
+      : tasks;
+  },
+
+  getByEntity: (entityType, entityId) => {
+    const tasks = taskService.getAll();
+    return tasks.filter(t => t.entityType === entityType && t.entityId === parseInt(entityId));
+  },
+
+  create: (data) => {
+    const tasks = getStore('mock_case_tasks') || [];
+    const newId = generateTaskNumber();
+
+    const newTask = {
+      ...data,
+      id: newId,
+      status: data.status || 'Pending',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      createdBy: 'Admin User',
+      updatedBy: 'Admin User',
+      history: [
+        {
+          date: new Date().toISOString(),
+          activity: 'Task Created',
+          actor: 'Admin User'
+        }
+      ]
+    };
+
+    tasks.push(newTask);
+    setStore('mock_case_tasks', tasks);
+
+    if (data.entityType === 'TAL_CASE') {
+      const cases = getStore('mock_tal_cases') || [];
+      const idx = cases.findIndex(c => c.id === parseInt(data.entityId));
+      if (idx !== -1) {
+        const c = cases[idx];
+        const taskIds = c.taskIds || [];
+        taskIds.push(newId);
+        cases[idx] = {
+          ...c,
+          taskIds,
+          updatedAt: new Date().toISOString()
+        };
+        setStore('mock_tal_cases', cases);
+      }
+    }
+
+    return newTask;
+  },
+
+  update: (id, data) => {
+    const tasks = getStore('mock_case_tasks') || [];
+    const idx = tasks.findIndex(t => t.id === id);
+    if (idx === -1) throw new Error('Task not found');
+
+    const oldTask = tasks[idx];
+    const history = [...(oldTask.history || [])];
+
+    if (data.status && data.status !== oldTask.status) {
+      history.push({
+        date: new Date().toISOString(),
+        activity: `Status changed: ${oldTask.status} → ${data.status}`,
+        actor: 'Admin User'
+      });
+    }
+
+    const updatedTask = {
+      ...oldTask,
+      ...data,
+      history,
+      updatedAt: new Date().toISOString(),
+      updatedBy: 'Admin User'
+    };
+
+    tasks[idx] = updatedTask;
+    setStore('mock_case_tasks', tasks);
+    return updatedTask;
+  },
+
+  markComplete: (id) => {
+    return taskService.update(id, {
+      status: 'COMPLETED',
+      completionDate: new Date().toISOString()
+    });
+  },
+
+  delete: (id) => {
+    const tasks = getStore('mock_case_tasks') || [];
+    const filtered = tasks.filter(t => t.id !== id);
+    setStore('mock_case_tasks', filtered);
+
+    const cases = getStore('mock_tal_cases') || [];
+    cases.forEach((c, idx) => {
+      if (c.taskIds?.includes(id)) {
+        cases[idx].taskIds = c.taskIds.filter(tid => tid !== id);
+      }
+    });
+    setStore('mock_tal_cases', cases);
+  }
+};
+
+export const legalAnalyticsService = {
+  getMetrics: () => {
+    const cases = talCaseService.getAll();
+    const active = cases.filter(c => !['Resolved', 'Closed'].includes(c.status)).length;
+    const filed = cases.filter(c => c.status === 'Filed' || c.filedDate).length;
+    const hearings = cases.filter(c => c.status === 'Hearing Scheduled').length;
+    const awaitingDocs = cases.filter(c => ['Preparing', 'Notice Sent'].includes(c.status)).length;
+    const judgementPending = cases.filter(c => c.status === 'Judgement Pending').length;
+    const closed = cases.filter(c => c.status === 'Closed').length;
+
+    const resolvedCount = cases.filter(c => c.status === 'Resolved').length;
+    const closedTotal = cases.filter(c => ['Resolved', 'Closed'].includes(c.status)).length;
+    const successRate = closedTotal ? Math.round((resolvedCount / closedTotal) * 100) : 85;
+
+    return {
+      activeCases: active,
+      filedThisMonth: filed,
+      hearingsScheduled: hearings,
+      awaitingDocuments: awaitingDocs,
+      judgementPending,
+      closedCases: closed,
+      successRate,
+      avgResolutionDays: 14
+    };
+  },
+
+  getCasesByStatus: () => {
+    const cases = talCaseService.getAll();
+    const statuses = {};
+    cases.forEach(c => {
+      statuses[c.status] = (statuses[c.status] || 0) + 1;
+    });
+
+    return Object.keys(statuses).map(status => ({
+      status,
+      count: statuses[status],
+      percentage: Math.round((statuses[status] / (cases.length || 1)) * 100)
+    }));
+  },
+
+  getCasesByPriority: () => {
+    const cases = talCaseService.getAll();
+    const priorities = {};
+    cases.forEach(c => {
+      priorities[c.priority] = (priorities[c.priority] || 0) + 1;
+    });
+    return Object.keys(priorities).map(p => ({
+      priority: p,
+      count: priorities[p]
+    }));
+  },
+
+  getUpcomingHearings: (days = 30) => {
+    const hearings = getStore('mock_case_hearings') || [];
+    const cases = talCaseService.getAll();
+    const caseIds = cases.map(c => c.id);
+
+    const now = new Date();
+    const limit = new Date();
+    limit.setDate(limit.getDate() + days);
+
+    return hearings
+      .filter(h => {
+        const hDate = new Date(h.date);
+        return caseIds.includes(h.caseId) && hDate >= now && hDate <= limit;
+      })
+      .map(h => {
+        const c = cases.find(item => item.id === h.caseId);
+        return {
+          ...h,
+          caseNumber: c?.caseNumber,
+          tenantName: c?.tenantName,
+          propertyName: c?.propertyName,
+          unitNumber: c?.unitNumber
+        };
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  },
+
+  getOverdueTasks: () => {
+    const tasks = taskService.getAll();
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    return tasks.filter(t => {
+      const dueDate = new Date(t.dueDate);
+      return dueDate < now && !['COMPLETED', 'CANCELLED'].includes(t.status);
+    });
+  },
+
+  getDashboardSummary: () => {
+    const cases = talCaseService.getAll();
+    const active = cases.filter(c => !['Resolved', 'Closed'].includes(c.status));
+    const urgent = active.filter(c => c.priority === 'Urgent' || c.priority === 'High');
+    const upcomingHearings = legalAnalyticsService.getUpcomingHearings(7);
+    const overdueTasks = legalAnalyticsService.getOverdueTasks();
+
+    return {
+      activeCasesCount: active.length,
+      urgentCases: urgent,
+      upcomingHearingsCount: upcomingHearings.length,
+      overdueTaskCount: overdueTasks.length
+    };
+  }
 };

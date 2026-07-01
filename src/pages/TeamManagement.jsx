@@ -45,6 +45,8 @@ const getModuleDisplayName = (name, t) => {
     'QuickBooks Sync': `↳ ${t('sidebar.quickbooks')}`,
     'Chart of Accounts': `↳ ${t('sidebar.chart_of_accounts')}`,
     'Tax Settings': `↳ ${t('sidebar.tax_settings')}`,
+    'TAL Cases': t('sidebar.tal_cases'),
+    'Notes Hub': t('sidebar.notes_hub'),
     'Reports': t('sidebar.reports'),
     'Communication': t('sidebar.sms_hub'),
     'Inbox': `↳ ${t('sidebar.inbox')}`,
@@ -60,9 +62,6 @@ const getModuleDisplayName = (name, t) => {
     'Inspections': t('sidebar.inspections'),
     'Inspection List': `↳ ${t('sidebar.inspection_list')}`,
     'Inspection Templates': `↳ ${t('sidebar.templates')}`,
-    'Unit Preparation': t('sidebar.unit_prep'),
-    'Move-Out': t('sidebar.move_out'),
-    'Move-In': t('sidebar.move_in'),
     'Settings': t('sidebar.team')
   };
   return map[name] || name;
@@ -78,15 +77,14 @@ const MODULES = [
   'Documents',
   'Payments', 'Invoices', 'Payments Received', 'Outstanding Dues', 'Refunds',
   'Accounting', 'General Ledger',
+  'TAL Cases',
+  'Notes Hub',
   'Reports',
   'Communication', 'Inbox', 'Campaign Manager', 'Templates',
   'Email Hub', 'Send Email', 'Email Templates', 'Sent Emails',
   'Maintenance',
   'Tickets',
   'Inspections', 'Inspection List', 'Inspection Templates',
-  'Unit Preparation',
-  'Move-Out',
-  'Move-In',
   'Settings'
 ];
 

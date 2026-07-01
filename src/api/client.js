@@ -113,6 +113,12 @@ api.defaults.adapter = async (config) => {
     }
   }
 
+  // Companies
+  if (cleanPath === '/api/admin/companies') {
+    const res = await mockDb.mockCompanyService.getAll();
+    return response200(res.data);
+  }
+
   // Properties / Buildings
   if (cleanPath === '/api/admin/properties') {
     if (method === 'get') {
@@ -386,76 +392,20 @@ api.defaults.adapter = async (config) => {
     }
   }
 
-  // Workflow Move Ins
-  if (cleanPath === '/api/admin/workflow/move-in') {
-    const res = await mockDb.mockWorkflowService.getMoveIns();
-    return response200(res.data);
-  }
-
-  const moveInReqMatch = cleanPath.match(/\/api\/admin\/workflow\/move-in\/(\d+)\/requirement/);
-  if (moveInReqMatch) {
-    const res = await mockDb.mockWorkflowService.updateMoveInRequirement(moveInReqMatch[1], body.reqId, body.status);
-    return response200(res.data);
-  }
-
-  const moveInApproveMatch = cleanPath.match(/\/api\/admin\/workflow\/move-in\/(\d+)\/approve/);
-  if (moveInApproveMatch) {
-    const res = await mockDb.mockWorkflowService.approveMoveIn(moveInApproveMatch[1]);
-    return response200(res.data);
-  }
-
-  const moveInCancelMatch = cleanPath.match(/\/api\/admin\/workflow\/move-in\/(\d+)\/cancel/);
-  if (moveInCancelMatch) {
-    const res = await mockDb.mockWorkflowService.cancelMoveIn(moveInCancelMatch[1]);
-    return response200(res.data);
-  }
-
-  const moveInOverrideMatch = cleanPath.match(/\/api\/admin\/workflow\/move-in\/(\d+)\/override/);
-  if (moveInOverrideMatch) {
-    const res = await mockDb.mockWorkflowService.overrideMoveIn(moveInOverrideMatch[1]);
-    return response200(res.data);
-  }
-
-  // Workflow Move Outs
-  if (cleanPath === '/api/admin/workflow/move-out') {
-    const res = await mockDb.mockWorkflowService.getMoveOuts();
-    return response200(res.data);
-  }
-
-  const moveOutCancelMatch = cleanPath.match(/\/api\/admin\/workflow\/move-out\/cancel\/(\d+)/);
-  if (moveOutCancelMatch) {
-    const res = await mockDb.mockWorkflowService.cancelMoveOut(moveOutCancelMatch[1]);
-    return response200(res.data);
-  }
-
-  const moveOutConfirmMatch = cleanPath.match(/\/api\/admin\/workflow\/move-out\/(\d+)\/confirm/);
-  if (moveOutConfirmMatch) {
-    const res = await mockDb.mockWorkflowService.confirmMoveOut(moveOutConfirmMatch[1]);
-    return response200(res.data);
-  }
-
-  const moveOutCompleteMatch = cleanPath.match(/\/api\/admin\/workflow\/move-out\/(\d+)\/complete/);
-  if (moveOutCompleteMatch) {
-    const res = await mockDb.mockWorkflowService.completeMoveOut(moveOutCompleteMatch[1]);
-    return response200(res.data);
-  }
-
-  const moveOutScheduleMatch = cleanPath.match(/\/api\/admin\/workflow\/move-out\/(\d+)\/schedule-final/);
-  if (moveOutScheduleMatch) {
-    const res = await mockDb.mockWorkflowService.scheduleFinalMoveOut(moveOutScheduleMatch[1], body.finalInspectionDate);
-    return response200(res.data);
-  }
-
-  // Workflow Unit Prep
-  if (cleanPath === '/api/admin/workflow/unit-prep') {
-    const res = await mockDb.mockWorkflowService.getPrepUnits();
-    return response200(res.data);
-  }
-
-  const unitPrepStageMatch = cleanPath.match(/\/api\/admin\/workflow\/unit-prep\/(\d+)\/stage/);
-  if (unitPrepStageMatch) {
-    const res = await mockDb.mockWorkflowService.updatePrepStage(unitPrepStageMatch[1], body.nextStage);
-    return response200(res.data);
+  // Disabled workflow modules (Move-In, Move-Out, Unit Preparation)
+  if (
+    cleanPath.includes('/api/admin/workflow/move-in') ||
+    cleanPath.includes('/api/admin/workflow/move-out') ||
+    cleanPath.includes('/api/admin/workflow/unit-prep')
+  ) {
+    return {
+      data: { success: false, message: 'This module has been disabled.' },
+      status: 403,
+      statusText: 'Forbidden',
+      headers: { 'content-type': 'application/json' },
+      config,
+      request: {},
+    };
   }
 
   // Workflow Inspections & Templates
@@ -1047,6 +997,80 @@ api.defaults.adapter = async (config) => {
     if (downloadReportMatch) {
       return response200(new Blob(['Mock report content'], { type: 'application/octet-stream' }));
     }
+  }
+
+  // Notes Hub (Phase 6)
+  if (cleanPath === '/api/admin/notes/stats') {
+    const { notesHubService } = await import('../services/notesHubService');
+    return response200(notesHubService.getStats());
+  }
+
+  if (cleanPath === '/api/admin/notes/activity') {
+    const { activityService } = await import('../services/activityService');
+    const limit = parseInt(query.get('limit') || '20', 10);
+    const companyId = localStorage.getItem('global_selected_company_id');
+    return response200(
+      activityService.getRecent(limit, companyId ? { companyId: parseInt(companyId, 10) } : {})
+    );
+  }
+
+  if (cleanPath === '/api/admin/notes') {
+    const { notesHubService } = await import('../services/notesHubService');
+    if (method === 'get') {
+      return response200(notesHubService.listNotes({
+        search: query.get('search') || '',
+        entityType: query.get('entityType') || '',
+        category: query.get('category') || '',
+        priority: query.get('priority') || '',
+      }));
+    }
+    if (method === 'post') {
+      return response200(notesHubService.createNote(body));
+    }
+  }
+
+  const noteIdMatch = cleanPath.match(/\/api\/admin\/notes\/([^/]+)$/);
+  if (noteIdMatch) {
+    const { notesHubService } = await import('../services/notesHubService');
+    const noteId = noteIdMatch[1];
+    if (method === 'get') {
+      return response200(notesHubService.getNoteDetail(noteId));
+    }
+    if (method === 'put') {
+      return response200(notesHubService.updateNote(noteId, body));
+    }
+    if (method === 'delete') {
+      notesHubService.deleteNote(noteId);
+      return response200({ success: true });
+    }
+  }
+
+  const notePinMatch = cleanPath.match(/\/api\/admin\/notes\/([^/]+)\/pin$/);
+  if (notePinMatch && method === 'post') {
+    const { notesHubService } = await import('../services/notesHubService');
+    return response200(notesHubService.togglePin(notePinMatch[1]));
+  }
+
+  const noteCommentsMatch = cleanPath.match(/\/api\/admin\/notes\/([^/]+)\/comments$/);
+  if (noteCommentsMatch && method === 'post') {
+    const { notesHubService } = await import('../services/notesHubService');
+    return response200(notesHubService.addComment(noteCommentsMatch[1], body.content, body.createdBy));
+  }
+
+  const noteAttachmentsMatch = cleanPath.match(/\/api\/admin\/notes\/([^/]+)\/attachments$/);
+  if (noteAttachmentsMatch && method === 'post') {
+    const { notesHubService } = await import('../services/notesHubService');
+    return response200(notesHubService.uploadAttachment(noteAttachmentsMatch[1], body));
+  }
+
+  if (cleanPath === '/api/admin/notifications') {
+    const { activityService } = await import('../services/activityService');
+    return response200(activityService.getNotifications(parseInt(query.get('limit') || '20', 10)));
+  }
+
+  if (cleanPath === '/api/admin/notifications/unread-count') {
+    const { activityService } = await import('../services/activityService');
+    return response200({ count: activityService.getUnreadNotificationCount() });
   }
 
   // Default fallback for any unhandled routes to prevent application crash

@@ -95,6 +95,15 @@ export const RentRoll = () => {
         if (user.role !== 'OWNER') fetchUnitTypes();
     }, []);
 
+    useEffect(() => {
+        const handleCompanyChange = () => {
+            setCurrentPage(1);
+            fetchRentRoll();
+        };
+        window.addEventListener('companyChanged', handleCompanyChange);
+        return () => window.removeEventListener('companyChanged', handleCompanyChange);
+    }, []);
+
     const formatDaysRemaining = (endDateStr) => {
         if (!endDateStr) return { text: '-', class: 'bg-slate-50 text-slate-500' };
 
@@ -350,6 +359,7 @@ export const RentRoll = () => {
                         <table className="w-full border-collapse min-w-[1100px]">
                             <thead>
                                 <tr className="bg-slate-50/80 border-b border-slate-200 text-left">
+                                    <th className="px-3 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Company</th>
                                     <th className="px-3 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Building Name</th>
                                     <th className="px-3 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Type</th>
                                     <th className="px-3 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Unit</th>
@@ -399,6 +409,7 @@ export const RentRoll = () => {
                                     const expiryInfo = formatDaysRemaining(row.endDate);
                                     return (
                                         <tr key={row.id} className="hover:bg-slate-50/50 transition-all text-sm group">
+                                            <td className="px-3 py-4 font-bold text-slate-700 whitespace-nowrap">{row.companyName || '-'}</td>
                                             <td className="px-3 py-4 font-medium text-slate-800 whitespace-nowrap">{row.buildingName}</td>
                                             <td className="px-3 py-4">
                                                 <span className={clsx(

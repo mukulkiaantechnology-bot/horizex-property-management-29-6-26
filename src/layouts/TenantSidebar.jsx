@@ -52,8 +52,8 @@ export const TenantSidebar = ({ isOpen, onClose }) => {
             )}>
                 <div className="h-16 flex items-center px-5 justify-between border-b border-slate-800 shrink-0">
                     <div className="flex items-center gap-3">
-                        <div className="bg-white rounded-xl p-1.5 shadow-md shrink-0 flex items-center justify-center">
-                            <img src="/assets/logo.png" alt="Horizex Logo" className="h-8 w-8 object-contain" />
+                        <div className="bg-white rounded-full p-0.5 shadow-md shrink-0 w-14 h-14 flex items-center justify-center overflow-hidden">
+                            <img src="/assets/logo.png" alt="Horizex Logo" className="h-13 w-13 object-contain" />
                         </div>
                         <div className="flex flex-col">
                             <span className="text-sm font-black text-white uppercase tracking-wider leading-none">Horizex</span>

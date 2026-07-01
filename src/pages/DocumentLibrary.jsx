@@ -192,6 +192,12 @@ export const DocumentLibrary = () => {
     useEffect(() => {
         fetchDocuments();
         fetchDropdownData();
+        const handleCompanyChange = () => {
+            fetchDocuments();
+            fetchDropdownData();
+        };
+        window.addEventListener('companyChanged', handleCompanyChange);
+        return () => window.removeEventListener('companyChanged', handleCompanyChange);
     }, []);
 
     const filteredDocuments = documents.filter(doc => {

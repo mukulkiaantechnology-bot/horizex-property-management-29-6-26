@@ -32,9 +32,19 @@ import { LeaseForm } from "./pages/LeaseForm";
 import { LeaseFormBedroom } from "./pages/LeaseFormBedroom";
 import { LeaseHistory } from "./pages/LeaseHistory";
 import { RentRoll } from "./pages/RentRoll";
+import { LeaseRenewals } from "./pages/LeaseRenewals";
+import { RenewalDetail } from "./pages/RenewalDetail";
+
+/* TAL CASES */
+import { TALCases } from "./pages/TALCases";
+import { TALCaseDetail } from "./pages/TALCaseDetail";
+
+/* NOTES HUB */
+import { NotesHub } from "./pages/NotesHub";
+import { NoteDetail } from "./pages/NoteDetail";
 
 /* PAYMENTS */
-import { Invoices } from "./pages/Invoices";
+import { RentCollection } from "./pages/RentCollection";
 import PaymentsReceived from "./pages/PaymentsReceived";
 import OutstandingDues from "./pages/OutstandingDues";
 import RefundsAdjustments from "./pages/RefundsAdjustments";
@@ -65,10 +75,17 @@ import { PrivacyPolicy } from "./pages/PrivacyPolicy";
 import { Support } from "./pages/Support";
 import { ShuttleManagement } from "./pages/ShuttleManagement";
 
+/* TIME & PAYROLL */
+import { PayrollDashboard } from "./pages/payroll/PayrollDashboard";
+import { EmployeeDirectory } from "./pages/payroll/EmployeeDirectory";
+import { AttendanceManagement } from "./pages/payroll/AttendanceManagement";
+import { ShiftManagement } from "./pages/payroll/ShiftManagement";
+import { LeaveManagement } from "./pages/payroll/LeaveManagement";
+import { OvertimeTracking } from "./pages/payroll/OvertimeTracking";
+import { PayrollProcessing } from "./pages/payroll/PayrollProcessing";
+import { PayrollTimelinePage } from "./pages/payroll/PayrollTimelinePage";
+
 /* WORKFLOW */
-import MoveInDashboard from "./pages/workflow/MoveInDashboard";
-import MoveOutDashboard from "./pages/workflow/MoveOutDashboard";
-import UnitPrepDashboard from "./pages/workflow/UnitPrepDashboard";
 import InspectionList from "./pages/workflow/InspectionList";
 import InspectionTemplates from "./pages/workflow/InspectionTemplates";
 import NewInspectionWizard from "./pages/workflow/NewInspectionWizard";
@@ -143,10 +160,22 @@ function App() {
           <Route path="/leases" element={<LeaseHistory />} />
           <Route path="/leases/new" element={<LeaseForm />} />
           <Route path="/leases/new-bedroom" element={<LeaseFormBedroom />} />
+          <Route path="/leases/renewals" element={<LeaseRenewals />} />
+          <Route path="/leases/renewals/:id" element={<RenewalDetail />} />
           <Route path="/rent-roll" element={<RentRoll />} />
 
+          {/* TAL CASES */}
+          <Route path="/tal-cases" element={<TALCases />} />
+          <Route path="/tal-cases/calendar" element={<TALCases defaultTab="calendar" />} />
+          <Route path="/tal-cases/:id" element={<TALCaseDetail />} />
+
+          {/* NOTES HUB */}
+          <Route path="/notes-hub" element={<NotesHub />} />
+          <Route path="/notes-hub/:id" element={<NoteDetail />} />
+
           {/* PAYMENTS */}
-          <Route path="/payments/invoices" element={<Invoices />} />
+          <Route path="/payments/invoices" element={<RentCollection />} />
+          <Route path="/payments/collection" element={<RentCollection />} />
           <Route path="/payments/received" element={<PaymentsReceived />} />
           <Route path="/payments/outstanding" element={<OutstandingDues />} />
           <Route path="/payments/refunds" element={<RefundsAdjustments />} />
@@ -176,10 +205,20 @@ function App() {
           <Route path="/admin/sms/templates" element={<SMSTemplates />} />
           <Route path="/shuttle" element={<ShuttleManagement />} />
 
+          {/* TIME & PAYROLL */}
+          <Route path="/payroll/dashboard" element={<PayrollDashboard />} />
+          <Route path="/payroll/employees" element={<EmployeeDirectory />} />
+          <Route path="/payroll/attendance" element={<AttendanceManagement />} />
+          <Route path="/payroll/shifts" element={<ShiftManagement />} />
+          <Route path="/payroll/leaves" element={<LeaveManagement />} />
+          <Route path="/payroll/overtime" element={<OvertimeTracking />} />
+          <Route path="/payroll/run" element={<PayrollProcessing />} />
+          <Route path="/payroll/timeline" element={<PayrollTimelinePage />} />
+
           {/* WORKFLOW ROUTES */}
-          <Route path="/admin/workflow/move-in" element={<MoveInDashboard />} />
-          <Route path="/admin/workflow/move-out" element={<MoveOutDashboard />} />
-          <Route path="/admin/workflow/unit-prep" element={<UnitPrepDashboard />} />
+          <Route path="/admin/workflow/move-in" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/move-out" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/admin/workflow/unit-prep" element={<Navigate to="/dashboard" replace />} />
           <Route path="/admin/workflow/inspections" element={<InspectionList />} />
           <Route path="/admin/workflow/templates" element={<InspectionTemplates />} />
           <Route path="/admin/workflow/templates/new" element={<CreateInspectionTemplate />} />

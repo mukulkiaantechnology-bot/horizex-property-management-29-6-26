@@ -1,35 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Menu, LogOut, MessageSquare, Globe, Bell } from 'lucide-react';
+import { Menu, LogOut, MessageSquare } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import api from '../api/client';
 import clsx from 'clsx';
+import { CompanySelector } from '../components/CompanySelector';
 
 export const Topbar = ({ title = 'Overview', onMenuClick }) => {
     const navigate = useNavigate();
     const { i18n } = useTranslation();
     const [unreadCount, setUnreadCount] = useState(0);
-    const [userName, setUserName] = useState('Admin User');
-    const [userInitials, setUserInitials] = useState('AU');
-    const [propertyName, setPropertyName] = useState('Horizex Group');
     const [currentLang, setCurrentLang] = React.useState(i18n.language?.split('-')[0] || 'en');
 
     const handleLogout = () => {
         localStorage.removeItem('isLoggedIn');
         navigate('/login');
     };
-
-    useEffect(() => {
-        // Load user from localStorage
-        try {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user.name) {
-                setUserName(user.name);
-                const inits = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-                setUserInitials(inits);
-            }
-        } catch (e) {}
-    }, []);
 
     useEffect(() => {
         const fetchUnreadCount = async () => {
@@ -80,6 +66,9 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
 
             {/* RIGHT */}
             <div className="flex items-center gap-3 md:gap-4">
+                {/* COMPANY SELECTOR */}
+                <CompanySelector />
+
                 {/* SMS NOTIFICATION */}
                 <Link
                     to="/admin/sms/inbox"

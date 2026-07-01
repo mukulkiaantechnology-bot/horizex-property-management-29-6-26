@@ -4,6 +4,25 @@ import { Card } from '../components/Card';
 import { Link } from 'react-router-dom';
 import api from '../api/client';
 import { hasPermission } from '../utils/permissions';
+import { UpcomingRenewalsWidget } from '../components/renewals/UpcomingRenewalsWidget';
+import { RecentRenewalsWidget } from '../components/renewals/RecentRenewalsWidget';
+import { mockRenewalService, collectionAnalyticsService, invoiceService, legalAnalyticsService, taskService } from '../mock/mockServices';
+import { notesHubService } from '../services/notesHubService';
+
+/* TIME & PAYROLL INTEGRATION */
+import payrollAnalyticsService from '../services/payrollAnalyticsService';
+import leaveService from '../services/leaveService';
+import attendanceService from '../services/attendanceService';
+import employeeService from '../services/employeeService';
+import payrollSettingsService from '../services/payrollSettingsService';
+import { PendingLeaveWidget } from '../components/payroll/PendingLeaveWidget';
+import { UpcomingPayrollWidget } from '../components/payroll/UpcomingPayrollWidget';
+import { RecentPaymentsWidget } from '../components/collection/RecentPaymentsWidget';
+import { UpcomingHearingsWidget } from '../components/tal/UpcomingHearingsWidget';
+import { DashboardTasksWidget } from '../components/tal/DashboardTasksWidget';
+import { UrgentCasesWidget } from '../components/tal/UrgentCasesWidget';
+import { CommunicationTimeline } from '../components/notes/CommunicationTimeline';
+import { RecentNotesWidget } from '../components/notes/RecentNotesWidget';
 import { 
   BarChart, 
 
@@ -31,10 +50,13 @@ import {
   ChevronRight,
   Calendar,
   UserPlus,
-  Wrench
+  Wrench,
+  Gavel,
+  StickyNote,
+  CheckCircle
 } from 'lucide-react';
 
-import { OwnerSelector } from '../components/OwnerSelector';
+
 
 export const Dashboard = () => {
     const [__forceUpdate, __setForceUpdate] = useState(0);
@@ -62,6 +84,15 @@ export const Dashboard = () => {
 
   const [stats, setStats] = useState(null);
   const [revenueStats, setRevenueStats] = useState(null);
+  const [renewals, setRenewals] = useState([]);
+  const [collectionMetrics, setCollectionMetrics] = useState({});
+  const [dashboardInvoices, setDashboardInvoices] = useState([]);
+  const [legalSummary, setLegalSummary] = useState({});
+  const [upcomingHearings, setUpcomingHearings] = useState([]);
+  const [overdueTasks, setOverdueTasks] = useState([]);
+  const [notesActivity, setNotesActivity] = useState([]);
+  const [notesStats, setNotesStats] = useState({});
+  const [recentNotes, setRecentNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOwnerId, setSelectedOwnerId] = useState('');
   const [leaseAlertPage, setLeaseAlertPage] = useState(1);
@@ -69,29 +100,73 @@ export const Dashboard = () => {
   const leaseAlertsPerPage = 5;
   const reservedUnitsPerPage = 5;
 
+  // Time & Payroll States
+  const [payrollKPIs, setPayrollKPIs] = useState({});
+  const [dashboardPendingLeaves, setDashboardPendingLeaves] = useState([]);
+  const [dashboardEmployees, setDashboardEmployees] = useState([]);
+  const [dashboardSettings, setDashboardSettings] = useState({});
+  const [dashboardCorrections, setDashboardCorrections] = useState([]);
+
 
   const fetchStats = async (ownerId = '') => {
     try {
       setLoading(true);
       const ownerParam = ownerId ? `?ownerId=${ownerId}` : '';
-      const [dashRes, revRes] = await Promise.all([
+      const [dashRes, revRes, renewalRes] = await Promise.all([
         api.get(`/api/admin/dashboard/stats${ownerParam}`),
-        api.get(`/api/admin/analytics/revenue${ownerParam}`)
+        api.get(`/api/admin/analytics/revenue${ownerParam}`),
+        mockRenewalService.getAll()
       ]);
       setStats(dashRes.data);
       setRevenueStats(revRes.data);
+      setRenewals(renewalRes.data || []);
+      setCollectionMetrics(collectionAnalyticsService.getMetrics());
+      setDashboardInvoices(invoiceService.getAll());
+      setLegalSummary(legalAnalyticsService.getDashboardSummary());
+      setUpcomingHearings(legalAnalyticsService.getUpcomingHearings(7));
+      setOverdueTasks(legalAnalyticsService.getOverdueTasks());
+      setNotesActivity(notesHubService.getRecentActivity(8));
+      setNotesStats(notesHubService.getStats());
+      setRecentNotes(notesHubService.listNotes({}).slice(0, 5));
+
+      // Fetch Time & Payroll
+      const compId = localStorage.getItem('global_selected_company_id') || '';
+      setPayrollKPIs(payrollAnalyticsService.getKPIs(compId));
+      setDashboardPendingLeaves(leaveService.getAll({ companyId: compId, status: 'Pending' }));
+      setDashboardEmployees(employeeService.getAll({ companyId: compId }));
+      setDashboardSettings(payrollSettingsService.getSettings());
+      setDashboardCorrections(attendanceService.getCorrections({ companyId: compId, status: 'Pending' }));
     } catch (error) {
       console.error('Failed to fetch dashboard stats', error);
       setStats(null);
       setRevenueStats(null);
+      setRenewals([]);
+      setCollectionMetrics({});
+      setDashboardInvoices([]);
+      setLegalSummary({});
+      setUpcomingHearings([]);
+      setOverdueTasks([]);
+      setNotesActivity([]);
+      setNotesStats({});
+      setRecentNotes([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchStats(selectedOwnerId);
-  }, [selectedOwnerId]);
+    fetchStats();
+    const handleCompanyChange = () => {
+      fetchStats();
+    };
+    window.addEventListener('companyChanged', handleCompanyChange);
+    return () => window.removeEventListener('companyChanged', handleCompanyChange);
+  }, []);
+
+  const handleCompleteTask = (taskId) => {
+    taskService.markComplete(taskId);
+    fetchStats();
+  };
 
   const handleCancelRefund = async (tenantId, unitId) => {
     if (!window.confirm('Are you sure you want to cancel the refund process for this tenant?')) return;
@@ -106,7 +181,7 @@ export const Dashboard = () => {
         reason: 'Refund process cancelled via Dashboard Alert'
       });
       alert('Refund process cancelled successfully.');
-      fetchStats(selectedOwnerId);
+      fetchStats();
     } catch (error) {
       console.error('Failed to cancel refund process', error);
       alert('Failed to cancel refund process');
@@ -219,9 +294,6 @@ export const Dashboard = () => {
       <div className="flex flex-col gap-4">
 
         {/* TOP BAR / FILTERS */}
-        <section className="flex justify-end sticky top-0 z-10 py-1 bg-bg/85 backdrop-blur-md -mx-4 px-4">
-          <OwnerSelector value={selectedOwnerId} onOwnerChange={(id) => setSelectedOwnerId(id)} />
-        </section>
 
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
@@ -234,10 +306,13 @@ export const Dashboard = () => {
                 {[
                     { title: 'Total Properties', value: totalProperties || 0, subValue: 'Active Properties', icon: Building2, color: 'bg-blue-500', path: '/properties/buildings' },
                     { title: 'Total Units', value: totalUnits || 0, subValue: 'Registered Units', icon: Home, color: 'bg-emerald-500', path: '/properties/buildings' },
-                    { title: 'Occupied Units', value: occupancy?.occupied || 0, subValue: `${Math.round(((occupancy?.occupied || 0) / (totalUnits || 1)) * 100)}% Occupied`, icon: Users, color: 'bg-indigo-500', path: '/properties/buildings' },
-                    { title: 'Outstanding Dues', value: `$${((outstandingRent || 0) + (outstandingDeposits || 0)).toLocaleString('en-CA')}`, subValue: 'Total Outstanding', icon: Wallet, color: 'bg-rose-500', path: '/outstanding-dues' },
-                    { title: 'Open Maintenance', value: data.openMaintenance || 18, subValue: 'Open Tickets', icon: Wrench, color: 'bg-amber-500', path: '/maintenance' },
-                    { title: 'Leases Expiring', value: leaseAlerts?.expiringSoon || 0, subValue: 'Next 30 Days', icon: Clock, color: 'bg-purple-500', path: '/leases' },
+                    { title: 'Outstanding Rent', value: `$${(collectionMetrics.totalOutstanding || 0).toLocaleString('en-CA')}`, subValue: 'AR Receivables', icon: Wallet, color: 'bg-rose-500', path: '/payments/collection' },
+                    { title: 'Collection Rate', value: `${collectionMetrics.collectionRate || 0}%`, subValue: 'Overall Performance', icon: TrendingUp, color: 'bg-indigo-500', path: '/payments/collection' },
+                    { title: 'Overdue Invoices', value: collectionMetrics.overdueCount || 0, subValue: 'Requires Collection', icon: Clock, color: 'bg-amber-500', path: '/payments/collection' },
+                    { title: 'This Month Collected', value: `$${(collectionMetrics.thisMonthCollection || 0).toLocaleString('en-CA')}`, subValue: 'Cash Inflow', icon: TrendingUp, color: 'bg-emerald-500', path: '/payments/collection' },
+                    { title: 'Active TAL Cases', value: legalSummary.activeCasesCount || 0, subValue: 'In Litigation', icon: Gavel, color: 'bg-violet-500', path: '/tal-cases' },
+                    { title: 'Upcoming Hearings', value: legalSummary.upcomingHearingsCount || 0, subValue: 'Next 7 Days', icon: Calendar, color: 'bg-orange-500', path: '/tal-cases/calendar' },
+                    { title: 'Notes Hub', value: notesStats.totalNotes || 0, subValue: `${notesStats.recentCount || 0} This Week`, icon: StickyNote, color: 'bg-indigo-500', path: '/notes-hub' },
                     { title: 'Monthly Revenue', value: `$${(actualRevenue || 0).toLocaleString('en-CA')}`, subValue: 'This Month', icon: TrendingUp, color: 'bg-emerald-500', path: '/accounting' },
                     { title: 'Vacant Units', value: occupancy?.vacant || 0, subValue: 'Available Units', icon: Home, color: 'bg-blue-500', path: '/properties/buildings' }
                 ].map((card, idx) => (
@@ -359,6 +434,132 @@ export const Dashboard = () => {
                   </div>
                 )}
               </Card>
+            </section>
+
+            {/* LEASE RENEWALS WIDGETS */}
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+              <UpcomingRenewalsWidget renewals={renewals} />
+              <RecentRenewalsWidget renewals={renewals} />
+            </section>
+
+            {/* RENT COLLECTION WIDGETS */}
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+              <RecentPaymentsWidget
+                payments={dashboardInvoices.flatMap(inv => inv.paymentsList || [])}
+                invoices={dashboardInvoices}
+              />
+              
+              {/* Quick Actions Card */}
+              <Card className="p-6 bg-slate-900 text-white rounded-[22px] shadow-lg flex flex-col justify-between">
+                <div>
+                  <h3 className="text-base font-black tracking-tight mb-2">Rent Collection Quick Actions</h3>
+                  <p className="text-xs text-slate-400 font-medium">Post transactions, waivers, and track ledgers</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mt-4">
+                  <button
+                    onClick={() => window.location.href = '/payments/collection'}
+                    className="py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all"
+                  >
+                    Open Workspace
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/payments/collection'}
+                    className="py-2.5 bg-white hover:bg-slate-100 text-slate-900 text-xs font-bold rounded-xl transition-all"
+                  >
+                    View Tenant Ledger
+                  </button>
+                </div>
+              </Card>
+            </section>
+
+            {/* TAL LEGAL WIDGETS */}
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+              <UpcomingHearingsWidget hearings={upcomingHearings} />
+              <DashboardTasksWidget tasks={overdueTasks} onCompleteTask={handleCompleteTask} />
+              <UrgentCasesWidget cases={legalSummary.urgentCases || []} onView={(id) => window.location.href = `/tal-cases/${id}`} />
+            </section>
+            {/* NOTES & ACTIVITY */}
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+              <Card className="p-5 rounded-[22px] border border-slate-200 lg:col-span-2">
+                <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-4">
+                  Recent Notes Activity
+                </h3>
+                <CommunicationTimeline events={notesActivity} compact />
+              </Card>
+              <RecentNotesWidget notes={recentNotes} />
+            </section>
+
+            {/* TIME & PAYROLL SUMMARY INTEGRATION */}
+            <section className="mt-8 border-t border-slate-100 pt-8">
+              <div className="flex flex-col gap-0.5 mb-6">
+                <h3 className="text-base font-black text-slate-800 uppercase tracking-wider">
+                  Time & Payroll Overview
+                </h3>
+                <span className="text-xs text-slate-400">Current company stats for attendance, pending leaves, and upcoming cycles.</span>
+              </div>
+
+              {/* KPI cards subset for Main Dashboard */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Present Today</span>
+                    <span className="text-xl font-black text-slate-800">{payrollKPIs.presentToday || 0} Staff</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-500 flex items-center justify-center">
+                    <CheckCircle size={18} />
+                  </div>
+                </div>
+
+                <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Employees On Leave</span>
+                    <span className="text-xl font-black text-slate-800">{payrollKPIs.employeesOnLeave || 0} Staff</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-100 text-amber-500 flex items-center justify-center">
+                    <Calendar size={18} />
+                  </div>
+                </div>
+
+                <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pending Corrections</span>
+                    <span className="text-xl font-black text-rose-600">{dashboardCorrections.length} Alerts</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-100 text-rose-500 flex items-center justify-center">
+                    <Clock size={18} />
+                  </div>
+                </div>
+
+                {/* Quick actions box for Main Dashboard */}
+                <div className="bg-slate-900 text-white border border-slate-950 rounded-3xl p-5 shadow-card flex flex-col justify-between gap-3">
+                  <span className="text-[10px] font-black text-indigo-300 uppercase tracking-widest">Time & Payroll Workspaces</span>
+                  <div className="flex gap-2">
+                    <Link to="/payroll/dashboard" className="px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold transition-all border-none">
+                      Dashboard
+                    </Link>
+                    <Link to="/payroll/run" className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-900 text-[10px] font-bold transition-all border-none">
+                      Runs
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Multi Widgets grid for Main Dashboard */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                  <PendingLeaveWidget 
+                    requests={dashboardPendingLeaves} 
+                    onApprove={(id) => { leaveService.updateStatus(id, 'Approved'); fetchStats(); }}
+                    onReject={(id, r) => { leaveService.updateStatus(id, 'Rejected', r); fetchStats(); }}
+                  />
+                </div>
+                <div>
+                  <UpcomingPayrollWidget 
+                    employees={dashboardEmployees} 
+                    settings={dashboardSettings} 
+                  />
+                </div>
+              </div>
             </section>
 
             {/* RESERVED UNITS TABLE */}
