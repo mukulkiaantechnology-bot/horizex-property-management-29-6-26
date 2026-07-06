@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 import { Button } from '../components/Button';
-import { Plus, Search, User, Eye, Trash2, FileText, Shield, Download, Upload, ArrowLeft, Calendar, FileCheck, AlertCircle, Pencil, Mail, Smartphone, Send, CheckCircle, Building2 } from 'lucide-react';
+import { Plus, Search, User, Eye, Trash2, FileText, Shield, Download, Upload, ArrowLeft, Calendar, FileCheck, AlertCircle, Pencil, Mail, Smartphone, Send, CheckCircle, Building2, Gavel } from 'lucide-react';
 import clsx from 'clsx';
 import api from '../api/client';
 import { AccessControl } from '../components/AccessControl';
+import { talCaseService } from '../mock/mockServices';
+import { EntityNotesPanel } from '../components/notes/EntityNotesPanel';
 
 const initialTenants = [];
 
@@ -1208,6 +1210,116 @@ export const Tenants = () => {
   ========================= */
 
 /* =========================
+   TENANT TAL CASES HISTORY WIDGET
+  ========================= */
+
+const TenantTALHistoryWidget = ({ tenantId, tenantName }) => {
+  const allCases = talCaseService.getAll() || [];
+  const tenantCases = allCases.filter(c => c.tenantId === tenantId);
+
+  const openCasesCount = tenantCases.filter(c => !['Closed', 'Archived'].includes(c.status)).length;
+  const closedCasesCount = tenantCases.filter(c => ['Closed', 'Archived'].includes(c.status)).length;
+  const latestCase = tenantCases.length > 0 ? [...tenantCases].sort((a, b) => b.id - a.id)[0] : null;
+
+  return (
+    <div className="space-y-6">
+      {/* Overview stats for Tenant's TAL history */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+          <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider block">Open TAL Cases</span>
+          <span className="text-xl font-black text-rose-600 block mt-1">{openCasesCount}</span>
+        </div>
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+          <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider block">Closed TAL Cases</span>
+          <span className="text-xl font-black text-slate-500 block mt-1">{closedCasesCount}</span>
+        </div>
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between">
+          <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider block">Latest Case Status</span>
+          <span className="text-xs font-bold text-indigo-600 block mt-2 uppercase truncate">
+            {latestCase ? `${latestCase.caseNumber} - ${latestCase.status}` : 'No Cases Recorded'}
+          </span>
+        </div>
+      </div>
+
+      <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 flex-wrap gap-2">
+          <h4 className="font-bold text-slate-800 flex items-center gap-2">
+            <Gavel size={16} className="text-indigo-600" />
+            TAL Legal Disputes History
+          </h4>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => window.location.href = `/tal-cases?search=${encodeURIComponent(tenantName)}`}
+            className="text-[10px] font-black uppercase tracking-wider py-1.5"
+          >
+            View TAL Cases Dashboard
+          </Button>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Case Number</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Case Type</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Opened Date</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Closed Date</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Outcome</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">Outstanding Balance</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-50 text-xs">
+              {tenantCases.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-6 py-12 text-center text-slate-400 font-semibold italic">
+                    No legal history or TAL disputes on file for this tenant.
+                  </td>
+                </tr>
+              ) : (
+                tenantCases.map(c => (
+                  <tr key={c.id} className="hover:bg-slate-50/50 transition-all font-medium">
+                    <td className="px-6 py-4 font-mono font-bold text-slate-800">{c.caseNumber}</td>
+                    <td className="px-6 py-4 text-slate-600">{c.caseType || 'Other'}</td>
+                    <td className="px-6 py-4 text-slate-500 font-mono">{c.filedDate || 'Draft'}</td>
+                    <td className="px-6 py-4 text-slate-500 font-mono">{c.closedDate || '-'}</td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-0.5 rounded uppercase text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                        {c.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-0.5 rounded uppercase text-[9px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                        {c.outcome || 'Pending'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 font-mono font-bold text-rose-600">
+                      ${c.outstandingRent || 0}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => window.location.href = `/tal-cases/${c.id}`}
+                        className="text-[10px] font-black uppercase tracking-wider py-1"
+                      >
+                        Quick View
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+/* =========================
    TENANT DETAIL COMPONENT
   ========================= */
 
@@ -1522,7 +1634,7 @@ const TenantDetail = ({ tenant, onBack, onSendInvite, onEdit, allUnits = [] }) =
 
         {/* TABS */}
         <div className="flex border-b border-slate-200 gap-8 px-2 overflow-x-auto no-scrollbar">
-          {['Details', 'Leases', 'Documents', 'Insurance', 'Tickets'].map(tab => (
+          {['Details', 'Leases', 'Documents', 'Insurance', 'Tickets', 'Notes', 'TAL Cases'].map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -2065,6 +2177,18 @@ const TenantDetail = ({ tenant, onBack, onSendInvite, onEdit, allUnits = [] }) =
                 </div>
               </section>
             </div>
+          )}
+
+          {activeTab === 'TAL Cases' && (
+            <TenantTALHistoryWidget tenantId={tenantData.id} tenantName={tenantData.name} />
+          )}
+
+          {activeTab === 'Notes' && (
+            <EntityNotesPanel
+              entityType="TENANT"
+              entityId={tenantData.id}
+              entityLabel="tenant"
+            />
           )}
 
         </div>

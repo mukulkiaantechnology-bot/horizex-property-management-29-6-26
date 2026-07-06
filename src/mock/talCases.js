@@ -6,34 +6,45 @@
 
 // ─── CONFIGURABLE STATUS WORKFLOWS ────────────────────────────
 export const TAL_CASE_STATUSES = {
-  DRAFT:             { label: 'Draft',             color: 'bg-slate-100 text-slate-600 border-slate-200',    step: 1 },
-  PREPARING:         { label: 'Preparing',          color: 'bg-blue-50 text-blue-700 border-blue-200',        step: 2 },
-  NOTICE_SENT:       { label: 'Notice Sent',        color: 'bg-indigo-50 text-indigo-700 border-indigo-200',  step: 3 },
-  FILED:             { label: 'Filed',              color: 'bg-violet-50 text-violet-700 border-violet-200',  step: 4 },
-  AWAITING_HEARING:  { label: 'Awaiting Hearing',   color: 'bg-amber-50 text-amber-700 border-amber-200',     step: 5 },
-  HEARING_SCHEDULED: { label: 'Hearing Scheduled',  color: 'bg-orange-50 text-orange-700 border-orange-200',  step: 6 },
-  UNDER_REVIEW:      { label: 'Under Review',       color: 'bg-cyan-50 text-cyan-700 border-cyan-200',        step: 7 },
-  JUDGEMENT_PENDING: { label: 'Judgement Pending',  color: 'bg-purple-50 text-purple-700 border-purple-200',  step: 8 },
-  RESOLVED:          { label: 'Resolved',           color: 'bg-emerald-50 text-emerald-700 border-emerald-200', step: 9 },
-  CLOSED:            { label: 'Closed',             color: 'bg-slate-200 text-slate-700 border-slate-300',    step: 10 },
-  APPEALED:          { label: 'Appealed',           color: 'bg-rose-50 text-rose-700 border-rose-200',        step: 11 },
+  DRAFT:               { label: 'Draft',               color: 'bg-slate-100 text-slate-600 border-slate-200', step: 1, nextAction: 'Complete case information' },
+  PREPARING_DOCUMENTS: { label: 'Preparing Documents', color: 'bg-indigo-50 text-indigo-700 border-indigo-200', step: 2, nextAction: 'Upload required legal documents' },
+  READY_TO_FILE:       { label: 'Ready to File',       color: 'bg-indigo-100 text-indigo-800 border-indigo-300', step: 3, nextAction: 'Generate TAL forms' },
+  FILED:               { label: 'Filed',               color: 'bg-blue-50 text-blue-700 border-blue-200', step: 4, nextAction: 'Wait for hearing scheduling' },
+  HEARING_SCHEDULED:   { label: 'Hearing Scheduled',   color: 'bg-orange-50 text-orange-700 border-orange-200', step: 5, nextAction: 'Notify tenant and prepare evidence' },
+  PREPARING_HEARING:   { label: 'Preparing Hearing',   color: 'bg-blue-100 text-blue-800 border-blue-300', step: 6, nextAction: 'Upload evidence and hearing notes' },
+  HEARING_COMPLETED:   { label: 'Hearing Completed',   color: 'bg-orange-100 text-orange-800 border-orange-300', step: 7, nextAction: 'Await tribunal decision' },
+  DECISION_RECEIVED:   { label: 'Decision Received',   color: 'bg-purple-50 text-purple-700 border-purple-200', step: 8, nextAction: 'Review tribunal order' },
+  ORDER_ISSUED:        { label: 'Order Issued',        color: 'bg-emerald-50 text-emerald-700 border-emerald-200', step: 9, nextAction: 'Begin enforcement' },
+  PAYMENT_ORDERED:     { label: 'Payment Ordered',     color: 'bg-emerald-100 text-emerald-800 border-emerald-300', step: 10, nextAction: 'Track payment collection' },
+  EVICTION_APPROVED:   { label: 'Eviction Approved',   color: 'bg-emerald-200 text-emerald-900 border-emerald-400', step: 11, nextAction: 'Schedule eviction' },
+  CLOSED:              { label: 'Closed',              color: 'bg-slate-200 text-slate-700 border-slate-300', step: 12, nextAction: 'Archive records' },
+  ARCHIVED:            { label: 'Archived',            color: 'bg-slate-300 text-slate-800 border-slate-400', step: 13, nextAction: 'Read-only historical record' },
 };
 
 export const TAL_CASE_PRIORITIES = {
-  LOW:    { label: 'Low',    color: 'bg-slate-100 text-slate-600' },
-  MEDIUM: { label: 'Medium', color: 'bg-amber-50 text-amber-700' },
-  HIGH:   { label: 'High',   color: 'bg-orange-50 text-orange-700' },
-  URGENT: { label: 'Urgent', color: 'bg-rose-50 text-rose-700' },
+  LOW:    { label: 'Low',    color: 'bg-slate-100 text-slate-600 border border-slate-200' },
+  MEDIUM: { label: 'Medium', color: 'bg-amber-50 text-amber-700 border border-amber-200' },
+  HIGH:   { label: 'High',   color: 'bg-orange-50 text-orange-700 border border-orange-200' },
+  URGENT: { label: 'Urgent', color: 'bg-rose-50 text-rose-700 border border-rose-200' },
 };
 
 export const TAL_DOCUMENT_TYPES = {
-  NOTICE:       { label: 'Notice',       icon: 'FileText' },
-  EVIDENCE:     { label: 'Evidence',     icon: 'File' },
-  LEASE:        { label: 'Lease',        icon: 'FileText' },
-  PHOTOS:       { label: 'Photos',       icon: 'Image' },
-  COURT_FILING: { label: 'Court Filing', icon: 'Gavel' },
-  JUDGEMENT:    { label: 'Judgement',    icon: 'Scale' },
-  OTHER:        { label: 'Other',        icon: 'Paperclip' },
+  LEASE_AGREEMENT:       { label: 'Lease Agreement',       icon: 'FileText' },
+  RENT_LEDGER:           { label: 'Rent Ledger',           icon: 'FileText' },
+  PAYMENT_HISTORY:       { label: 'Payment History',       icon: 'DollarSign' },
+  INSPECTION_REPORTS:    { label: 'Inspection Reports',    icon: 'ClipboardList' },
+  PROPERTY_PHOTOS:       { label: 'Property Photos',       icon: 'Image' },
+  VIDEOS:                { label: 'Videos',                icon: 'Video' },
+  TENANT_COMMUNICATIONS: { label: 'Tenant Communications', icon: 'MessageSquare' },
+  EMAILS:                { label: 'Emails',                icon: 'Mail' },
+  SMS_RECORDS:           { label: 'SMS Records',           icon: 'Smartphone' },
+  LEGAL_NOTICES:         { label: 'Legal Notices',         icon: 'AlertCircle' },
+  TAL_FORMS:             { label: 'TAL Forms',             icon: 'Scale' },
+  HEARING_NOTICE:        { label: 'Hearing Notice',        icon: 'Calendar' },
+  TRIBUNAL_DECISION:     { label: 'Tribunal Decision',     icon: 'Scale' },
+  INVOICES:              { label: 'Invoices',              icon: 'DollarSign' },
+  RECEIPTS:              { label: 'Receipts',              icon: 'FileCheck' },
+  OTHER_EVIDENCE:        { label: 'Other Evidence',        icon: 'Paperclip' },
 };
 
 // ─── CONFIGURABLE TASK WORKFLOWS ──────────────────────────────
@@ -92,12 +103,14 @@ export const mockTalCases = [
     taskIds: [1, 2],
 
     // Case details
+    caseType: 'Non-Payment of Rent',
     subject: 'Unpaid Rent Recovery',
     caseSummary: 'Claim filed for recovery of $1,150 in outstanding rent and associated late fees for the period of June 2026. Tenant acknowledged debt but has not made payment.',
     status: 'Hearing Scheduled',
     priority: 'High',
     filedDate: '2026-06-10',
     closedDate: null,
+    outcome: 'Pending',
 
     // Assigned team
     assignedManagerId: 'usr-001',
@@ -111,16 +124,34 @@ export const mockTalCases = [
     judgeId: 'jdg-001',
     judgeName: 'Justice Robert Côté',
 
+    // Financial Details
+    monthlyRent: 1200,
+    outstandingRent: 1150,
+    filingFee: 98,
+    legalFees: 450,
+    amountClaimed: 1698,
+    recoveredAmount: 0,
+    paymentStatus: 'Unpaid',
+
     // Append-only audit timeline (embedded for atomic reads)
     timeline: [
       { id: 1, date: '2026-06-01T09:00:00Z', event: 'Case Created: TAL-2026-000001', actor: 'Admin User', createdAt: '2026-06-01T09:00:00Z' },
-      { id: 2, date: '2026-06-05T14:00:00Z', event: 'Status changed: Draft → Preparing', actor: 'Admin User', createdAt: '2026-06-05T14:00:00Z' },
+      { id: 2, date: '2026-06-05T14:00:00Z', event: 'Status changed: Draft → Preparing Documents', actor: 'Admin User', createdAt: '2026-06-05T14:00:00Z' },
       { id: 3, date: '2026-06-08T10:00:00Z', event: 'Notice Sent to tenant John Doe via registered mail', actor: 'Admin User', createdAt: '2026-06-08T10:00:00Z' },
-      { id: 4, date: '2026-06-08T10:05:00Z', event: 'Status changed: Preparing → Notice Sent', actor: 'Admin User', createdAt: '2026-06-08T10:05:00Z' },
+      { id: 4, date: '2026-06-08T10:05:00Z', event: 'Status changed: Preparing Documents → Ready to File', actor: 'Admin User', createdAt: '2026-06-08T10:05:00Z' },
       { id: 5, date: '2026-06-10T09:00:00Z', event: 'Case Filed at Tribunal Administratif du Logement', actor: 'Me. Jean Tremblay', createdAt: '2026-06-10T09:00:00Z' },
-      { id: 6, date: '2026-06-10T09:05:00Z', event: 'Status changed: Notice Sent → Filed', actor: 'Admin User', createdAt: '2026-06-10T09:05:00Z' },
+      { id: 6, date: '2026-06-10T09:05:00Z', event: 'Status changed: Ready to File → Filed', actor: 'Admin User', createdAt: '2026-06-10T09:05:00Z' },
       { id: 7, date: '2026-06-15T11:00:00Z', event: 'Hearing scheduled for 2026-07-20 in Room 4A', actor: 'Me. Jean Tremblay', createdAt: '2026-06-15T11:00:00Z' },
       { id: 8, date: '2026-06-15T11:05:00Z', event: 'Status changed: Filed → Hearing Scheduled', actor: 'Admin User', createdAt: '2026-06-15T11:05:00Z' },
+    ],
+
+    // Immutable Audit Log
+    auditLog: [
+      { id: 1, user: 'Admin User', timestamp: '2026-06-01T09:00:00Z', field: 'Status', oldValue: 'None', newValue: 'Draft', action: 'Create Case' },
+      { id: 2, user: 'Admin User', timestamp: '2026-06-05T14:00:00Z', field: 'Status', oldValue: 'Draft', newValue: 'Preparing Documents', action: 'Update Status' },
+      { id: 3, user: 'Admin User', timestamp: '2026-06-08T10:05:00Z', field: 'Status', oldValue: 'Preparing Documents', newValue: 'Ready to File', action: 'Update Status' },
+      { id: 4, user: 'Admin User', timestamp: '2026-06-10T09:05:00Z', field: 'Status', oldValue: 'Ready to File', newValue: 'Filed', action: 'Update Status' },
+      { id: 5, user: 'Admin User', timestamp: '2026-06-15T11:05:00Z', field: 'Status', oldValue: 'Filed', newValue: 'Hearing Scheduled', action: 'Update Status' }
     ],
 
     // Audit fields
@@ -149,12 +180,14 @@ export const mockTalCases = [
     noteIds: [2],
     taskIds: [3],
 
+    caseType: 'Rent Increase Dispute',
     subject: 'Contested Rent Increase',
     caseSummary: 'Tenant has formally contested the proposed 4.5% rent increase for the upcoming renewal term, citing comparable unit rates in the same building.',
-    status: 'Preparing',
+    status: 'Preparing Documents',
     priority: 'Medium',
     filedDate: null,
     closedDate: null,
+    outcome: 'Pending',
 
     assignedManagerId: 'usr-001',
     assignedManagerName: 'Admin User',
@@ -166,10 +199,24 @@ export const mockTalCases = [
     judgeId: null,
     judgeName: null,
 
+    // Financial Details
+    monthlyRent: 1500,
+    outstandingRent: 0,
+    filingFee: 98,
+    legalFees: 200,
+    amountClaimed: 298,
+    recoveredAmount: 0,
+    paymentStatus: 'No Balance',
+
     timeline: [
       { id: 1, date: '2026-06-20T08:00:00Z', event: 'Case Created: TAL-2026-000002', actor: 'Admin User', createdAt: '2026-06-20T08:00:00Z' },
-      { id: 2, date: '2026-06-22T09:00:00Z', event: 'Status changed: Draft → Preparing', actor: 'Admin User', createdAt: '2026-06-22T09:00:00Z' },
+      { id: 2, date: '2026-06-22T09:00:00Z', event: 'Status changed: Draft → Preparing Documents', actor: 'Admin User', createdAt: '2026-06-22T09:00:00Z' },
       { id: 3, date: '2026-06-23T10:00:00Z', event: 'Document uploaded: Rent increase notice letter', actor: 'Admin User', createdAt: '2026-06-23T10:00:00Z' },
+    ],
+
+    auditLog: [
+      { id: 1, user: 'Admin User', timestamp: '2026-06-20T08:00:00Z', field: 'Status', oldValue: 'None', newValue: 'Draft', action: 'Create Case' },
+      { id: 2, user: 'Admin User', timestamp: '2026-06-22T09:00:00Z', field: 'Status', oldValue: 'Draft', newValue: 'Preparing Documents', action: 'Update Status' }
     ],
 
     createdAt: '2026-06-20T08:00:00Z',
@@ -197,12 +244,14 @@ export const mockTalCases = [
     noteIds: [3],
     taskIds: [4],
 
+    caseType: 'Property Damage',
     subject: 'Property Damage Recovery',
     caseSummary: 'Tenant caused water damage to the unit bathroom. Insurance estimate places repair cost at $3,200. TAL case filed for cost recovery.',
-    status: 'Under Review',
+    status: 'Hearing Completed',
     priority: 'Urgent',
     filedDate: '2026-06-18',
     closedDate: null,
+    outcome: 'Pending',
 
     assignedManagerId: 'usr-001',
     assignedManagerName: 'Admin User',
@@ -214,16 +263,35 @@ export const mockTalCases = [
     judgeId: 'jdg-002',
     judgeName: 'Justice Fatima Al-Said',
 
+    // Financial Details
+    monthlyRent: 1350,
+    outstandingRent: 3200,
+    filingFee: 98,
+    legalFees: 600,
+    amountClaimed: 3898,
+    recoveredAmount: 1000,
+    paymentStatus: 'Partially Paid',
+
     timeline: [
       { id: 1, date: '2026-06-18T10:00:00Z', event: 'Case Created: TAL-2026-000003', actor: 'Admin User', createdAt: '2026-06-18T10:00:00Z' },
       { id: 2, date: '2026-06-18T10:30:00Z', event: 'Status changed: Draft → Filed', actor: 'Admin User', createdAt: '2026-06-18T10:30:00Z' },
       { id: 3, date: '2026-06-19T09:00:00Z', event: 'Document uploaded: Damage photos package', actor: 'Admin User', createdAt: '2026-06-19T09:00:00Z' },
       { id: 4, date: '2026-06-20T11:00:00Z', event: 'Hearing scheduled for 2026-07-28 in Room 2B', actor: 'Me. Ahmed Hassan', createdAt: '2026-06-20T11:00:00Z' },
-      { id: 5, date: '2026-06-25T10:00:00Z', event: 'Status changed: Filed → Under Review', actor: 'Admin User', createdAt: '2026-06-25T10:00:00Z' },
+      { id: 5, date: '2026-06-25T10:00:00Z', event: 'Status changed: Filed → Hearing Scheduled', actor: 'Admin User', createdAt: '2026-06-25T10:00:00Z' },
+      { id: 6, date: '2026-07-01T15:00:00Z', event: 'Status changed: Hearing Scheduled → Preparing Hearing', actor: 'Admin User', createdAt: '2026-07-01T15:00:00Z' },
+      { id: 7, date: '2026-07-03T17:00:00Z', event: 'Status changed: Preparing Hearing → Hearing Completed', actor: 'Me. Ahmed Hassan', createdAt: '2026-07-03T17:00:00Z' },
+    ],
+
+    auditLog: [
+      { id: 1, user: 'Admin User', timestamp: '2026-06-18T10:00:00Z', field: 'Status', oldValue: 'None', newValue: 'Draft', action: 'Create Case' },
+      { id: 2, user: 'Admin User', timestamp: '2026-06-18T10:30:00Z', field: 'Status', oldValue: 'Draft', newValue: 'Filed', action: 'Update Status' },
+      { id: 3, user: 'Admin User', timestamp: '2026-06-25T10:00:00Z', field: 'Status', oldValue: 'Filed', newValue: 'Hearing Scheduled', action: 'Update Status' },
+      { id: 4, user: 'Admin User', timestamp: '2026-07-01T15:00:00Z', field: 'Status', oldValue: 'Hearing Scheduled', newValue: 'Preparing Hearing', action: 'Update Status' },
+      { id: 5, user: 'Me. Ahmed Hassan', timestamp: '2026-07-03T17:00:00Z', field: 'Status', oldValue: 'Preparing Hearing', newValue: 'Hearing Completed', action: 'Update Status' }
     ],
 
     createdAt: '2026-06-18T10:00:00Z',
-    updatedAt: '2026-06-25T10:00:00Z',
+    updatedAt: '2026-07-03T17:00:00Z',
     createdBy: 'Admin User',
     updatedBy: 'Admin User',
   },

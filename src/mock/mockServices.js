@@ -2805,8 +2805,24 @@ export const talCaseService = {
 
     const oldCase = cases[idx];
     const updatedTimeline = [...(oldCase.timeline || [])];
+    const updatedAuditLog = [...(oldCase.auditLog || [])];
 
+    // Smart Transition Validation
     if (data.status && data.status !== oldCase.status) {
+      const allowedPreRequisites = {
+        'Decision Received': ['Hearing Completed'],
+        'Order Issued': ['Decision Received'],
+        'Payment Ordered': ['Decision Received', 'Order Issued'],
+        'Eviction Approved': ['Decision Received', 'Order Issued'],
+        'Closed': ['Draft', 'Preparing Documents', 'Ready to File', 'Filed', 'Hearing Scheduled', 'Preparing Hearing', 'Hearing Completed', 'Decision Received', 'Order Issued', 'Payment Ordered', 'Eviction Approved']
+      };
+
+      const requiredPrev = allowedPreRequisites[data.status];
+      if (requiredPrev && !requiredPrev.includes(oldCase.status)) {
+        throw new Error(`Invalid transition: Cannot transition to "${data.status}" from "${oldCase.status}". Prerequisite status must be one of: ${requiredPrev.join(', ')}.`);
+      }
+
+      // Add to timeline
       updatedTimeline.push({
         id: Date.now(),
         date: new Date().toISOString(),
@@ -2814,12 +2830,39 @@ export const talCaseService = {
         actor: 'Admin User',
         createdAt: new Date().toISOString()
       });
+
+      // Add to audit log
+      updatedAuditLog.push({
+        id: Date.now(),
+        user: 'Admin User',
+        timestamp: new Date().toISOString(),
+        field: 'Status',
+        oldValue: oldCase.status,
+        newValue: data.status,
+        action: 'Update Status'
+      });
+    }
+
+    // Capture other field edits in the audit log
+    for (const key of Object.keys(data)) {
+      if (key !== 'status' && key !== 'timeline' && key !== 'auditLog' && data[key] !== oldCase[key]) {
+        updatedAuditLog.push({
+          id: Date.now() + Math.random(),
+          user: 'Admin User',
+          timestamp: new Date().toISOString(),
+          field: key,
+          oldValue: String(oldCase[key] || ''),
+          newValue: String(data[key] || ''),
+          action: 'Edit Field'
+        });
+      }
     }
 
     const updatedCase = {
       ...oldCase,
       ...data,
       timeline: updatedTimeline,
+      auditLog: updatedAuditLog,
       updatedAt: new Date().toISOString(),
       updatedBy: 'Admin User'
     };
@@ -2862,6 +2905,17 @@ export const talCaseService = {
         createdAt: new Date().toISOString()
       });
 
+      const auditLog = c.auditLog || [];
+      auditLog.push({
+        id: Date.now(),
+        user: 'Admin User',
+        timestamp: new Date().toISOString(),
+        field: 'Hearings',
+        oldValue: 'N/A',
+        newValue: `Scheduled: ${hearingData.date} - ${hearingData.courtRoom || 'TBD'}`,
+        action: 'Add Hearing'
+      });
+
       cases[idx] = {
         ...c,
         hearingIds: hIds,
@@ -2870,6 +2924,7 @@ export const talCaseService = {
         judgeId: hearingData.judgeId,
         judgeName: hearingData.judgeName,
         timeline,
+        auditLog,
         updatedAt: new Date().toISOString()
       };
       setStore('mock_tal_cases', cases);
@@ -2906,15 +2961,27 @@ export const talCaseService = {
       timeline.push({
         id: Date.now(),
         date: new Date().toISOString(),
-        event: `Document uploaded: ${docData.name}`,
+        event: `Document uploaded: ${docData.name} (${docData.type || 'Other'})`,
         actor: 'Admin User',
         createdAt: new Date().toISOString()
+      });
+
+      const auditLog = c.auditLog || [];
+      auditLog.push({
+        id: Date.now(),
+        user: 'Admin User',
+        timestamp: new Date().toISOString(),
+        field: 'Documents',
+        oldValue: 'N/A',
+        newValue: `${docData.name} (${docData.type || 'Other'})`,
+        action: 'Upload Document'
       });
 
       cases[idx] = {
         ...c,
         documentIds: docIds,
         timeline,
+        auditLog,
         updatedAt: new Date().toISOString()
       };
       setStore('mock_tal_cases', cases);
@@ -2943,10 +3010,22 @@ export const talCaseService = {
         createdAt: new Date().toISOString()
       });
 
+      const auditLog = c.auditLog || [];
+      auditLog.push({
+        id: Date.now(),
+        user: 'Admin User',
+        timestamp: new Date().toISOString(),
+        field: 'Documents',
+        oldValue: `Doc ID: ${docId}`,
+        newValue: 'Deleted',
+        action: 'Delete Document'
+      });
+
       cases[idx] = {
         ...c,
         documentIds: docIds,
         timeline,
+        auditLog,
         updatedAt: new Date().toISOString()
       };
       setStore('mock_tal_cases', cases);
@@ -3502,26 +3581,24 @@ export const taskService = {
 export const legalAnalyticsService = {
   getMetrics: () => {
     const cases = talCaseService.getAll();
-    const active = cases.filter(c => !['Resolved', 'Closed'].includes(c.status)).length;
-    const filed = cases.filter(c => c.status === 'Filed' || c.filedDate).length;
+    const open = cases.filter(c => !['Closed', 'Archived'].includes(c.status)).length;
+    const draft = cases.filter(c => c.status === 'Draft').length;
+    const filed = cases.filter(c => c.status === 'Filed').length;
     const hearings = cases.filter(c => c.status === 'Hearing Scheduled').length;
-    const awaitingDocs = cases.filter(c => ['Preparing', 'Notice Sent'].includes(c.status)).length;
-    const judgementPending = cases.filter(c => c.status === 'Judgement Pending').length;
-    const closed = cases.filter(c => c.status === 'Closed').length;
-
-    const resolvedCount = cases.filter(c => c.status === 'Resolved').length;
-    const closedTotal = cases.filter(c => ['Resolved', 'Closed'].includes(c.status)).length;
-    const successRate = closedTotal ? Math.round((resolvedCount / closedTotal) * 100) : 85;
+    const awaitingDecision = cases.filter(c => ['Hearing Completed', 'Decision Received'].includes(c.status)).length;
+    const ordersIssued = cases.filter(c => ['Order Issued', 'Payment Ordered', 'Eviction Approved'].includes(c.status)).length;
+    const closed = cases.filter(c => ['Closed', 'Archived'].includes(c.status)).length;
+    const urgent = cases.filter(c => c.priority?.toLowerCase() === 'urgent').length;
 
     return {
-      activeCases: active,
-      filedThisMonth: filed,
+      openCases: open,
+      draftCases: draft,
+      filedCases: filed,
       hearingsScheduled: hearings,
-      awaitingDocuments: awaitingDocs,
-      judgementPending,
+      awaitingDecision,
+      ordersIssued,
       closedCases: closed,
-      successRate,
-      avgResolutionDays: 14
+      urgentCases: urgent
     };
   },
 
