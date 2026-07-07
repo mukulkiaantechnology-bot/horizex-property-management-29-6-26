@@ -264,8 +264,7 @@ export const DocumentLibrary = () => {
                     </div>
                 </div>
 
-                {/* FILTERS */}
-                <Card className="p-6 rounded-[22px] border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 items-center">
+                <Card className="flex flex-col md:flex-row gap-4 items-center">
                     <div className="flex-1 relative w-full">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                         <input
@@ -314,7 +313,7 @@ export const DocumentLibrary = () => {
                 </Card>
 
                 {/* TABLE VIEW */}
-                <Card className="bg-white rounded-2xl shadow-sm overflow-hidden border border-slate-100">
+                <div className="saas-table-container">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-slate-50 border-b border-slate-200">
@@ -442,7 +441,7 @@ export const DocumentLibrary = () => {
                             </tbody>
                         </table>
                     </div>
-                </Card>
+                </div>
 
                 {/* PAGINATION */}
                 {sortedDocuments.length > docsPerPage && (

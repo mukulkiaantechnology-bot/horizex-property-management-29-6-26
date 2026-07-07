@@ -141,7 +141,7 @@ export const RevenueDashboard = () => {
 
   return (
     <MainLayout title="Revenue Dashboard">
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
 
         {/* TOP BAR / FILTERS */}
 
@@ -151,7 +151,7 @@ export const RevenueDashboard = () => {
           </div>
         ) : (
           <>
-            <section className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
+            <section className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
               <Card className="saas-card border-l-4 border-blue-500">
                 <span className="text-xs font-bold uppercase tracking-wider text-blue-500">Total Rent</span>
                 <h2 className="text-3xl font-black mt-2 text-slate-800 leading-tight" title={`$${(stats.actualRent || 0).toLocaleString('en-CA')}`}>
@@ -178,10 +178,10 @@ export const RevenueDashboard = () => {
             </section>
 
             {/* CHARTS & BREAKDOWN */}
-            <section className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
+            <section className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 items-start">
 
               {/* Monthly Revenue Chart */}
-              <Card title="Revenue Trends (Monthly)" className="p-6 rounded-[18px] bg-white shadow-[0_20px_45px_rgba(0,0,0,0.08)]">
+              <Card title="Revenue Trends (Monthly)" className="h-fit">
                 {stats.monthlyRevenue.length === 0 ? (
                   <p className="text-gray-400 italic text-sm mt-2">No revenue data available yet</p>
                 ) : (
@@ -225,7 +225,7 @@ export const RevenueDashboard = () => {
               </Card>
 
               {/* Revenue by Property */}
-              <Card title="Revenue by Property" className="p-6 rounded-[18px] bg-white shadow-[0_20px_45px_rgba(0,0,0,0.08)]">
+              <Card title="Revenue by Property" className="h-fit">
                 {/* Month Filter */}
                 {availableMonths.length > 0 && (
                   <div className="mb-4">
@@ -264,7 +264,7 @@ export const RevenueDashboard = () => {
               </Card>
 
               {/* Recent Activity moved here from Overview as requested */}
-              <Card title="Recent Activity" className="col-span-1 lg:col-span-2 p-6 rounded-[18px] bg-white shadow-[0_20px_45px_rgba(0,0,0,0.08)]">
+              <Card title="Recent Activity" className="col-span-1 lg:col-span-2 h-fit">
                 <ul className="pl-4 text-gray-700 space-y-2 list-disc marker:text-gray-400">
                   {stats.recentActivity && stats.recentActivity.map((activity, index) => (
                     <li key={index} className="text-sm font-medium">{activity}</li>

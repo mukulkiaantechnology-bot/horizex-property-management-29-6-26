@@ -5,7 +5,7 @@ export const Card = ({ children, className, title, action, ...props }) => {
     return (
         <div
             className={clsx(
-                'bg-white border border-slate-100 rounded-[22px] shadow-card hover:shadow-md hover:translate-y-[-1px] transition-all duration-300 ease-in-out flex flex-col overflow-hidden',
+                'saas-card flex flex-col overflow-hidden',
                 className
             )}
             {...props}

@@ -38,16 +38,16 @@ export const AttendanceTable = ({ logs = [], onEdit, onCorrect }) => {
       <table className="w-full border-collapse text-left">
         <thead>
           <tr className="bg-slate-50/50 border-b border-slate-100">
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Employee</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Clock In</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Clock Out</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Break Interval</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Hours</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Overtime (Hr)</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Date</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Employee</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Department</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Clock In</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Clock Out</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Break Interval</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Total Hours</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Overtime (Hr)</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Status</th>
+            <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right whitespace-nowrap">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-50 text-slate-600 text-sm">
@@ -65,22 +65,22 @@ export const AttendanceTable = ({ logs = [], onEdit, onCorrect }) => {
               const hasAnomaly = log.clockIn && !log.clockOut && log.date !== new Date().toISOString().split('T')[0];
               return (
                 <tr key={log.id} className="hover:bg-slate-50/20 transition-colors duration-200">
-                  <td className="px-6 py-4 font-semibold text-slate-700">
+                  <td className="px-6 py-4 font-semibold text-slate-700 whitespace-nowrap">
                     {log.date}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex flex-col">
                       <span className="font-bold text-slate-800">{log.employeeName}</span>
                       <span className="text-xs text-slate-400">{log.employeeNo}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 font-medium text-slate-500">
+                  <td className="px-6 py-4 font-medium text-slate-500 whitespace-nowrap">
                     {log.department}
                   </td>
-                  <td className="px-6 py-4 font-mono text-xs">
+                  <td className="px-6 py-4 font-mono text-xs whitespace-nowrap">
                     {formatTime(log.clockIn)}
                   </td>
-                  <td className="px-6 py-4 font-mono text-xs">
+                  <td className="px-6 py-4 font-mono text-xs whitespace-nowrap">
                     {formatTime(log.clockOut)}
                     {hasAnomaly && (
                       <span className="ml-1.5 inline-flex items-center text-rose-500" title="Missing Clock-Out Alert">
@@ -88,7 +88,7 @@ export const AttendanceTable = ({ logs = [], onEdit, onCorrect }) => {
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-4 font-mono text-xs">
+                  <td className="px-6 py-4 font-mono text-xs whitespace-nowrap">
                     {log.breakStart && log.breakEnd ? (
                       `${formatTime(log.breakStart)} - ${formatTime(log.breakEnd)}`
                     ) : log.breakStart ? (
@@ -97,18 +97,18 @@ export const AttendanceTable = ({ logs = [], onEdit, onCorrect }) => {
                       '--:--'
                     )}
                   </td>
-                  <td className="px-6 py-4 font-semibold text-slate-800">
-                    {log.totalHours} hrs
+                  <td className="px-6 py-4 font-semibold text-slate-800 whitespace-nowrap">
+                    {log.totalHours || '0'} hrs
                   </td>
-                  <td className="px-6 py-4 font-semibold text-violet-600">
+                  <td className="px-6 py-4 font-semibold text-violet-600 whitespace-nowrap">
                     {log.overtimeHours > 0 ? `+${log.overtimeHours} hrs` : '0 hrs'}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={getStatusBadge(log.status)}>
                       {log.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-2">
                       <button 
                         onClick={() => onCorrect && onCorrect(log)}

@@ -210,7 +210,7 @@ export const RentCollection = () => {
 
   return (
     <MainLayout title="Rent Collection & Accounts Receivable">
-      <div className="flex flex-col gap-6 p-4 sm:p-6">
+      <div className="flex flex-col gap-6">
 
         {/* Tab Selection Bar */}
         <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm gap-3">
@@ -262,7 +262,7 @@ export const RentCollection = () => {
                   <div className="lg:col-span-2">
                     <RecentPaymentsWidget payments={payments} invoices={invoices} />
                   </div>
-                  <Card className="p-6 bg-slate-900 text-white rounded-[22px] shadow-lg flex flex-col justify-between">
+                  <Card className="bg-slate-900 text-white rounded-[22px] shadow-lg flex flex-col justify-between h-fit">
                     <div>
                       <h3 className="text-base font-black tracking-tight mb-2">AR Collection Quick Actions</h3>
                       <p className="text-xs text-slate-400 font-medium">Instantly generate cycles or adjust balances</p>

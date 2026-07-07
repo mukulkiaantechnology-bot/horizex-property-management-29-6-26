@@ -321,7 +321,7 @@ export const Dashboard = () => {
         ) : (
           <>
             {/* STAT CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
                 {[
                     { title: 'Total Properties', value: totalProperties || 0, subValue: 'Active Properties', icon: Building2, color: 'bg-blue-500', path: '/properties/buildings' },
                     { title: 'Total Units', value: totalUnits || 0, subValue: 'Registered Units', icon: Home, color: 'bg-emerald-500', path: '/properties/buildings' },
@@ -335,17 +335,15 @@ export const Dashboard = () => {
                     { title: 'Monthly Revenue', value: `$${(actualRevenue || 0).toLocaleString('en-CA')}`, subValue: 'This Month', icon: TrendingUp, color: 'bg-emerald-500', path: '/accounting' },
                     { title: 'Vacant Units', value: occupancy?.vacant || 0, subValue: 'Available Units', icon: Home, color: 'bg-blue-500', path: '/properties/buildings' }
                 ].map((card, idx) => (
-                    <Link
+                    <div
                         key={idx}
-                        to={card.path}
-                        className="bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all group active:scale-[0.98] flex flex-col justify-between"
+                        className="saas-card p-5 flex flex-col justify-between"
                     >
                         <div>
                             <div className="flex justify-between items-start mb-3">
                                 <div className={`w-10 h-10 ${card.color} rounded-xl flex items-center justify-center text-white shadow-lg`}>
                                     <card.icon size={20} />
                                 </div>
-                                <ArrowUpRight size={16} className="text-slate-300 group-hover:text-primary transition-colors" />
                             </div>
                             <h4 className="text-slate-500 font-bold text-[11px] uppercase tracking-wider">{card.title}</h4>
                             <p className="text-xl font-black text-slate-800 tracking-tight mt-0.5">{card.value}</p>
@@ -353,14 +351,14 @@ export const Dashboard = () => {
                         <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{card.subValue}</span>
                         </div>
-                    </Link>
+                    </div>
                 ))}
             </div>
 
             {/* LEASE EXPIRATION ALERTS TABLE (Detailed List) */}
-            <section className="mt-8 mb-6">
-              <Card className="p-8 rounded-[22px] bg-white shadow-sm border border-slate-200 overflow-hidden">
-                <div className="flex items-center justify-between mb-8">
+            <section className="mt-6 mb-4">
+              <div className="saas-table-container p-5 md:p-8">
+                <div className="flex items-center justify-between mb-5">
                   <div>
                     <h3 className="text-xl font-black text-gray-800 tracking-tight">Lease Expiration Alerts</h3>
                     <p className="text-sm text-gray-400 font-medium mt-1">Clients criteria: 45 days for short-term, 4 months for long-term leases</p>
@@ -373,7 +371,7 @@ export const Dashboard = () => {
                 </div>
 
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
+                  <table className="saas-table">
                     <thead>
                       <tr className="border-b border-gray-100">
                         <th className="pb-4 text-xs font-bold text-gray-400 uppercase tracking-widest pl-2">Lease Holder</th>
@@ -434,7 +432,7 @@ export const Dashboard = () => {
                     <button
                       onClick={() => setLeaseAlertPage(p => Math.max(1, p - 1))}
                       disabled={leaseAlertPage === 1}
-                      className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition-all uppercase tracking-widest cursor-pointer"
+                      className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition-all uppercase tracking-widest cursor-pointer focus-visible:ring-2 rounded-lg"
                     >
                       <ChevronLeft size={16} /> Previous
                     </button>
@@ -446,30 +444,30 @@ export const Dashboard = () => {
                     <button
                       onClick={() => setLeaseAlertPage(p => Math.min(totalLeaseAlertPages, p + 1))}
                       disabled={leaseAlertPage === totalLeaseAlertPages}
-                      className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition-all uppercase tracking-widest cursor-pointer"
+                      className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-indigo-600 disabled:opacity-30 disabled:hover:text-slate-400 transition-all uppercase tracking-widest cursor-pointer focus-visible:ring-2 rounded-lg"
                     >
                       Next <ChevronRight size={16} />
                     </button>
                   </div>
                 )}
-              </Card>
+              </div>
             </section>
 
             {/* LEASE RENEWALS WIDGETS */}
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6 items-start">
               <UpcomingRenewalsWidget renewals={renewals} />
               <RecentRenewalsWidget renewals={renewals} />
             </section>
 
             {/* RENT COLLECTION WIDGETS */}
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6 items-start">
               <RecentPaymentsWidget
                 payments={dashboardInvoices.flatMap(inv => inv.paymentsList || [])}
                 invoices={dashboardInvoices}
               />
               
               {/* Quick Actions Card */}
-              <Card className="p-6 bg-slate-900 text-white rounded-[22px] shadow-lg flex flex-col justify-between">
+              <div className="p-6 bg-slate-900 text-white rounded-[22px] shadow-[0_10px_30px_rgba(15,23,42,0.15)] hover:shadow-[0_15px_40px_rgba(15,23,42,0.25)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
                 <div>
                   <h3 className="text-base font-black tracking-tight mb-2">Rent Collection Quick Actions</h3>
                   <p className="text-xs text-slate-400 font-medium">Post transactions, waivers, and track ledgers</p>
@@ -488,18 +486,18 @@ export const Dashboard = () => {
                     View Tenant Ledger
                   </button>
                 </div>
-              </Card>
+              </div>
             </section>
 
             {/* TAL LEGAL WIDGETS */}
-            <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6 items-start">
               <UpcomingHearingsWidget hearings={upcomingHearings} />
               <DashboardTasksWidget tasks={overdueTasks} onCompleteTask={handleCompleteTask} />
               <UrgentCasesWidget cases={legalSummary.urgentCases || []} onView={(id) => window.location.href = `/tal-cases/${id}`} />
             </section>
             {/* NOTES & ACTIVITY */}
-            <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-              <Card className="p-5 rounded-[22px] border border-slate-200 lg:col-span-2">
+            <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6 items-start">
+              <Card className="lg:col-span-2 h-fit">
                 <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-4">
                   Recent Notes Activity
                 </h3>
@@ -509,7 +507,7 @@ export const Dashboard = () => {
             </section>
 
             {/* TIME & PAYROLL SUMMARY INTEGRATION */}
-            <section className="mt-8 border-t border-slate-100 pt-8">
+            <section className="mt-6 border-t border-slate-100 pt-6">
               <div className="flex flex-col gap-0.5 mb-6">
                 <h3 className="text-base font-black text-slate-800 uppercase tracking-wider">
                   Time & Payroll Overview
@@ -518,8 +516,8 @@ export const Dashboard = () => {
               </div>
 
               {/* KPI cards subset for Main Dashboard */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex items-center justify-between">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5 items-start">
+                <div className="saas-card p-5 flex items-center justify-between">
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Present Today</span>
                     <span className="text-xl font-black text-slate-800">{payrollKPIs.presentToday || 0} Staff</span>
@@ -564,7 +562,7 @@ export const Dashboard = () => {
               </div>
 
               {/* Multi Widgets grid for Main Dashboard */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                 <div className="lg:col-span-2">
                   <PendingLeaveWidget 
                     requests={dashboardPendingLeaves} 
@@ -582,9 +580,9 @@ export const Dashboard = () => {
             </section>
 
             {/* RESERVED UNITS TABLE */}
-            <section className="mt-8 mb-12">
-              <Card className="p-8 rounded-[22px] bg-white shadow-sm border border-slate-200 border-t-[4px] border-t-primary overflow-hidden">
-                <div className="flex items-center justify-between mb-8">
+            <section className="mt-6 mb-6">
+              <div className="saas-table-container p-5 md:p-8 border-t-[4px] border-t-primary">
+                <div className="flex items-center justify-between mb-5">
                   <div>
                     <h3 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
                        <UserPlus size={20} className="text-indigo-500" /> Reserved Units
@@ -698,17 +696,17 @@ export const Dashboard = () => {
                     </div>
                   </div>
                 )}
-              </Card>
+              </div>
             </section>
 
             {/* ENTERPRISE INTEGRATIONS MODULE WIDGETS */}
-            <section className="mt-8 mb-6">
+            <section className="mt-6 mb-4">
               <div className="flex flex-col gap-4">
                 <h3 className="text-lg font-black text-gray-800 tracking-tight">Enterprise Integrations Hub</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
                   
                   {/* Sync Queue Summary */}
-                  <Card className="p-6 rounded-[22px] bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
+                  <div className="saas-card p-6 flex flex-col gap-4">
                     <div className="flex justify-between items-center border-b border-slate-50 pb-2">
                       <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Sync & Connection Status</span>
                       <Link to="/integrations?tab=queue" className="text-[10px] text-indigo-600 font-bold hover:underline">Manage Queue</Link>
@@ -727,10 +725,10 @@ export const Dashboard = () => {
                         <span className="font-mono text-slate-500">{integrationStats.lastSuccessfulSync ? new Date(integrationStats.lastSuccessfulSync).toLocaleTimeString() : 'N/A'}</span>
                       </div>
                     </div>
-                  </Card>
+                  </div>
 
                   {/* Upcoming Calendar Events */}
-                  <Card className="p-6 rounded-[22px] bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
+                  <div className="saas-card p-6 flex flex-col gap-4">
                     <div className="flex justify-between items-center border-b border-slate-50 pb-2">
                       <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Upcoming Calendar Events</span>
                       <Link to="/integrations?tab=calendar" className="text-[10px] text-indigo-600 font-bold hover:underline">View Calendar</Link>
@@ -744,10 +742,10 @@ export const Dashboard = () => {
                       ))}
                       {dashboardEvents.length === 0 && <span className="text-xs text-slate-400 italic">No sync events found.</span>}
                     </div>
-                  </Card>
+                  </div>
 
                   {/* Unread Notifications / Recent Emails */}
-                  <Card className="p-6 rounded-[22px] bg-white border border-slate-200 shadow-sm flex flex-col gap-4">
+                  <div className="saas-card p-6 flex flex-col gap-4">
                     <div className="flex justify-between items-center border-b border-slate-50 pb-2">
                       <span className="text-xs font-black text-slate-800 uppercase tracking-wider">Mails & Alerts</span>
                       <Link to="/integrations?tab=notifications" className="text-[10px] text-indigo-600 font-bold hover:underline">Open Inbox</Link>
@@ -766,7 +764,7 @@ export const Dashboard = () => {
                         <span className="text-emerald-600 font-bold flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" /> Active</span>
                       </div>
                     </div>
-                  </Card>
+                  </div>
 
                 </div>
               </div>

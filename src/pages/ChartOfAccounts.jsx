@@ -103,7 +103,11 @@ export const ChartOfAccounts = () => {
   const filteredAccounts =
     filter === 'All'
       ? accounts
-      : accounts.filter((a) => a.assetType === filter);
+      : accounts.filter((a) => {
+          let type = a.assetType || a.type || 'Asset';
+          if (type.toLowerCase() === 'revenue') type = 'Income';
+          return type === filter;
+        });
 
   return (
     <MainLayout title="Chart of Accounts">
@@ -149,17 +153,20 @@ export const ChartOfAccounts = () => {
             // Safe numeric parse – API may return openingBalance or balance
             const rawBalance = acc.openingBalance ?? acc.balance ?? acc.currentBalance ?? 0;
             const numBalance = parseFloat(rawBalance) || 0;
-            const accType = acc.assetType || acc.type || 'Asset';
+            let accType = acc.assetType || acc.type || 'Asset';
+            if (accType.toLowerCase() === 'revenue') accType = 'Income';
+            
+            const accName = acc.accountName || acc.name || 'Unnamed Account';
 
             return (
               <div
                 key={index}
                 className={`rounded-xl p-4 sm:p-5 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.06)] relative transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(0,0,0,0.08)] border-l-[5px] ${accType === 'Asset' ? 'border-l-blue-600' :
                   accType === 'Income' ? 'border-l-green-600' : 'border-l-red-600'
-                  }`}
+                  } h-fit`}
               >
                 <div className="flex justify-between items-start gap-2">
-                  <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">{acc.accountName}</h3>
+                  <h3 className="text-sm sm:text-base font-semibold text-slate-900 leading-snug">{accName}</h3>
                   <div className="flex gap-1.5 items-center shrink-0">
                     {hasPermission('Chart of Accounts', 'edit') && (
                       <button

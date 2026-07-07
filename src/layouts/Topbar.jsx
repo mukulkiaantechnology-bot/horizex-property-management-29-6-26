@@ -102,19 +102,7 @@ export const Topbar = ({ title = 'Overview', onMenuClick }) => {
                     )}
                 </Link>
 
-                {/* NOTIFICATION HUB BELL */}
-                <Link
-                    to="/integrations?tab=notifications"
-                    className="relative p-1.5 sm:p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
-                    title="System Notifications"
-                >
-                    <Bell size={17} className="sm:w-[19px] sm:h-[19px]" />
-                    {notifCount > 0 && (
-                        <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-rose-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border border-white shadow-sm">
-                            {notifCount}
-                        </span>
-                    )}
-                </Link>
+
 
                 {/* LANGUAGE SWITCHER */}
                 <div className="flex items-center bg-slate-100/80 rounded-xl p-0.5 h-7 sm:h-9 notranslate">

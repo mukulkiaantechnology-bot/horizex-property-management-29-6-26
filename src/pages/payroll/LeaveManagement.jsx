@@ -113,29 +113,31 @@ export const LeaveManagement = () => {
       <div className="flex flex-col gap-6">
         
         {/* Header Options */}
-        <div className="flex flex-wrap items-center justify-between gap-4 bg-white border border-slate-100 rounded-3xl p-6 shadow-card">
-          {/* Roster Tabs */}
-          <div className="flex bg-slate-50 border border-slate-100 rounded-2xl p-1 gap-1">
-            <button 
-              onClick={() => setActiveTab('list')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-none cursor-pointer ${
-                activeTab === 'list' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
-              }`}
-            >
-              List View
-            </button>
-            <button 
-              onClick={() => setActiveTab('calendar')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-none cursor-pointer ${
-                activeTab === 'calendar' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
-              }`}
-            >
-              Calendar View
-            </button>
+        <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-5 bg-white border border-slate-100 rounded-[22px] p-5 shadow-card">
+          <div className="flex items-center justify-between w-full xl:w-auto">
+            {/* Roster Tabs */}
+            <div className="flex bg-slate-50 border border-slate-100 rounded-2xl p-1 gap-1 shrink-0">
+              <button 
+                onClick={() => setActiveTab('list')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-none cursor-pointer ${
+                  activeTab === 'list' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                List View
+              </button>
+              <button 
+                onClick={() => setActiveTab('calendar')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-none cursor-pointer ${
+                  activeTab === 'calendar' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                }`}
+              >
+                Calendar View
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl px-2 py-1.5 focus-within:border-blue-100 w-44 md:w-56 transition-all">
+          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto xl:justify-end">
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-xl px-2 py-1.5 focus-within:border-blue-100 flex-1 sm:flex-none sm:w-44 md:w-56 transition-all">
               <Search size={14} className="text-slate-400 shrink-0" />
               <input 
                 type="text" 
@@ -149,7 +151,7 @@ export const LeaveManagement = () => {
             <select 
               value={filters.leaveType} 
               onChange={(e) => setFilters(p => ({ ...p, leaveType: e.target.value }))}
-              className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-600 outline-none font-semibold focus:border-blue-100"
+              className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-600 outline-none font-semibold focus:border-blue-100 shrink-0"
             >
               <option value="">All Types</option>
               <option value="Annual">Annual</option>
@@ -164,7 +166,7 @@ export const LeaveManagement = () => {
             <select 
               value={filters.status} 
               onChange={(e) => setFilters(p => ({ ...p, status: e.target.value }))}
-              className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-600 outline-none font-semibold focus:border-blue-100"
+              className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-600 outline-none font-semibold focus:border-blue-100 shrink-0"
             >
               <option value="">All Statuses</option>
               <option value="Pending">Pending</option>
@@ -176,7 +178,7 @@ export const LeaveManagement = () => {
             {canManage && (
               <button 
                 onClick={() => { resetForm(); setRequestModal(true); }}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg border-none flex items-center gap-1.5 cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg border-none flex items-center justify-center gap-1.5 cursor-pointer shrink-0 ml-auto sm:ml-0"
               >
                 <Plus size={14} /> Request Leave
               </button>
@@ -192,14 +194,14 @@ export const LeaveManagement = () => {
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="bg-slate-50/50 border-b border-slate-100">
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Employee</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Department</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Leave Type</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Period Range</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Absence Justification</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Employee</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Department</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Leave Type</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Period Range</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Absence Justification</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Status</th>
                   {canManage && (
-                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right whitespace-nowrap">Actions</th>
                   )}
                 </tr>
               </thead>
@@ -216,33 +218,33 @@ export const LeaveManagement = () => {
                 ) : (
                   leaves.map((lv) => (
                     <tr key={lv.id} className="hover:bg-slate-50/20 transition-colors duration-200">
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex flex-col">
                           <span className="font-bold text-slate-800">{lv.employeeName}</span>
                           <span className="text-xs text-slate-400">{lv.employeeNo}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 font-semibold text-slate-500">
+                      <td className="px-6 py-4 font-semibold text-slate-500 whitespace-nowrap">
                         {lv.department}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${getLeaveTypeColor(lv.leaveType)}`}>
                           {lv.leaveType}
                         </span>
                       </td>
-                      <td className="px-6 py-4 font-semibold text-slate-600 font-mono text-xs">
+                      <td className="px-6 py-4 font-semibold text-slate-600 font-mono text-xs whitespace-nowrap">
                         {lv.startDate} to {lv.endDate}
                       </td>
-                      <td className="px-6 py-4 italic text-slate-500 max-w-xs truncate">
+                      <td className="px-6 py-4 italic text-slate-500 max-w-xs truncate whitespace-nowrap">
                         "{lv.reason || 'No description'}"
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-black tracking-wide border uppercase ${getStatusColor(lv.status)}`}>
                           {lv.status}
                         </span>
                       </td>
                       {canManage && (
-                        <td className="px-6 py-4 text-right">
+                        <td className="px-6 py-4 text-right whitespace-nowrap">
                           {lv.status === 'Pending' ? (
                             <div className="flex items-center justify-end gap-1.5">
                               <button 

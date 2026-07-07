@@ -43,7 +43,7 @@ export const CollectionStatusChart = ({ invoices = [] }) => {
   }).sort((a, b) => b.value - a.value);
 
   return (
-    <Card className="p-6 bg-white border border-slate-200 rounded-[22px] shadow-sm flex flex-col justify-between h-full">
+    <Card className="h-fit">
       <div>
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -54,7 +54,7 @@ export const CollectionStatusChart = ({ invoices = [] }) => {
         </div>
 
         {invoices.length === 0 ? (
-          <p className="text-xs text-slate-400 py-8 text-center">No invoices available</p>
+          <p className="text-xs text-slate-400 py-2 text-center">No invoices available</p>
         ) : (
           <div className="space-y-4">
             {/* Visual Progress Stack */}

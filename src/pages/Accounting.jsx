@@ -77,25 +77,28 @@ export const Accounting = () => {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-blue-500">
+                <div className="bg-white border border-slate-200 rounded-[22px] shadow-sm p-5 border-l-4 border-blue-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Rent Revenue</div>
                     <div className="text-xl sm:text-2xl font-black text-slate-800">${totalRent.toLocaleString('en-CA')}</div>
-                </Card>
-                <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-purple-500">
+                </div>
+                <div className="bg-white border border-slate-200 rounded-[22px] shadow-sm p-5 border-l-4 border-purple-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Deposits</div>
                     <div className="text-xl sm:text-2xl font-black text-slate-800">${totalDeposits.toLocaleString('en-CA')}</div>
-                </Card>
-                <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-orange-500">
+                </div>
+                <div className="bg-white border border-slate-200 rounded-[22px] shadow-sm p-5 border-l-4 border-orange-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fees</div>
                     <div className="text-xl sm:text-2xl font-black text-slate-800">${totalFees.toLocaleString('en-CA')}</div>
-                </Card>
-                <Card className="p-4 bg-white border-slate-200 shadow-sm border-l-4 border-red-500">
+                </div>
+                <div className="bg-white border border-slate-200 rounded-[22px] shadow-sm p-5 border-l-4 border-red-500">
                     <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Deposit Refunds</div>
                     <div className="text-xl sm:text-2xl font-black text-red-600">${totalRefunds.toLocaleString('en-CA')}</div>
-                </Card>
+                </div>
             </div>
 
-            <Card title="General Ledger">
+            <div className="saas-table-container">
+                <div className="p-6 border-b border-slate-100">
+                    <h3 className="text-base font-black tracking-tight text-slate-800">General Ledger</h3>
+                </div>
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -167,7 +170,7 @@ export const Accounting = () => {
                         ))}
                     </div>
                 </div>
-            </Card>
+            </div>
 
             {selectedInvoice && (
                 <PaymentModal

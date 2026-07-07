@@ -12,7 +12,7 @@ export const LegalTimeline = ({ timeline = [] }) => {
       <p className="text-[10px] text-slate-400 font-medium mb-5">Immutable record of case modifications and events</p>
 
       {sortedEvents.length === 0 ? (
-        <p className="text-xs font-semibold text-slate-400 text-center py-6">No timeline events logged.</p>
+        <p className="text-xs font-semibold text-slate-400 text-center py-2">No timeline events logged.</p>
       ) : (
         <div className="relative pl-6 border-l border-slate-200 ml-2.5 space-y-6">
           {sortedEvents.map((ev, idx) => (

@@ -200,8 +200,8 @@ const UnitReadiness = () => {
 
   return (
     <MainLayout title="Unit Readiness Dashboard">
-      <div className="bg-slate-50 min-h-screen font-sans -ml-4 lg:-ml-8 -mt-4 lg:-mt-8">
-        <div className="w-full space-y-4">
+      <div className="page-container mt-6">
+        <div className="w-full space-y-6">
           
           {/* Settings Modal */}
           {showSettings && (
@@ -304,27 +304,27 @@ const UnitReadiness = () => {
               </div>
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-0 border border-slate-300 rounded-lg overflow-hidden shadow-md">
-            <div className="bg-[#D9E9FF] p-4 text-center border-r border-slate-300">
-                <p className="text-xs font-bold text-slate-700 mb-1">Total Units</p>
-                <p className="text-2xl font-black text-slate-900">{stats.totalUnits}</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="saas-card bg-blue-50/40 p-5 text-center border-b-4 border-b-blue-500">
+                <p className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Total Units</p>
+                <p className="text-3xl font-black text-slate-800">{stats.totalUnits}</p>
             </div>
-            <div className="bg-[#E2F0D9] p-4 text-center border-r border-slate-300">
-                <p className="text-xs font-bold text-slate-700 mb-1">Ready for Leasing</p>
-                <p className="text-2xl font-black text-slate-900">{stats.readyForLeasing}</p>
+            <div className="saas-card bg-emerald-50/40 p-5 text-center border-b-4 border-b-emerald-500">
+                <p className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Ready for Leasing</p>
+                <p className="text-3xl font-black text-slate-800">{stats.readyForLeasing}</p>
             </div>
-            <div className="bg-[#FFF2CC] p-4 text-center border-r border-slate-300">
-                <p className="text-xs font-bold text-slate-700 mb-1">Reserved</p>
-                <p className="text-2xl font-black text-slate-900">{stats.reservedUnits}</p>
+            <div className="saas-card bg-amber-50/40 p-5 text-center border-b-4 border-b-amber-500">
+                <p className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Reserved</p>
+                <p className="text-3xl font-black text-slate-800">{stats.reservedUnits}</p>
             </div>
-            <div className="bg-[#FCE4D6] p-4 text-center">
-                <p className="text-xs font-bold text-slate-700 mb-1">Overdue</p>
-                <p className="text-2xl font-black text-slate-900">{stats.overdueUnits}</p>
+            <div className="saas-card bg-rose-50/40 p-5 text-center border-b-4 border-b-rose-500">
+                <p className="text-xs font-bold text-slate-500 mb-1 uppercase tracking-wider">Overdue</p>
+                <p className="text-3xl font-black text-slate-800">{stats.overdueUnits}</p>
             </div>
           </div>
 
           {/* Toolbar Section */}
-          <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm mb-4">
+          <div className="saas-card p-4 mb-4">
             <div className="flex flex-wrap items-center gap-2">
                 {/* Building Filter */}
                 <div className="relative min-w-[160px]">
@@ -332,7 +332,7 @@ const UnitReadiness = () => {
                     <Building2 size={15} />
                   </div>
                   <select 
-                    className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer hover:bg-white transition-all"
+                    className="saas-input !pl-10 cursor-pointer appearance-none"
                     value={propertyFilter}
                     onChange={(e) => { setPropertyFilter(e.target.value); setPage(1); }}
                   >
@@ -347,7 +347,7 @@ const UnitReadiness = () => {
                     <Filter size={15} />
                   </div>
                   <select 
-                  className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 appearance-none cursor-pointer hover:bg-white transition-all"
+                  className="saas-input !pl-10 cursor-pointer appearance-none"
                   value={statusFilter}
                   onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                 >
@@ -368,15 +368,15 @@ const UnitReadiness = () => {
                   <input 
                     type="text"
                     placeholder="Search by unit or building..."
-                    className="w-full pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 hover:bg-white transition-all"
+                    className="saas-input !pl-10"
                     value={searchTerm}
                     onChange={(e) => { setSearchTerm(e.target.value); setPage(1); }}
                   />
                 </div>
 
                {/* Show Leased Toggle */}
-               <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 shrink-0">
-                  <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Show Leased Units</span>
+               <label className="flex items-center gap-2 cursor-pointer bg-slate-50 px-4 h-11 rounded-[14px] border border-slate-300 shrink-0 hover:bg-slate-100 transition-all">
+                  <span className="text-sm font-bold text-slate-600 whitespace-nowrap">Show Leased Units</span>
                   <input 
                     type="checkbox" 
                     className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
@@ -386,14 +386,14 @@ const UnitReadiness = () => {
                </label>
               <button 
                   onClick={() => setShowHolidays(!showHolidays)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm shrink-0"
+                  className="saas-btn-outline shrink-0"
               >
                   <Calendar size={15} />
                   <span>Holidays</span>
               </button>
               <button 
                   onClick={() => setShowSettings(!showSettings)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all shadow-sm shrink-0"
+                  className="saas-btn-outline shrink-0"
               >
                   <SettingsIcon size={15} />
                   <span>Settings</span>
@@ -401,7 +401,7 @@ const UnitReadiness = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-xl overflow-hidden border border-slate-200">
+          <div className="saas-table-container">
             {/* The Master Table (Fixed Scroll Fix) */}
             <div className="overflow-x-auto overflow-y-hidden custom-scrollbar">
               <table className="min-w-[1200px] w-full text-left border-collapse border border-slate-400">

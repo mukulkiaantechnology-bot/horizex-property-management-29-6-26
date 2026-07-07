@@ -180,8 +180,7 @@ export const AttendanceManagement = () => {
           </div>
         </div>
 
-        {/* Attendance Dashboard Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Logs List Table */}
           <div className="lg:col-span-2">
             <AttendanceTable 

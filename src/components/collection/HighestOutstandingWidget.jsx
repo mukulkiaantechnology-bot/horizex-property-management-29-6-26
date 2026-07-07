@@ -4,7 +4,7 @@ import { ShieldAlert } from 'lucide-react';
 
 export const HighestOutstandingWidget = ({ aging = {} }) => {
   return (
-    <Card className="p-5 bg-white border border-slate-200 rounded-[22px] shadow-sm h-full flex flex-col justify-between">
+    <Card className="h-fit">
       <div>
         <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-2">
           <div>

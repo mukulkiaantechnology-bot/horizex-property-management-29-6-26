@@ -5,7 +5,7 @@ import { CaseStatusBadge } from './CaseStatusBadge';
 
 export const UrgentCasesWidget = ({ cases = [], onView }) => {
   return (
-    <Card className="p-5 bg-white border border-slate-200 rounded-[22px] shadow-sm flex flex-col justify-between h-full">
+    <Card className="h-fit">
       <div>
         <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
           <div>
@@ -16,7 +16,7 @@ export const UrgentCasesWidget = ({ cases = [], onView }) => {
         </div>
 
         {cases.length === 0 ? (
-          <div className="py-10 text-center text-xs text-slate-400 font-medium">
+          <div className="py-2 text-center text-xs text-slate-400 font-medium">
             No urgent or high priority cases currently.
           </div>
         ) : (

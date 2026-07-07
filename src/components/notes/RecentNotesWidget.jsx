@@ -5,10 +5,10 @@ import { Card } from '../Card';
 import { EntityBadge } from './EntityBadge';
 
 export const RecentNotesWidget = ({ notes = [], title = 'Recent Notes' }) => (
-  <Card className="p-5 bg-white border border-slate-200 rounded-[22px] shadow-sm">
+  <Card className="h-fit">
     <h3 className="text-xs font-black text-slate-800 tracking-wider uppercase mb-4">{title}</h3>
     {!notes.length ? (
-      <p className="text-xs text-slate-400 font-medium text-center py-6">No notes yet.</p>
+      <p className="text-xs text-slate-400 font-medium text-center py-2">No notes yet.</p>
     ) : (
       <div className="space-y-3">
         {notes.map((note) => (

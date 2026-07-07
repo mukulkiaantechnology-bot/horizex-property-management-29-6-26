@@ -61,7 +61,7 @@ export const MainLayout = ({ children, title = 'Overview' }) => {
                 <Topbar title={title} onMenuClick={toggleSidebar} />
 
                 {/* Scrollable Page Content */}
-                <main className="flex-1 w-full max-w-[1400px] mx-auto flex flex-col gap-8 p-4 lg:p-8">
+                <main className="flex-1 w-full max-w-[1400px] mx-auto flex flex-col gap-4 sm:gap-6 p-3 sm:p-4 lg:p-6 pb-20 lg:pb-8">
                     {children}
                 </main>
             </div>

@@ -103,7 +103,7 @@ export const HearingCalendarWidget = ({ hearings = [] }) => {
               const hDate = new Date(h.date);
               return hDate.getFullYear() === year && hDate.getMonth() === month;
             }).length === 0 ? (
-              <p className="text-xs font-semibold text-slate-400 text-center py-10">No hearings this month.</p>
+              <p className="text-xs font-semibold text-slate-400 text-center py-2">No hearings this month.</p>
             ) : (
               hearings
                 .filter(h => {

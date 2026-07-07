@@ -248,107 +248,126 @@ export const Buildings = () => {
         </div>
 
         {/* TABLE CARD */}
-        <Card className="bg-white rounded-[22px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          <div className="w-full overflow-x-auto flex-1">
-            <div className="hidden md:grid grid-cols-12 min-w-[1300px] bg-slate-50/80 px-6 py-4 border-b border-slate-100">
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Building Details</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1">Company</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1">Owner(s)</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Street</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-2">Location</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1">Postal Code</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1 text-center">Units</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1 text-center">Status</div>
-              <div className="font-bold text-slate-400 text-[10px] uppercase tracking-widest col-span-1 text-right">Actions</div>
-            </div>
-
-            <div className="bg-white">
+        <div className="saas-table-container flex flex-col flex-1">
+          <div className="overflow-x-auto w-full">
+            <table className="saas-table w-full text-left whitespace-nowrap">
+              <thead>
+                <tr>
+                  <th className="pl-6">Building Details</th>
+                  <th>Company</th>
+                  <th>Owner(s)</th>
+                  <th>Street</th>
+                  <th>Location</th>
+                  <th>Postal Code</th>
+                  <th className="text-center">Units</th>
+                  <th className="text-center">Status</th>
+                  <th className="text-right pr-6">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
               {filteredBuildings.length === 0 ? (
-                <div className="p-8 text-center text-slate-500">No buildings found.</div>
+                <tr>
+                  <td colSpan="9" className="p-8 text-center text-slate-500">No buildings found.</td>
+                </tr>
               ) : (
                 filteredBuildings.map((building, index) => (
-                  <div
-                    key={building.id}
-                    className="grid grid-cols-1 md:grid-cols-12 min-w-[1300px] px-6 py-4 border-b border-slate-100 transition-all duration-300 hover:bg-gradient-to-r hover:from-slate-50 hover:to-white hover:scale-[1.002] hover:shadow-md items-center gap-4 md:gap-0"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  >
-                    <div className="flex items-center gap-2 col-span-2">
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-lg flex items-center justify-center text-white shrink-0 shadow-sm">
-                        <Building2 size={20} />
+                  <tr key={building.id} className="group transition-all duration-300 hover:bg-gradient-to-r hover:from-slate-50 hover:to-white hover:scale-[1.002] hover:shadow-md">
+                    <td className="pl-6">
+                      <div className="flex items-center gap-2">
+                        <div className="w-10 h-10 bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-lg flex items-center justify-center text-white shrink-0 shadow-sm">
+                          <Building2 size={20} />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-bold text-slate-800 text-sm">{building.name}</span>
+                          <span className="text-[10px] text-[#667eea] font-black uppercase tracking-tighter">B-{building.id}</span>
+                        </div>
                       </div>
-                      <div className="flex flex-col truncate">
-                        <span className="font-bold text-slate-800 text-sm truncate">{building.name}</span>
-                        <span className="text-[10px] text-[#667eea] font-black uppercase tracking-tighter">B-{building.id}</span>
-                      </div>
-                    </div>
-                    <div className="col-span-1 font-bold text-slate-700 text-xs truncate pr-2">
-                      {building.companyName || '-'}
-                    </div>
-                    <div className="col-span-1 flex flex-wrap gap-1 pr-4">
-                      {building.ownerNames ? (
-                        building.ownerNames.split(', ').slice(0, 1).map((owner, oIdx) => (
-                          <span key={oIdx} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-bold border border-indigo-100 whitespace-nowrap">
-                            {owner}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-slate-400 text-xs italic">No Owner</span>
-                      )}
-                    </div>
-                    <div className="col-span-2 text-slate-600 text-sm truncate pr-4" title={building.street}>
-                      {building.street || '-'}
-                    </div>
-                    <div className="col-span-2 flex flex-col justify-center gap-0.5">
-                      <span className="font-bold text-slate-700 text-sm leading-tight">{building.city || '-'}</span>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{building.province || '-'}</span>
-                    </div>
-                    <div className="col-span-1 text-slate-600 text-xs font-medium">
-                      {building.postalCode || '-'}
-                    </div>
-                    <div className="col-span-1 flex justify-center">
-                      <span className="text-[1rem] font-black text-[#667eea]">{building.units}</span>
-                    </div>
-                    <div className="col-span-1 flex justify-center">
-                      <span
-                        className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-tight ${building.status === 'Active'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-red-100 text-red-800'
-                          }`}
-                      >
-                        <span className={`w-1 h-1 rounded-full ${building.status === 'Active' ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
-                        {building.status}
+                    </td>
+                    <td>
+                      <span className="font-bold text-slate-700 text-xs truncate max-w-[150px] inline-block">
+                        {building.companyName || '-'}
                       </span>
-                    </div>
-                    <div className="col-span-1 flex gap-2 justify-end">
-                      <button
-                        className="w-7 h-7 border-none rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 bg-sky-50 text-sky-600 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(2,132,199,0.2)] hover:scale-110"
-                        title="View Details"
-                        onClick={() => viewBuilding(building)}
-                      >
-                        <Eye size={12} />
-                      </button>
-                      {hasPermission('Buildings', 'edit') && (
+                    </td>
+                    <td>
+                      <div className="flex flex-wrap gap-1">
+                        {building.ownerNames ? (
+                          building.ownerNames.split(', ').slice(0, 1).map((owner, oIdx) => (
+                            <span key={oIdx} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-bold border border-indigo-100 whitespace-nowrap">
+                              {owner}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-slate-400 text-xs italic">No Owner</span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <span className="text-slate-600 text-sm truncate max-w-[200px] inline-block" title={building.street}>
+                        {building.street || '-'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="flex flex-col justify-center gap-0.5">
+                        {building.city || building.province ? (
+                          <>
+                            {building.city && <span className="font-bold text-slate-700 text-sm leading-tight">{building.city}</span>}
+                            {building.province && <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{building.province}</span>}
+                          </>
+                        ) : (
+                          <span className="text-slate-600 text-sm">-</span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <span className="text-slate-600 text-xs font-medium">
+                        {building.postalCode || '-'}
+                      </span>
+                    </td>
+                    <td className="text-center">
+                      <span className="text-[1rem] font-black text-[#667eea]">{building.units}</span>
+                    </td>
+                    <td className="text-center">
+                      <div className="flex justify-center">
+                        <span className={`saas-badge ${building.status === 'Active' ? 'saas-badge-success' : 'saas-badge-danger'}`}>
+                          <span className={`w-1 h-1 rounded-full ${building.status === 'Active' ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+                          {building.status}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-right pr-6">
+                      <div className="flex gap-2 justify-end">
                         <button
-                          className="w-7 h-7 border-none rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 bg-emerald-50 text-emerald-600 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(22,163,74,0.2)] hover:scale-110"
-                          title="Edit Building"
-                          onClick={() => editBuilding(building)}
+                          className="w-7 h-7 border-none rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 bg-sky-50 text-sky-600 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(2,132,199,0.2)] hover:scale-110"
+                          title="View Details"
+                          onClick={() => viewBuilding(building)}
                         >
-                          <Pencil size={12} />
+                          <Eye size={12} />
                         </button>
-                      )}
-                      {hasPermission('Buildings', 'delete') && (
-                        <button
-                          className="w-7 h-7 border-none rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 bg-red-50 text-red-600 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(220,38,38,0.2)] hover:scale-110"
-                          title="Delete Building"
-                          onClick={() => deleteBuilding(building.id)}
-                        >
-                          <Trash2 size={12} />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )))}
-            </div>
+                        {hasPermission('Buildings', 'edit') && (
+                          <button
+                            className="w-7 h-7 border-none rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 bg-emerald-50 text-emerald-600 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(22,163,74,0.2)] hover:scale-110"
+                            title="Edit Building"
+                            onClick={() => editBuilding(building)}
+                          >
+                            <Pencil size={12} />
+                          </button>
+                        )}
+                        {hasPermission('Buildings', 'delete') && (
+                          <button
+                            className="w-7 h-7 border-none rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 bg-red-50 text-red-600 hover:-translate-y-1 hover:shadow-[0_5px_15px_rgba(220,38,38,0.2)] hover:scale-110"
+                            title="Delete Building"
+                            onClick={() => deleteBuilding(building.id)}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+              </tbody>
+            </table>
           </div>
 
           {/* Pagination Controls */}
@@ -389,7 +408,7 @@ export const Buildings = () => {
               </div>
             </div>
           )}
-        </Card>
+        </div>
 
         {/* Add Building Modal */}
         {showModal && (

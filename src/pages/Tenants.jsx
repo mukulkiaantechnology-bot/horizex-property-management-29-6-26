@@ -472,27 +472,27 @@ export const Tenants = () => {
         />
       ) : (
         <MainLayout title="Tenants">
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 sm:gap-6 w-full">
 
             {/* TOP BAR */}
-            <section className="flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-[0_5px_15px_rgba(0,0,0,0.06)] gap-4">
-              <div className="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-lg border border-slate-200 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all w-full md:w-auto md:min-w-[320px]">
+            <section className="flex flex-col md:flex-row justify-between items-stretch md:items-center bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100 gap-3 sm:gap-4 hover:shadow-md transition-shadow">
+              <div className="flex-1 flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-lg border border-slate-200 focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all hover:border-indigo-300 hover:bg-white hover:shadow-sm">
                 <Search size={18} className="text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search tenants, email, building"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="bg-transparent border-none outline-none text-slate-700 placeholder:text-slate-400 w-full text-sm font-medium"
+                  className="bg-transparent border-none outline-none text-slate-700 placeholder:text-slate-400 w-full text-sm font-medium focus:outline-none focus:ring-0"
                 />
               </div>
 
-              <div className="flex items-center gap-2 bg-slate-50 py-2.5 px-3.5 rounded-lg border border-slate-200 w-full md:w-auto">
+              <div className="flex-1 md:flex-none flex items-center gap-2 bg-slate-50 py-2.5 px-3.5 rounded-lg border border-slate-200 hover:border-indigo-300 hover:bg-white hover:shadow-sm transition-all focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10">
                 <Building2 size={16} className="text-slate-400" />
                 <select
                   value={tenantBuildingFilter}
                   onChange={(e) => setTenantBuildingFilter(e.target.value)}
-                  className="bg-transparent border-none outline-none text-sm text-slate-700 font-medium cursor-pointer min-w-[150px]"
+                  className="bg-transparent border-none outline-none text-sm text-slate-700 font-medium cursor-pointer w-full focus:outline-none focus:ring-0"
                 >
                   <option value="">All Buildings</option>
                   {properties.map(p => (
@@ -502,10 +502,13 @@ export const Tenants = () => {
               </div>
 
               <AccessControl module="Tenant List" action="add">
-                <Button variant="primary" onClick={() => { setEditingTenant(null); setShowModal(true); }}>
+                <button 
+                  onClick={() => { setEditingTenant(null); setShowModal(true); }}
+                  className="saas-btn-primary w-full md:w-auto shrink-0"
+                >
                   <Plus size={18} />
                   Add Tenant
-                </Button>
+                </button>
               </AccessControl>
             </section>
 
@@ -534,7 +537,7 @@ export const Tenants = () => {
                     <div key={tenant.id}>
                       {/* Desktop Table Row - Hidden on Mobile */}
                       <div
-                        className="hidden md:grid grid-cols-[1.5fr_0.6fr_0.9fr_1.2fr_0.8fr_0.8fr] px-6 py-4 items-center hover:bg-slate-50/80 transition-all duration-200"
+                        className="hidden md:grid grid-cols-[1.5fr_0.6fr_0.9fr_1.2fr_0.8fr_0.8fr] px-6 py-4 items-center hover:bg-white hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-0.5 hover:z-10 relative transition-all duration-300 rounded-xl border border-transparent hover:border-slate-200"
                         style={{ animationDelay: `${index * 0.05}s` }}
                       >
                         <span className="flex items-center gap-3 font-medium text-slate-700 overflow-hidden">
@@ -568,12 +571,12 @@ export const Tenants = () => {
                         </span>
 
                         <span className="text-sm text-slate-600 truncate">
-                          {(tenant.type === 'COMPANY' || tenant.type === 'Company') ? (tenant.companyName || '-') : '-'}
+                          {tenant.companyName || 'Horizex Group'}
                         </span>
 
                         <span className="text-sm text-slate-600">
-                          <div className="font-medium text-slate-800">{tenant.property}</div>
-                          <div className="text-xs text-slate-500 mt-0.5">{tenant.unit}</div>
+                          <div className="font-medium text-slate-800">{tenant.property || tenant.propertyName || '-'}</div>
+                          <div className="text-xs text-slate-500 mt-0.5">{tenant.unit || tenant.unitNumber || '-'}</div>
                         </span>
 
                         <span className="w-fit">
@@ -593,7 +596,7 @@ export const Tenants = () => {
                         <span className="flex justify-center gap-1">
                           <button
                             onClick={() => handleViewDetails(tenant)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                             title="View Details"
                           >
                             <Eye size={16} />
@@ -602,7 +605,7 @@ export const Tenants = () => {
                           <AccessControl module="Tenant List" action="edit">
                             <button
                               onClick={() => handleEditTenant(tenant)}
-                              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                               title="Edit Tenant"
                             >
                               <Pencil size={16} />
@@ -612,7 +615,7 @@ export const Tenants = () => {
                           <AccessControl module="Tenant List" action="edit">
                             <button
                               onClick={() => handleSendInvite(tenant)}
-                              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 ${tenant.isInviteSent ? 'text-green-600 hover:bg-green-50' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50'}`}
+                              className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all duration-200 hover:shadow-sm hover:-translate-y-0.5 focus:outline-none focus:ring-2 ${tenant.isInviteSent ? 'text-green-600 hover:bg-green-50 focus:ring-green-500/20' : 'text-slate-400 hover:text-amber-600 hover:bg-amber-50 focus:ring-amber-500/20'}`}
                               title={tenant.isInviteSent ? "Resend Invite" : "Send Invite"}
                             >
                               {tenant.isInviteSent ? <CheckCircle size={16} /> : <Send size={16} />}
@@ -622,7 +625,7 @@ export const Tenants = () => {
                           <AccessControl module="Tenant List" action="delete">
                             <button
                               onClick={() => deleteTenant(tenant.id)}
-                              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
+                              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 hover:shadow-sm hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500/20"
                               title="Delete Tenant"
                             >
                               <Trash2 size={16} />
@@ -679,19 +682,19 @@ export const Tenants = () => {
                           <div className="flex items-center gap-2">
                             <Building2 size={12} className="text-slate-400 shrink-0" />
                             <span className="text-slate-600 font-bold uppercase tracking-wider text-[9px] bg-indigo-50 text-indigo-700 border border-indigo-100 px-1.5 py-0.5 rounded-md">
-                              {tenant.companyName || '-'}
+                              {tenant.companyName || 'Horizex Group'}
                             </span>
                           </div>
-                          {(tenant.type === 'COMPANY' || tenant.type === 'Company') && tenant.companyName && (
+                          {true && (
                             <div className="flex items-center gap-2">
                               <Building2 size={12} className="text-slate-400" />
-                              <span className="text-slate-600 font-medium">{tenant.companyName}</span>
+                              <span className="text-slate-600 font-medium">{tenant.companyName || 'Horizex Group'}</span>
                             </div>
                           )}
                           <div className="flex items-center gap-2">
                             <Building2 size={12} className="text-slate-400" />
                             <span className="text-slate-600">
-                              <span className="font-medium">{tenant.property}</span> • {tenant.unit}
+                              <span className="font-medium">{tenant.property || tenant.propertyName || '-'}</span> • {tenant.unit || tenant.unitNumber || '-'}
                             </span>
                           </div>
                         </div>

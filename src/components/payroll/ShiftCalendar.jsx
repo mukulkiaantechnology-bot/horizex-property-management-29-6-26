@@ -14,13 +14,13 @@ export const ShiftCalendar = ({ shifts = [], employees = [], onEdit, onRotate })
   return (
     <div className="flex flex-col gap-8">
       {/* Shifts Profiles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
         {shifts.map((sh) => {
           const shiftEmployees = getEmployeesInShift(sh.id);
           return (
             <div 
               key={sh.id}
-              className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card hover:shadow-md hover:translate-y-[-1px] transition-all duration-300 ease-in-out flex flex-col justify-between gap-6"
+              className="bg-white border border-slate-100 rounded-[22px] p-5 shadow-card hover:shadow-md hover:translate-y-[-1px] transition-all duration-300 ease-in-out flex flex-col gap-4 h-fit"
             >
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
@@ -40,13 +40,13 @@ export const ShiftCalendar = ({ shifts = [], employees = [], onEdit, onRotate })
 
               {/* Roster & Times details */}
               <div className="flex flex-col gap-3 bg-slate-50/50 border border-slate-100 rounded-2xl p-4 text-xs">
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <span className="text-slate-400">Grace Time:</span>
-                  <span className="font-semibold text-slate-700">{sh.graceTime} mins</span>
+                  <span className="font-semibold text-slate-700 text-right">{sh.graceTime} mins</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <span className="text-slate-400">Break Duration:</span>
-                  <span className="font-semibold text-slate-700">{sh.breakDuration} mins</span>
+                  <span className="font-semibold text-slate-700 text-right">{sh.breakDuration} mins</span>
                 </div>
                 <div className="flex flex-col gap-1 mt-1 border-t border-slate-100/80 pt-2">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Weekly Off</span>
