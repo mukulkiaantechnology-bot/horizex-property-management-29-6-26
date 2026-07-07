@@ -255,12 +255,12 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
 
   return (
     <MainLayout title="TAL Cases">
-      <div className="flex flex-col gap-6 p-6">
+      <div className="flex flex-col gap-4">
         
         {/* Subtitle / Header Section */}
-        <div className="bg-white p-5 rounded-[22px] border border-slate-200 shadow-sm">
-          <h2 className="text-lg font-black text-slate-800 tracking-tight">TAL Legal Disputes Dashboard</h2>
-          <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">
+        <div className="bg-white px-5 py-3 rounded-[22px] border border-slate-200 shadow-sm">
+          <h2 className="text-base font-black text-slate-800 tracking-tight">TAL Legal Disputes Dashboard</h2>
+          <p className="text-xs text-slate-500 font-medium mt-0.5 leading-relaxed">
             Manage all Tribunal administratif du logement (TAL) legal cases, hearings, legal documents, and tenant disputes.
           </p>
         </div>
@@ -304,9 +304,9 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
           <>
             {/* Overview Tab */}
             {activeTab === 'overview' && (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                 <TALKPICards metrics={metrics} onFilterClick={handleKPIFilterClick} />
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <CaseStatusChart statusBreakdown={statusBreakdown} />
                   <UpcomingHearingsWidget hearings={upcomingHearings.slice(0, 3)} />
                   <UrgentCasesWidget cases={urgentCases} onView={handleViewDetail} />
@@ -316,9 +316,9 @@ export const TALCases = ({ defaultTab = 'overview' }) => {
 
             {/* TAL Cases List Grid Tab */}
             {activeTab === 'cases' && (
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                 {/* Search & Filter Toolbar */}
-                <div className="bg-white p-5 rounded-[22px] border border-slate-200 shadow-sm flex flex-col gap-4">
+                <div className="bg-white p-4 rounded-[22px] border border-slate-200 shadow-sm flex flex-col gap-3">
                   {/* Search */}
                   <div className="relative">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />

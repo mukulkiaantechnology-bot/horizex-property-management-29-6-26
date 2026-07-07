@@ -388,7 +388,11 @@ api.defaults.adapter = async (config) => {
       return response200(res.data);
     } else {
       const list = JSON.parse(localStorage.getItem('mock_refunds') || '[]');
-      return response200(list);
+      const page = parseInt(query.get('page')) || 1;
+      const limit = parseInt(query.get('limit')) || 10;
+      const start = (page - 1) * limit;
+      const paginated = list.slice(start, start + limit);
+      return response200({ data: paginated, total: list.length, totalPages: Math.ceil(list.length / limit), page });
     }
   }
 
@@ -1071,6 +1075,30 @@ api.defaults.adapter = async (config) => {
   if (cleanPath === '/api/admin/notifications/unread-count') {
     const { activityService } = await import('../services/activityService');
     return response200({ count: activityService.getUnreadNotificationCount() });
+  }
+
+  if (cleanPath === '/api/admin/shuttle/requests') {
+    return response200({
+      requests: [
+        { id: 1, tenant_name: "John Doe", date: "2026-07-08", time: "09:00", origin: "Parkview Heights", destination: "Downtown", passengers: 1, status: "pending" },
+        { id: 2, tenant_name: "Jane Miller", date: "2026-07-09", time: "10:30", origin: "Sunset Towers", destination: "Airport", passengers: 2, status: "approved" }
+      ]
+    });
+  }
+  if (cleanPath === '/api/admin/shuttle/trips') {
+    return response200({ 
+      trips: [
+        { id: 1, time: "08:00", date: "2026-07-06", origin: "Parkview Heights", destination: "Downtown", seats_total: 7, is_recurring: true, actual_passengers: 5, status: "completed" },
+        { id: 2, time: "17:30", date: "2026-07-06", origin: "Downtown", destination: "Parkview Heights", seats_total: 7, is_recurring: true, actual_passengers: 7, status: "completed" },
+        { id: 3, time: "09:00", date: "2026-07-08", origin: "Parkview Heights", destination: "Airport", seats_total: 4, is_recurring: false, actual_passengers: 0, status: "scheduled" }
+      ] 
+    });
+  }
+  if (cleanPath === '/api/admin/shuttle/users') {
+    return response200({ users: [] });
+  }
+  if (cleanPath === '/api/admin/shuttle/trips/locations') {
+    return response200({ locations: [] });
   }
 
   // Default fallback for any unhandled routes to prevent application crash

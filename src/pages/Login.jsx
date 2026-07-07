@@ -73,7 +73,7 @@ export const Login = () => {
   return (
     <div className="flex h-screen w-full bg-[#F4F8FF] font-sans overflow-hidden relative">
       {/* LEFT FORM PANEL */}
-      <div className="w-full lg:w-[42%] h-full flex flex-col justify-center items-center p-4 sm:p-6 z-10 overflow-y-auto custom-scrollbar">
+      <div className="w-full lg:w-[42%] h-full flex flex-col items-center p-4 sm:p-6 z-10 overflow-y-auto custom-scrollbar">
         <div className="w-full max-w-[400px] bg-white/95 backdrop-blur-md border border-slate-100 rounded-[22px] p-6 md:p-8 shadow-float flex flex-col my-auto mx-auto">
 
           <div className="flex items-center gap-3 mb-5">

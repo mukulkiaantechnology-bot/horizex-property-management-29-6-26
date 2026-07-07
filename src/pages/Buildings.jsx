@@ -186,38 +186,32 @@ export const Buildings = () => {
     <MainLayout title="Buildings">
       <div className="flex flex-col gap-6">
         {/* STAT CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-white shadow-lg">
-                <Building2 size={22} />
-              </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="bg-white p-5 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Buildings</p>
+              <p className="text-2xl font-black text-slate-800 leading-none">{totalItems || buildings.length}</p>
             </div>
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Buildings</p>
-              <p className="text-3xl font-black text-slate-800 mt-0.5">{totalItems || buildings.length}</p>
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center">
+              <Building2 size={22} />
             </div>
           </div>
-          <div className="bg-white p-6 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg">
-                <Home size={22} />
-              </div>
+          <div className="bg-white p-5 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Units</p>
+              <p className="text-2xl font-black text-slate-800 leading-none">{calculatedTotalUnits}</p>
             </div>
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Units</p>
-              <p className="text-3xl font-black text-slate-800 mt-0.5">{calculatedTotalUnits}</p>
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center">
+              <Home size={22} />
             </div>
           </div>
-          <div className="bg-white p-6 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all group flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div className="w-12 h-12 bg-indigo-500 rounded-xl flex items-center justify-center text-white shadow-lg">
-                <Building2 size={22} />
-              </div>
+          <div className="bg-white p-5 rounded-[22px] border border-slate-200 shadow-sm hover:shadow-md transition-all flex items-center justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Buildings</p>
+              <p className="text-2xl font-black text-slate-800 leading-none">{calculatedActiveBuildings}</p>
             </div>
-            <div>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Buildings</p>
-              <p className="text-3xl font-black text-slate-800 mt-0.5">{calculatedActiveBuildings}</p>
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center">
+              <Building2 size={22} />
             </div>
           </div>
         </div>

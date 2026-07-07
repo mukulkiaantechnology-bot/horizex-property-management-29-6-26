@@ -74,7 +74,7 @@ export const OwnerTopbar = ({ title, onMenuClick }) => {
                 {/* Language Toggle */}
                 <button
                     onClick={toggleLanguage}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/80 hover:bg-primary/5 hover:text-primary transition-colors group h-9"
+                    className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 rounded-xl bg-slate-100/80 hover:bg-primary/5 hover:text-primary transition-colors group h-9 notranslate"
                 >
                     <Globe size={15} className="text-slate-400 group-hover:text-primary" />
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-600 group-hover:text-primary">

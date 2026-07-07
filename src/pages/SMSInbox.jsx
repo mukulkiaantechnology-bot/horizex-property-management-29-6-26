@@ -137,21 +137,21 @@ const SMSInbox = () => {
                 
                 {/* Conversations Sidebar */}
                 <div className={`${!showSidebar && selectedUser ? 'hidden lg:flex' : 'flex'} w-full lg:w-96 flex-col bg-white border-r border-slate-200 z-30`}>
-                    <div className="p-6 border-b border-slate-100 space-y-4">
+                    <div className="p-4 border-b border-slate-100 space-y-3">
                         <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-black text-slate-800 uppercase tracking-tight">Inbox</h2>
-                            <button onClick={fetchConversations} className="p-2 hover:bg-slate-100 rounded-full transition-all active:rotate-180 duration-500">
-                                <RefreshCw className="h-5 w-5 text-slate-400" />
+                            <h2 className="text-lg font-black text-slate-800 uppercase tracking-tight">Inbox</h2>
+                            <button onClick={fetchConversations} className="p-1.5 hover:bg-slate-100 rounded-full transition-all active:rotate-180 duration-500">
+                                <RefreshCw className="h-4 w-4 text-slate-400" />
                             </button>
                         </div>
                         <div className="relative flex items-center">
-                            <Search className="absolute left-3.5 text-slate-400" size={15} />
+                            <Search className="absolute left-3.5 text-slate-400" size={14} />
                             <input 
                                 type="text"
                                 placeholder="Search conversations..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition-all outline-none h-10"
+                                className="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition-all outline-none h-9"
                             />
                         </div>
 
@@ -206,13 +206,13 @@ const SMSInbox = () => {
                                             setSelectedUser(conv);
                                             setShowSidebar(false);
                                         }}
-                                        className={`p-5 flex items-center gap-4 cursor-pointer border-b border-slate-50 transition-all ${isSelected ? 'bg-indigo-50/50 border-l-4 border-l-indigo-600' : 'hover:bg-slate-50 border-l-4 border-l-transparent'}`}
+                                        className={`p-4 flex items-center gap-3 cursor-pointer border-b border-slate-50 transition-all ${isSelected ? 'bg-indigo-50/50 border-l-4 border-l-indigo-600' : 'hover:bg-slate-50 border-l-4 border-l-transparent'}`}
                                     >
                                         <div className="relative">
-                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg ${unread ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'bg-slate-100 text-slate-500'}`}>
+                                            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-base ${unread ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-100' : 'bg-slate-100 text-slate-500'}`}>
                                                 {conv.name?.charAt(0) || 'T'}
                                             </div>
-                                            {unread && <span className="absolute -top-0.5 -right-0.5 w-[10px] h-[10px] bg-red-500 border border-white rounded-full"></span>}
+                                            {unread && <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 border border-white rounded-full"></span>}
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start mb-0.5">
@@ -354,11 +354,11 @@ const SMSInbox = () => {
                         </>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center text-slate-300">
-                             <div className="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center mb-8 relative">
-                                <MessageSquare className="h-16 w-16 opacity-10" />
-                                <div className="absolute inset-0 border-4 border-slate-200 border-dashed rounded-full animate-spin-slow"></div>
+                             <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-5 relative">
+                                <MessageSquare className="h-10 w-10 opacity-10" />
+                                <div className="absolute inset-0 border-[3px] border-slate-200 border-dashed rounded-full animate-spin-slow"></div>
                              </div>
-                             <h3 className="text-2xl font-black uppercase tracking-widest text-slate-200">Select a Conversation</h3>
+                             <h3 className="text-xl font-black uppercase tracking-widest text-slate-300">Select a Conversation</h3>
                              <p className="text-xs font-bold text-slate-400 mt-2">Pick a tenant from the left to start messaging</p>
                         </div>
                     )}

@@ -699,21 +699,21 @@ export const Tenants = () => {
                           </div>
                         </div>
 
-                        <div className="flex gap-2 pt-3 border-t border-slate-100">
+                        <div className="flex gap-1.5 sm:gap-2 pt-3 border-t border-slate-100 flex-wrap sm:flex-nowrap">
                           <button
                             onClick={() => handleViewDetails(tenant)}
-                            className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all text-xs font-semibold"
+                            className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all text-[10px] sm:text-xs font-semibold whitespace-nowrap"
                           >
-                            <Eye size={14} />
+                            <Eye size={13} />
                             View
                           </button>
                           
                           <AccessControl module="Tenant List" action="edit">
                             <button
                               onClick={() => handleEditTenant(tenant)}
-                              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all text-xs font-semibold"
+                              className="flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all text-[10px] sm:text-xs font-semibold whitespace-nowrap"
                             >
-                              <Pencil size={14} />
+                              <Pencil size={13} />
                               Edit
                             </button>
                           </AccessControl>
@@ -721,16 +721,16 @@ export const Tenants = () => {
                           <AccessControl module="Tenant List" action="edit">
                             <button
                               onClick={() => handleSendInvite(tenant)}
-                              className={`flex-1 flex items-center justify-center gap-1 px-3 py-2 rounded-lg transition-all text-xs font-semibold ${tenant.isInviteSent ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-amber-600 bg-amber-50 hover:bg-amber-100'}`}
+                              className={`flex-1 flex items-center justify-center gap-1 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all text-[10px] sm:text-xs font-semibold whitespace-nowrap ${tenant.isInviteSent ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-amber-600 bg-amber-50 hover:bg-amber-100'}`}
                             >
                               {tenant.isInviteSent ? (
                                 <>
-                                  <CheckCircle size={14} />
+                                  <CheckCircle size={13} />
                                   Resend
                                 </>
                               ) : (
                                 <>
-                                  <Send size={14} />
+                                  <Send size={13} />
                                   Invite
                                 </>
                               )}
@@ -740,9 +740,9 @@ export const Tenants = () => {
                           <AccessControl module="Tenant List" action="delete">
                             <button
                               onClick={() => deleteTenant(tenant.id)}
-                              className="flex items-center justify-center px-3 py-2 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-all"
+                              className="flex items-center justify-center px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-red-600 bg-red-50 hover:bg-red-100 transition-all"
                             >
-                              <Trash2 size={14} />
+                              <Trash2 size={13} />
                             </button>
                           </AccessControl>
                         </div>

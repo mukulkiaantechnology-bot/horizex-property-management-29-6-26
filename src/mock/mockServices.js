@@ -28,7 +28,7 @@ export { mockNotes, mockNoteComments, mockNoteAttachments, mockCommTimeline };
 
 // Initialize localStorage databases with mock seed data if empty
 export const initMockDatabase = () => {
-  if (localStorage.getItem('mock_db_version') !== '2.4') {
+  if (localStorage.getItem('mock_db_version') !== '2.5') {
     localStorage.removeItem('mock_dashboard_stats');
     localStorage.removeItem('mock_revenue_analytics');
     localStorage.removeItem('mock_properties');
@@ -78,7 +78,7 @@ export const initMockDatabase = () => {
     localStorage.removeItem('mock_ledger');
     localStorage.removeItem('mock_reports_analytics');
     localStorage.removeItem('mock_companies');
-    localStorage.setItem('mock_db_version', '2.4');
+    localStorage.setItem('mock_db_version', '2.5');
   }
 
   const checkAndSeed = (key, initialData) => {
@@ -140,6 +140,118 @@ export const initMockDatabase = () => {
   checkAndSeed('mock_ledger', mockLedgerData);
   checkAndSeed('mock_reports_analytics', mockReportsAnalytics);
   checkAndSeed('mock_companies', mockCompanies);
+
+  const mockPaymentsReceivedData = [
+    { id: 1, invoice: 'INV-2026-000001', tenant: 'Sarah Connor', unit: 'Apt 101', category: 'Rent', amount: 1100, method: 'E-Transfer', date: '2026-05-28', status: 'Completed' },
+    { id: 2, invoice: 'INV-2026-000002', tenant: 'Alice Cooper', unit: 'Apt 201', category: 'Rent', amount: 950, method: 'Credit Card', date: '2026-06-01', status: 'Completed' },
+    { id: 3, invoice: 'INV-2026-000003', tenant: 'John Doe', unit: 'Apt 301', category: 'Deposit', amount: 1500, method: 'Bank Transfer', date: '2026-06-15', status: 'Completed' },
+    { id: 4, invoice: 'INV-2026-000004', tenant: 'Jane Miller', unit: 'Apt 104', category: 'Rent', amount: 950, method: 'Cash', date: '2026-07-01', status: 'Pending' }
+  ];
+  checkAndSeed('mock_payments_received', mockPaymentsReceivedData);
+
+  const mockOutstandingDuesData = [
+    { id: 1, invoice: 'INV-2026-000005', tenant: 'Robert Dow', unit: 'Apt 104B', category: 'RENT', leaseType: 'Bedroom Lease', amount: 950, dueDate: '2026-06-01', status: 'Overdue', daysOverdue: 36, building: 'Sunset Towers', tenantId: 103, unitId: 3, invoiceId: 5 },
+    { id: 2, invoice: 'INV-2026-000006', tenant: 'John Doe', unit: 'Apt 301', category: 'RENT', leaseType: 'Full Unit', amount: 1500, dueDate: '2026-06-15', status: 'Overdue', daysOverdue: 22, building: 'Parkview Heights', tenantId: 104, unitId: 4, invoiceId: 6 },
+    { id: 3, invoice: 'INV-2026-000007', tenant: 'Sarah Connor', unit: 'Apt 101', category: 'SERVICE', leaseType: 'Full Unit', amount: 200, dueDate: '2026-07-01', status: 'Pending', daysOverdue: 0, building: 'Parkview Heights', tenantId: 101, unitId: 1, invoiceId: 7 },
+    { id: 4, invoice: 'INV-2026-000008', tenant: 'Alice Cooper', unit: 'Apt 201', category: 'SECURITY_DEPOSIT', leaseType: 'Full Unit', amount: 1900, dueDate: '2026-05-01', status: 'Partial', daysOverdue: 0, building: 'Sunset Towers', tenantId: 102, unitId: 2, invoiceId: 8 },
+    { id: 5, invoice: 'INV-2026-000009', tenant: 'Jane Miller', unit: 'Apt 104A', category: 'RENT', leaseType: 'Bedroom Lease', amount: 950, dueDate: '2026-07-05', status: 'Pending', daysOverdue: 0, building: 'Sunset Towers', tenantId: 105, unitId: 5, invoiceId: 9 },
+  ];
+  checkAndSeed('mock_outstanding_dues', mockOutstandingDuesData);
+
+  const mockRefundsData = [
+    { id: 1, type: 'Security Deposit Refund', tenant: 'Alice Cooper', unit: 'Apt 201', amount: 1900, date: '2026-06-10', issuedDate: '2026-06-15', status: 'Completed', tenantId: 102, unitId: 2, reason: 'Lease ended, full deposit returned' },
+    { id: 2, type: 'Refund', tenant: 'Robert Dow', unit: 'Apt 104B', amount: 475, date: '2026-06-20', issuedDate: null, status: 'Pending', tenantId: 103, unitId: 3, reason: 'Overpayment on June rent' },
+    { id: 3, type: 'Adjustment', tenant: 'John Doe', unit: 'Apt 301', amount: -150, date: '2026-06-25', issuedDate: '2026-06-26', status: 'Applied', tenantId: 104, unitId: 4, reason: 'Late fee waiver — grace period granted' },
+    { id: 4, type: 'Security Deposit Refund', tenant: 'Sarah Connor', unit: 'Apt 101', amount: 1100, date: '2026-07-01', issuedDate: null, status: 'Pending', tenantId: 101, unitId: 1, reason: 'Tenant vacated, deposit to be refunded after inspection' },
+    { id: 5, type: 'Adjustment', tenant: 'Jane Miller', unit: 'Apt 104A', amount: -50, date: '2026-07-05', issuedDate: '2026-07-05', status: 'Applied', tenantId: 105, unitId: 5, reason: 'Utilities adjustment for June' },
+  ];
+  checkAndSeed('mock_refunds', mockRefundsData);
+
+  // Payroll runs data for Run Payroll page
+  const mockPayrollData = [
+    {
+      id: 'pay-2026-001', payrollNo: 'PAY-APEX-2026-001', payslipNo: 'PSP-APEX-2026-001',
+      employeeId: 4, companyId: 1,
+      payrollMonth: '2026-06', periodStart: '2026-06-01', periodEnd: '2026-06-30',
+      cycle: 'Monthly',
+      basicSalary: 4500, allowances: 450, bonus: 0, overtimePay: 320, deductions: 200, tax: 540, netSalary: 4530,
+      status: 'Paid',
+      createdAt: '2026-06-30T10:00:00Z', createdBy: 'Admin User',
+      generatedBy: 'Admin User', generatedAt: '2026-06-30T10:00:00Z',
+      approvedBy: 'Admin User', approvedAt: '2026-07-01T09:00:00Z',
+      paidBy: 'Admin User', paidAt: '2026-07-01T10:00:00Z',
+      linkedOvertimeIds: [], unpaidDaysCount: 0
+    },
+    {
+      id: 'pay-2026-002', payrollNo: 'PAY-APEX-2026-002', payslipNo: 'PSP-APEX-2026-002',
+      employeeId: 5, companyId: 1,
+      payrollMonth: '2026-06', periodStart: '2026-06-01', periodEnd: '2026-06-30',
+      cycle: 'Monthly',
+      basicSalary: 3800, allowances: 380, bonus: 200, overtimePay: 0, deductions: 150, tax: 456, netSalary: 3774,
+      status: 'Approved',
+      createdAt: '2026-06-30T10:15:00Z', createdBy: 'Admin User',
+      generatedBy: 'Admin User', generatedAt: '2026-06-30T10:15:00Z',
+      approvedBy: 'Admin User', approvedAt: '2026-07-01T09:30:00Z',
+      paidBy: null, paidAt: null,
+      linkedOvertimeIds: [], unpaidDaysCount: 0
+    },
+    {
+      id: 'pay-2026-003', payrollNo: 'PAY-APEX-2026-003', payslipNo: 'PSP-APEX-2026-003',
+      employeeId: 4, companyId: 1,
+      payrollMonth: '2026-07', periodStart: '2026-07-01', periodEnd: '2026-07-31',
+      cycle: 'Monthly',
+      basicSalary: 4500, allowances: 450, bonus: 500, overtimePay: 0, deductions: 200, tax: 540, netSalary: 4710,
+      status: 'Pending Approval',
+      createdAt: '2026-07-05T10:00:00Z', createdBy: 'Admin User',
+      generatedBy: 'Admin User', generatedAt: '2026-07-05T10:00:00Z',
+      approvedBy: null, approvedAt: null,
+      paidBy: null, paidAt: null,
+      linkedOvertimeIds: [], unpaidDaysCount: 0
+    }
+  ];
+  checkAndSeed('mock_payroll', mockPayrollData);
+
+  // Payroll audit timeline data for Audit Timeline page
+  const mockPayrollTimelineData = [
+    {
+      id: 'prt-001', eventType: 'Payroll Generated', description: 'Payroll PAY-APEX-2026-003 generated for July 2026 (2 employees)',
+      employeeId: null, employeeName: '', companyId: 1,
+      metadata: { payrollNo: 'PAY-APEX-2026-003', month: '2026-07', employeeCount: 2 },
+      createdAt: '2026-07-05T10:00:00Z', createdBy: 'Admin User', updatedAt: '2026-07-05T10:00:00Z', updatedBy: 'Admin User'
+    },
+    {
+      id: 'prt-002', eventType: 'Salary Updated', description: 'Salary updated for Sarah Smith: $4,200 → $4,500',
+      employeeId: 4, employeeName: 'Sarah Smith', companyId: 1,
+      metadata: { oldSalary: 4200, newSalary: 4500 },
+      createdAt: '2026-06-28T14:00:00Z', createdBy: 'Admin User', updatedAt: '2026-06-28T14:00:00Z', updatedBy: 'Admin User'
+    },
+    {
+      id: 'prt-003', eventType: 'Payroll Generated', description: 'Payroll PAY-APEX-2026-001 generated for June 2026 (2 employees)',
+      employeeId: null, employeeName: '', companyId: 1,
+      metadata: { payrollNo: 'PAY-APEX-2026-001', month: '2026-06', employeeCount: 2 },
+      createdAt: '2026-06-30T10:00:00Z', createdBy: 'Admin User', updatedAt: '2026-06-30T10:00:00Z', updatedBy: 'Admin User'
+    },
+    {
+      id: 'prt-004', eventType: 'Status Changed', description: 'Payslip PSP-APEX-2026-001 status changed to Paid for Sarah Smith',
+      employeeId: 4, employeeName: 'Sarah Smith', companyId: 1,
+      metadata: { payslipNo: 'PSP-APEX-2026-001', newStatus: 'Paid' },
+      createdAt: '2026-07-01T10:00:00Z', createdBy: 'Admin User', updatedAt: '2026-07-01T10:00:00Z', updatedBy: 'Admin User'
+    },
+    {
+      id: 'prt-005', eventType: 'Leave Approved', description: 'Leave approved for Mike Johnson: Annual Leave (Jun 15 – Jun 16)',
+      employeeId: 5, employeeName: 'Mike Johnson', companyId: 1,
+      metadata: { leaveType: 'Annual', startDate: '2026-06-15', endDate: '2026-06-16', days: 2 },
+      createdAt: '2026-06-12T09:30:00Z', createdBy: 'Admin User', updatedAt: '2026-06-12T09:30:00Z', updatedBy: 'Admin User'
+    },
+    {
+      id: 'prt-006', eventType: 'Attendance Updated', description: 'Attendance corrected for Sarah Smith on Jun 28 (Clock-out added)',
+      employeeId: 4, employeeName: 'Sarah Smith', companyId: 1,
+      metadata: { date: '2026-06-28', action: 'clock-out-updated' },
+      createdAt: '2026-06-29T08:00:00Z', createdBy: 'Admin User', updatedAt: '2026-06-29T08:00:00Z', updatedBy: 'Admin User'
+    }
+  ];
+  checkAndSeed('mock_payroll_timeline', mockPayrollTimelineData);
+
   // ── Phase 6: Non-destructive seed (only creates if missing) ──
   checkAndSeed('mock_notes', mockNotes);
   checkAndSeed('mock_note_comments', mockNoteComments);
@@ -1449,7 +1561,7 @@ export const mockReportsService = {
   getAll: () => withDelay(() => getStore('mock_reports_analytics')),
   getRentRoll: () => withDelay(() => {
     const raw = getStore('mock_rent_roll') || {};
-    const list = raw.rentRoll || [];
+    const list = raw.rentRoll || raw.units || [];
     const allowedPropertyIds = getAllowedPropertyIds();
     const properties = getStore('mock_properties');
     

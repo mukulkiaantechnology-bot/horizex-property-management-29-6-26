@@ -78,23 +78,23 @@ export const TALKPICards = ({ metrics = {}, onFilterClick }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {cards.map((card, idx) => (
         <div
           key={idx}
           onClick={() => onFilterClick && onFilterClick(card.filterType, card.filterValue)}
-          className="p-4 bg-white border border-slate-200 rounded-[22px] shadow-sm flex flex-col justify-between hover:shadow-md hover:border-indigo-200 cursor-pointer transition-all duration-300 group"
+          className="p-3 bg-white border border-slate-200 rounded-[18px] shadow-sm flex flex-col justify-between hover:shadow-md hover:border-indigo-200 cursor-pointer transition-all duration-300 group"
         >
           <div className="flex items-center justify-between w-full">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.color} shrink-0 shadow-sm transition-transform group-hover:scale-105`}>
-              <card.icon size={18} />
+            <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.color} shrink-0 shadow-sm transition-transform group-hover:scale-105`}>
+              <card.icon size={16} />
             </div>
-            <span className="text-xl sm:text-2xl font-black text-slate-800 font-mono tracking-tight">
+            <span className="text-xl font-black text-slate-800 font-mono tracking-tight">
               {card.value}
             </span>
           </div>
-          <div className="mt-3">
-            <span className="text-[11px] font-black text-slate-700 uppercase tracking-wider block">
+          <div className="mt-2">
+            <span className="text-[10px] font-black text-slate-700 uppercase tracking-wider block">
               {card.title}
             </span>
             <span className="text-[10px] text-slate-400 font-medium block mt-0.5 leading-snug">

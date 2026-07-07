@@ -453,8 +453,8 @@ export const Units = () => {
               />
             </div>
 
-            <label className="flex items-center gap-2 cursor-pointer group bg-white py-2 px-3 rounded-xl shadow-sm border border-slate-200">
-               <div className="relative shrink-0">
+             <label className="flex items-center gap-2 cursor-pointer group bg-white py-2 px-3 rounded-xl shadow-sm border border-slate-200 w-fit">
+               <div className="relative flex items-center shrink-0">
                  <input 
                     type="checkbox" 
                     className="sr-only" 
@@ -465,22 +465,22 @@ export const Units = () => {
                       localStorage.setItem('showUnitsInConstruction', newValue.toString());
                     }} 
                  />
-                 <div className={`w-9 h-5 rounded-full transition-colors ${showInactive ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
-                 <div className={`absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform shadow ${showInactive ? 'translate-x-4' : ''}`}></div>
+                 <div className={`w-[36px] min-w-[36px] h-[20px] rounded-full transition-colors ${showInactive ? 'bg-indigo-600' : 'bg-slate-200'}`}></div>
+                 <div className={`absolute left-[2px] bg-white w-[16px] h-[16px] rounded-full shadow transition-transform ${showInactive ? 'translate-x-[16px]' : 'translate-x-0'}`}></div>
                </div>
                <span className="text-xs font-bold text-slate-500 whitespace-nowrap">Show units in construction</span>
             </label>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             {hasPermission('Units', 'edit') && (
-              <Button variant="secondary" onClick={() => setShowTypesModal(true)}>
+              <Button variant="secondary" onClick={() => setShowTypesModal(true)} className="w-full sm:w-auto">
                 <Settings size={18} />
                 Manage Types
               </Button>
             )}
             {hasPermission('Units', 'add') && (
-              <Button variant="primary" onClick={openAddModal}>
+              <Button variant="primary" onClick={openAddModal} className="w-full sm:w-auto">
                 <Plus size={18} />
                 Add Unit
               </Button>
@@ -498,7 +498,7 @@ export const Units = () => {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <div className="grid grid-cols-8 min-w-[900px] p-3.5 px-5 font-semibold bg-slate-50 text-slate-500 text-sm border-b border-slate-100 uppercase tracking-wide">
+                <div className="grid grid-cols-8 gap-4 min-w-[1000px] p-3.5 px-5 font-semibold bg-slate-50 text-slate-500 text-sm border-b border-slate-100 uppercase tracking-wide">
                   <span>Unit Identifier</span>
                   <span>Company</span>
                   <span>Building Name</span>
@@ -515,7 +515,7 @@ export const Units = () => {
                   </div>
                 ) : (
                   filteredUnits.map((unit) => (
-                    <div key={unit.id} className="grid grid-cols-8 min-w-[900px] p-3.5 px-5 transition-all duration-300 hover:bg-slate-50 bg-white border-b border-slate-50 last:border-0 text-sm items-center">
+                    <div key={unit.id} className="grid grid-cols-8 gap-4 min-w-[1000px] p-3.5 px-5 transition-all duration-300 hover:bg-slate-50 bg-white border-b border-slate-50 last:border-0 text-sm items-center">
                       <Link to={`/units/${unit.id}`} className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline transition-all">
                         {unit.unitNumber}
                       </Link>

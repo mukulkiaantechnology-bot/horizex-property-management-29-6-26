@@ -112,9 +112,9 @@ const SMSTemplates = () => {
 
                 {/* Templates Grid */}
                 {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[1, 2, 3].map(i => (
-                            <div key={i} className="bg-white border border-gray-100 h-64 rounded-3xl animate-pulse"></div>
+                            <div key={i} className="bg-white border border-gray-100 h-48 rounded-2xl animate-pulse"></div>
                         ))}
                     </div>
                 ) : filteredTemplates.length === 0 ? (
@@ -124,42 +124,42 @@ const SMSTemplates = () => {
                         <p className="text-gray-400 mt-2">Create your first SMS template to get started.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-start">
                         {filteredTemplates.map(template => (
-                            <div key={template.id} className="bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl transition-all group overflow-hidden flex flex-col">
-                                <div className="p-6 flex-grow">
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className="bg-indigo-50 p-3 rounded-2xl">
-                                            <FileText className="h-6 w-6 text-indigo-600" />
+                            <div key={template.id} className="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all group overflow-hidden flex flex-col h-fit">
+                                <div className="p-4">
+                                    <div className="flex items-start justify-between mb-3">
+                                        <div className="bg-indigo-50 p-2 rounded-xl">
+                                            <FileText className="h-5 w-5 text-indigo-600" />
                                         </div>
                                         <div className="flex gap-1">
                                             {hasPermission('Templates', 'edit') && (
-                                                <button onClick={() => openModal(template)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-600">
+                                                <button onClick={() => openModal(template)} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-600">
                                                     <Edit2 className="h-4 w-4" />
                                                 </button>
                                             )}
                                             {hasPermission('Templates', 'delete') && (
-                                                <button onClick={() => handleDelete(template.id)} className="p-2 hover:bg-red-50 rounded-xl transition-colors text-red-500">
+                                                <button onClick={() => handleDelete(template.id)} className="p-1.5 hover:bg-red-50 rounded-lg transition-colors text-red-500">
                                                     <Trash2 className="h-4 w-4" />
                                                 </button>
                                             )}
                                         </div>
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-2 truncate">{template.name}</h3>
+                                    <h3 className="text-sm font-bold text-gray-900 mb-1.5 truncate">{template.name}</h3>
                                     {template.category && (
-                                        <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full mb-3 inline-block">
+                                        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[10px] font-bold rounded-full mb-2 inline-block">
                                             {template.category}
                                         </span>
                                     )}
-                                    <div className="text-sm text-gray-500 line-clamp-4 leading-relaxed bg-gray-50/50 p-4 rounded-2xl border border-gray-50">
+                                    <div className="text-xs text-gray-500 line-clamp-3 leading-relaxed bg-gray-50/50 p-3 rounded-xl border border-gray-50">
                                         {template.content}
                                     </div>
                                 </div>
-                                <div className="px-6 py-4 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
+                                <div className="px-4 py-3 bg-gray-50/50 border-t border-gray-100 flex items-center justify-between">
                                     <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                                         ID: #{template.id}
                                     </span>
-                                    <span className="text-[10px] text-gray-400 font-medium italic">
+                                    <span className="text-[10px] text-gray-400 italic">
                                         Updated: {new Date(template.updatedAt).toLocaleDateString()}
                                     </span>
                                 </div>

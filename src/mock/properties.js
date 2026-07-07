@@ -12,7 +12,11 @@ export const mockProperties = [
     totalUnits: 42,
     occupancy: '95%',
     occupancyRate: 95,
-    revenue: 48500
+    revenue: 48500,
+    street: '1250 Pine Avenue',
+    city: 'Montreal',
+    province: 'QC',
+    postalCode: 'H3A 1A1'
   },
   {
     id: 2,
@@ -27,7 +31,11 @@ export const mockProperties = [
     totalUnits: 60,
     occupancy: '90%',
     occupancyRate: 90,
-    revenue: 72000
+    revenue: 72000,
+    street: '450 Sherbrooke St W',
+    city: 'Montreal',
+    province: 'QC',
+    postalCode: 'H3A 1B6'
   },
   {
     id: 3,
@@ -42,7 +50,11 @@ export const mockProperties = [
     totalUnits: 30,
     occupancy: '100%',
     occupancyRate: 100,
-    revenue: 35000
+    revenue: 35000,
+    street: '888 De Maisonneuve Blvd E',
+    city: 'Montreal',
+    province: 'QC',
+    postalCode: 'H2L 4S8'
   },
   {
     id: 4,
@@ -57,6 +69,10 @@ export const mockProperties = [
     totalUnits: 16,
     occupancy: '87.5%',
     occupancyRate: 87.5,
-    revenue: 19800
+    revenue: 19800,
+    street: '320 Lakeshore Road',
+    city: 'Dorval',
+    province: 'QC',
+    postalCode: 'H9S 2B6'
   }
 ];

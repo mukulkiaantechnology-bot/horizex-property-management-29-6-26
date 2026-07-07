@@ -100,13 +100,13 @@ export const ExecutiveAlertsWidget = ({ alerts = [] }) => {
 /* 3. REVENUE TREND WIDGET (Area Chart) */
 export const RevenueTrendWidget = ({ data = [] }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px]">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">Monthly Revenue Trend</h3>
         <p className="text-xs text-slate-400 font-medium">Consolidated cash flow collections</p>
       </div>
 
-      <div className="flex-1 min-h-0 w-full font-mono text-[10px]">
+      <div className="w-full" style={{height: 200}}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
@@ -134,22 +134,16 @@ export const OccupancyWidget = ({ occupancy = {} }) => {
   ];
 
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px] justify-between">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">Occupancy Target Ratio</h3>
         <p className="text-xs text-slate-400 font-medium">Currently occupied vs vacant ratio</p>
       </div>
 
-      <div className="flex-1 min-h-0 w-full relative flex items-center justify-center font-sans">
-        <ResponsiveContainer width="100%" height={180}>
+      <div className="w-full relative flex items-center justify-center" style={{height: 160}}>
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie
-              data={chartData}
-              innerRadius={45}
-              outerRadius={65}
-              paddingAngle={3}
-              dataKey="value"
-            >
+            <Pie data={chartData} innerRadius={45} outerRadius={65} paddingAngle={3} dataKey="value">
               <Cell fill="#10B981" />
               <Cell fill="#F1F5F9" />
             </Pie>
@@ -161,7 +155,7 @@ export const OccupancyWidget = ({ occupancy = {} }) => {
         </div>
       </div>
 
-      <div className="flex justify-around text-xs border-t border-slate-50 pt-3">
+      <div className="flex justify-around text-xs border-t border-slate-50 pt-2">
         <div className="flex items-center gap-2">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
           <span className="font-bold text-slate-700">{occupancy.occupied} Leased</span>
@@ -183,13 +177,13 @@ export const OutstandingBalanceWidget = ({ collection = {} }) => {
   ];
 
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px]">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">Rent Outstanding Ledger</h3>
         <p className="text-xs text-slate-400 font-medium">Collections vs outstanding balances</p>
       </div>
 
-      <div className="flex-1 min-h-0 w-full font-mono text-[10px]">
+      <div className="w-full" style={{height: 200}}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <XAxis dataKey="name" stroke="#94A3B8" />
@@ -209,8 +203,8 @@ export const OutstandingBalanceWidget = ({ collection = {} }) => {
 /* 6. RENT ROLL WIDGET (Quick Rollup list) */
 export const RentRollWidget = ({ rentRoll = [] }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px]">
-      <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
+      <div className="flex justify-between items-center border-b border-slate-50 pb-2">
         <div>
           <h3 className="font-bold text-slate-800 text-sm">Lease Rent Roll Overview</h3>
           <p className="text-[10px] text-slate-400 font-medium">Top monthly lease amounts</p>
@@ -218,16 +212,20 @@ export const RentRollWidget = ({ rentRoll = [] }) => {
         <Link to="/reports?tab=standard&report=Rent Roll" className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All</Link>
       </div>
 
-      <div className="flex flex-col gap-3 overflow-y-auto pr-1">
-        {rentRoll.slice(0, 4).map((row, idx) => (
-          <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-slate-50/50 border border-slate-100/50">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-bold text-slate-800 text-xs">{row.tenantName}</span>
-              <span className="text-[10px] text-slate-400 font-medium">{row.buildingName} · {row.unitNumber}</span>
+      <div className="flex flex-col gap-2">
+        {rentRoll.length === 0 ? (
+          <p className="text-xs text-slate-400 text-center py-6">No rent roll data found.</p>
+        ) : (
+          rentRoll.slice(0, 4).map((row, idx) => (
+            <div key={idx} className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/50 border border-slate-100/50">
+              <div className="flex flex-col gap-0.5">
+                <span className="font-bold text-slate-800 text-xs">{row.tenantName}</span>
+                <span className="text-[10px] text-slate-400 font-medium">{row.buildingName} · {row.unitNumber}</span>
+              </div>
+              <span className="font-mono font-bold text-slate-700 text-xs">${row.rentAmount?.toLocaleString()}</span>
             </div>
-            <span className="font-mono font-bold text-slate-700 text-xs">${row.rentAmount?.toLocaleString()}</span>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
@@ -236,18 +234,18 @@ export const RentRollWidget = ({ rentRoll = [] }) => {
 /* 7. RENEWAL WIDGET (Line Graph Success Rate) */
 export const RenewalWidget = ({ renewals = {} }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px] justify-between">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">Lease Renewal Performance</h3>
         <p className="text-xs text-slate-400 font-medium">Renewal success rate and statuses</p>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-1.5 py-6">
+      <div className="flex flex-col items-center justify-center gap-1 py-3">
         <span className="text-4xl font-black text-indigo-600 tracking-tight">{renewals.successRate || 100}%</span>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Renewal Success Rate</span>
       </div>
 
-      <div className="flex flex-col gap-2.5 border-t border-slate-50 pt-3 text-xs">
+      <div className="flex flex-col gap-2 border-t border-slate-50 pt-2 text-xs">
         <div className="flex justify-between items-center">
           <span className="text-slate-500 font-medium">Accepted/Renewed</span>
           <span className="font-bold text-slate-800">{renewals.accepted}</span>
@@ -268,18 +266,18 @@ export const RenewalWidget = ({ renewals = {} }) => {
 /* 8. LEGAL CASES WIDGET (Court Case lists) */
 export const LegalCasesWidget = ({ tal = {} }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px] justify-between">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">TAL Litigation Milestones</h3>
         <p className="text-xs text-slate-400 font-medium">Active lawsuits and trial outcomes</p>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-1.5 py-6">
+      <div className="flex flex-col items-center justify-center gap-1 py-3">
         <span className="text-4xl font-black text-rose-600 tracking-tight">{tal.active || 0}</span>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Tribunal Cases</span>
       </div>
 
-      <div className="flex flex-col gap-2.5 border-t border-slate-50 pt-3 text-xs">
+      <div className="flex flex-col gap-2 border-t border-slate-50 pt-2 text-xs">
         <div className="flex justify-between items-center">
           <span className="text-slate-500 font-medium">Resolved Cases</span>
           <span className="font-bold text-slate-800">{tal.closed}</span>
@@ -296,18 +294,18 @@ export const LegalCasesWidget = ({ tal = {} }) => {
 /* 9. ATTENDANCE WIDGET (KPI & Stats chart) */
 export const AttendanceWidget = ({ attendance = {} }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px] justify-between">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">Staff Attendance Ratios</h3>
         <p className="text-xs text-slate-400 font-medium">Monthly check-in summary percentages</p>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-1.5 py-6">
+      <div className="flex flex-col items-center justify-center gap-1 py-3">
         <span className="text-4xl font-black text-emerald-600 tracking-tight">{attendance.presentPct || 100}%</span>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Average Present Rate</span>
       </div>
 
-      <div className="flex flex-col gap-2.5 border-t border-slate-50 pt-3 text-xs">
+      <div className="flex flex-col gap-2 border-t border-slate-50 pt-2 text-xs">
         <div className="flex justify-between items-center">
           <span className="text-slate-500 font-medium">Late Arrival rate</span>
           <span className="font-bold text-slate-800">{attendance.latePct}%</span>
@@ -324,18 +322,18 @@ export const AttendanceWidget = ({ attendance = {} }) => {
 /* 10. PAYROLL WIDGET (Cost distributions) */
 export const PayrollWidget = ({ payroll = {} }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px] justify-between">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
       <div>
         <h3 className="font-bold text-slate-800 text-sm">Corporate Payroll Breakdown</h3>
         <p className="text-xs text-slate-400 font-medium">Labor salary allocations</p>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-1 py-4">
+      <div className="flex flex-col items-center justify-center gap-1 py-3">
         <span className="text-3xl font-black text-slate-800 tracking-tight">{formatCurr(payroll.totalCost)}</span>
         <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Monthly Payroll</span>
       </div>
 
-      <div className="flex flex-col gap-2.5 border-t border-slate-50 pt-3 text-xs">
+      <div className="flex flex-col gap-2 border-t border-slate-50 pt-2 text-xs">
         <div className="flex justify-between items-center">
           <span className="text-slate-500 font-medium">Overtime compensation</span>
           <span className="font-bold text-slate-800">{formatCurr(payroll.overtimeCost)}</span>
@@ -356,8 +354,8 @@ export const PayrollWidget = ({ payroll = {} }) => {
 /* 11. VACANCY WIDGET (Vacant units lists) */
 export const VacancyWidget = ({ vacantList = [] }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px]">
-      <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
+      <div className="flex justify-between items-center border-b border-slate-50 pb-2">
         <div>
           <h3 className="font-bold text-slate-800 text-sm">Vacant Apartments List</h3>
           <p className="text-[10px] text-slate-400 font-medium">Unleased units ready for rent</p>
@@ -365,17 +363,17 @@ export const VacancyWidget = ({ vacantList = [] }) => {
         <Link to="/reports?tab=standard&report=Vacancy Report" className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All</Link>
       </div>
 
-      <div className="flex flex-col gap-3 overflow-y-auto pr-1">
+      <div className="flex flex-col gap-2">
         {vacantList.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-12">All units are currently occupied.</p>
+          <p className="text-xs text-slate-400 text-center py-8">All units are currently occupied.</p>
         ) : (
           vacantList.slice(0, 4).map((apt, idx) => (
-            <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-amber-50/30 border border-amber-100/30">
+            <div key={idx} className="flex items-center justify-between p-2.5 rounded-2xl bg-amber-50/30 border border-amber-100/30">
               <div className="flex flex-col gap-0.5">
                 <span className="font-bold text-slate-800 text-xs">{apt.propertyName || apt.buildingName}</span>
                 <span className="text-[10px] text-slate-400 font-medium">{apt.unitNumber} · {apt.unitType || 'Apartment'}</span>
               </div>
-              <span className="font-bold text-slate-700 text-xs">${(apt.monthlyRent || 1200).toLocaleString()}/mo</span>
+              <span className="font-bold text-slate-700 text-xs">${(apt.monthlyRent || apt.rent || 1200).toLocaleString()}/mo</span>
             </div>
           ))
         )}
@@ -387,8 +385,8 @@ export const VacancyWidget = ({ vacantList = [] }) => {
 /* 12. LISTING STATUS WIDGET (Listing list) */
 export const ListingStatusWidget = ({ listingList = [] }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px]">
-      <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
+      <div className="flex justify-between items-center border-b border-slate-50 pb-2">
         <div>
           <h3 className="font-bold text-slate-800 text-sm">Unit Marketing Listing</h3>
           <p className="text-[10px] text-slate-400 font-medium">Marketing listings status</p>
@@ -396,20 +394,24 @@ export const ListingStatusWidget = ({ listingList = [] }) => {
         <Link to="/reports?tab=standard&report=Listing Status" className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:underline">View All</Link>
       </div>
 
-      <div className="flex flex-col gap-3 overflow-y-auto pr-1">
-        {listingList.slice(0, 4).map((item, idx) => (
-          <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-slate-50/50 border border-slate-100/50 text-xs">
-            <div className="flex flex-col gap-0.5">
-              <span className="font-bold text-slate-800 text-xs">{item.buildingName} · {item.unitNumber}</span>
-              <span className="text-[10px] text-slate-400">Monthly Rent: ${item.monthlyRent}</span>
+      <div className="flex flex-col gap-2">
+        {listingList.length === 0 ? (
+          <p className="text-xs text-slate-400 text-center py-8">No listing data available.</p>
+        ) : (
+          listingList.slice(0, 5).map((item, idx) => (
+            <div key={idx} className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/50 border border-slate-100/50 text-xs">
+              <div className="flex flex-col gap-0.5">
+                <span className="font-bold text-slate-800 text-xs">{item.buildingName} · {item.unitNumber}</span>
+                <span className="text-[10px] text-slate-400">Monthly Rent: ${item.monthlyRent || item.rent || 1200}</span>
+              </div>
+              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+                item.status === 'Vacant' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+              }`}>
+                {item.status === 'Vacant' ? 'Listed' : 'Leased'}
+              </span>
             </div>
-            <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
-              item.status === 'Vacant' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
-            }`}>
-              {item.status === 'Vacant' ? 'Listed' : 'Leased'}
-            </span>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
@@ -418,20 +420,20 @@ export const ListingStatusWidget = ({ listingList = [] }) => {
 /* 13. UPCOMING TASKS WIDGET (Reminders / Task checklist) */
 export const UpcomingTasksWidget = ({ tasks = [] }) => {
   return (
-    <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-card flex flex-col gap-4 h-[350px]">
-      <div className="flex justify-between items-center border-b border-slate-50 pb-3">
+    <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-card flex flex-col gap-3">
+      <div className="flex justify-between items-center border-b border-slate-50 pb-2">
         <div>
           <h3 className="font-bold text-slate-800 text-sm">High Priority Follow-ups</h3>
           <p className="text-[10px] text-slate-400 font-medium">Urgent operations calendar list</p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 overflow-y-auto pr-1">
+      <div className="flex flex-col gap-2">
         {tasks.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-12">No high priority follow-up tasks.</p>
+          <p className="text-xs text-slate-400 text-center py-8">No high priority follow-up tasks.</p>
         ) : (
           tasks.slice(0, 4).map((t, idx) => (
-            <div key={idx} className="flex items-start gap-2.5 p-3 rounded-2xl bg-rose-50/20 border border-rose-100/20">
+            <div key={idx} className="flex items-start gap-2.5 p-2.5 rounded-2xl bg-rose-50/20 border border-rose-100/20">
               <AlertCircle size={14} className="text-rose-500 shrink-0 mt-0.5" />
               <div className="flex flex-col gap-0.5">
                 <span className="font-bold text-slate-800 text-xs">{t.description || t.title}</span>

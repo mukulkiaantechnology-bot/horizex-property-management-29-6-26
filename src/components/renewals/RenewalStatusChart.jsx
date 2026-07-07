@@ -29,7 +29,7 @@ export const RenewalStatusChart = ({ renewals = [] }) => {
   ].filter(s => s.value > 0);
 
   return (
-    <Card className="p-5 rounded-[22px] bg-white shadow-sm border border-slate-200 h-[288px] max-h-[288px] flex flex-col overflow-hidden">
+    <div className="saas-card p-5 rounded-[22px] bg-white shadow-sm border border-slate-200 h-[288px] max-h-[288px] flex flex-col overflow-hidden">
       <div className="flex items-center justify-between mb-4 shrink-0">
         <div>
           <h3 className="text-sm font-black text-slate-800 tracking-tight">Status Distribution</h3>
@@ -63,7 +63,7 @@ export const RenewalStatusChart = ({ renewals = [] }) => {
                 <div key={idx} className="flex flex-col gap-1">
                   <div className="flex items-center justify-between text-xs font-semibold text-slate-750">
                     <div className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${seg.color}`}></span>
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${seg.color}`}></span>
                       <span>{seg.label}</span>
                     </div>
                     <div className="text-slate-400 font-mono text-[10px]">
@@ -82,6 +82,6 @@ export const RenewalStatusChart = ({ renewals = [] }) => {
           </div>
         )}
       </div>
-    </Card>
+    </div>
   );
 };

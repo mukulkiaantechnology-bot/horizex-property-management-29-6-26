@@ -215,7 +215,7 @@ export const InsuranceAlerts = () => {
                 {/* SUMMARY CARDS */}
                 <section className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <Card
-                        className={`p-6 rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 ${statusFilter === 'MISSING' ? 'border-rose-600 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
+                        className={`rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 h-fit ${statusFilter === 'MISSING' ? 'border-rose-600 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
                         onClick={() => setStatusFilter('MISSING')}
                     >
                         <div className="flex items-center gap-4">
@@ -230,7 +230,7 @@ export const InsuranceAlerts = () => {
                     </Card>
 
                     <Card
-                        className={`p-6 rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 ${statusFilter === 'EXPIRED' ? 'border-red-500 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
+                        className={`rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 h-fit ${statusFilter === 'EXPIRED' ? 'border-red-500 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
                         onClick={() => setStatusFilter('EXPIRED')}
                     >
                         <div className="flex items-center gap-4">
@@ -245,7 +245,7 @@ export const InsuranceAlerts = () => {
                     </Card>
 
                     <Card
-                        className={`p-6 rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 ${statusFilter === 'EXPIRING_SOON' ? 'border-orange-500 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
+                        className={`rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 h-fit ${statusFilter === 'EXPIRING_SOON' ? 'border-orange-500 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
                         onClick={() => setStatusFilter('EXPIRING_SOON')}
                     >
                         <div className="flex items-center gap-4">
@@ -260,7 +260,7 @@ export const InsuranceAlerts = () => {
                     </Card>
 
                     <Card
-                        className={`p-6 rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 ${statusFilter === 'ACTIVE' ? 'border-emerald-500 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
+                        className={`rounded-[22px] cursor-pointer transition-all duration-300 hover:-translate-y-1 border-b-4 h-fit ${statusFilter === 'ACTIVE' ? 'border-emerald-500 shadow-lg' : 'border-transparent shadow-sm bg-white'}`}
                         onClick={() => setStatusFilter('ACTIVE')}
                     >
                         <div className="flex items-center gap-4">
@@ -338,10 +338,10 @@ export const InsuranceAlerts = () => {
                                         </td>
                                         <td className="p-4 px-6">
                                             <div className="font-bold text-slate-600">{item.building}</div>
-                                            <div className="text-[11px] text-slate-400 font-bold uppercase tracking-wide">Unit {item.unitNumber}</div>
+                                            <div className="text-[11px] text-slate-400 font-bold uppercase tracking-wide">{item.unitName || `Unit ${item.unitNumber}`}</div>
                                         </td>
                                         <td className="p-4 px-6 text-center text-sm font-bold text-slate-600">
-                                            {item.expiryDate !== 'N/A' ? item.expiryDate : '-'}
+                                            {item.endDate || item.expiryDate || '-'}
                                         </td>
                                         <td className="p-4 px-6 text-center">
                                             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border 

@@ -10,7 +10,7 @@ export const mockRentRollData = {
     totalOutstandingRent: 1600,
     totalOutstandingDeposits: 500
   },
-  units: [
+  rentRoll: [
     {
       id: 1,
       buildingName: "Parkview Heights",

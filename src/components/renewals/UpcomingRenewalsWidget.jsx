@@ -14,7 +14,7 @@ export const UpcomingRenewalsWidget = ({ renewals = [] }) => {
     .slice(0, 5);
 
   return (
-    <Card className="p-5 rounded-[22px] bg-white shadow-sm border border-slate-200 h-[288px] max-h-[288px] flex flex-col overflow-hidden">
+    <div className="saas-card p-5 rounded-[22px] bg-white shadow-sm border border-slate-200 h-fit max-h-[350px] flex flex-col overflow-hidden">
       <div className="flex items-center justify-between mb-3 shrink-0">
         <div>
           <h3 className="text-sm font-black text-slate-800 tracking-tight">Upcoming Renewals</h3>
@@ -69,6 +69,6 @@ export const UpcomingRenewalsWidget = ({ renewals = [] }) => {
           View All Renewals
         </Button>
       </div>
-    </Card>
+    </div>
   );
 };

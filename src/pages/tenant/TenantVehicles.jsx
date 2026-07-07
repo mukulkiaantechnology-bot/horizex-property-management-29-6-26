@@ -36,13 +36,13 @@ export const TenantVehicles = () => {
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         
         {/* INFO BOX */}
-        <section className="bg-indigo-50 border border-indigo-100 p-6 rounded-3xl flex items-start gap-4">
-          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
-            <Info size={20} />
+        <section className="bg-indigo-50 border border-indigo-100 p-4 sm:p-6 rounded-3xl flex items-start gap-3 sm:gap-4">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center text-indigo-600 shadow-sm shrink-0">
+            <Info size={18} />
           </div>
           <div>
-            <h3 className="font-black text-indigo-900 uppercase tracking-tight text-sm">Parking Policy</h3>
-            <p className="text-indigo-700/80 text-sm mt-1 font-medium leading-relaxed">
+            <h3 className="font-black text-indigo-900 uppercase tracking-tight text-xs sm:text-sm">Parking Policy</h3>
+            <p className="text-indigo-700/80 text-xs sm:text-sm mt-1 font-medium leading-relaxed">
               Only registered vehicles with an "Authorized" status are permitted to park on the property. 
               If your vehicle information is incorrect or you have a new car, please contact the property manager.
             </p>
@@ -69,23 +69,27 @@ export const TenantVehicles = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {vehicles.map((v) => (
                 <div key={v.id} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all group">
-                  <div className="h-48 bg-slate-100 relative overflow-hidden">
-                    {v.photo1Url ? (
-                      <img src={v.photo1Url} alt="Vehicle" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-2">
-                        <Car size={48} />
-                        <span className="text-[10px] font-black uppercase tracking-widest">No Photo Available</span>
-                      </div>
-                    )}
+                  <div className="h-44 bg-slate-100 relative overflow-hidden flex flex-col">
+                    {/* Status Header Bar */}
                     <div className={clsx(
-                      "absolute top-4 right-4 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg flex items-center gap-2 border",
+                      "px-4 py-2 text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5 border-b shrink-0",
                       v.isAuthorized 
-                        ? "bg-emerald-500 text-white border-emerald-400" 
-                        : "bg-rose-500 text-white border-rose-400"
+                        ? "bg-emerald-500 text-white border-emerald-600 shadow-sm" 
+                        : "bg-rose-500 text-white border-rose-600 shadow-sm"
                     )}>
-                      {v.isAuthorized ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
+                      {v.isAuthorized ? <CheckCircle size={12} /> : <AlertCircle size={12} />}
                       {v.isAuthorized ? 'Authorized' : 'Not Authorized'}
+                    </div>
+                    {/* Image / Placeholder */}
+                    <div className="flex-1 min-h-0 relative">
+                      {v.photo1Url ? (
+                        <img src={v.photo1Url} alt="Vehicle" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-1.5 p-4">
+                          <Car size={36} />
+                          <span className="text-[9px] font-black uppercase tracking-widest">No Photo Available</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

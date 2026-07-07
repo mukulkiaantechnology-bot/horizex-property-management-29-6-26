@@ -221,7 +221,7 @@ export const Owners = () => {
                 {/* TABLE */}
                 <section className="bg-white rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] overflow-hidden">
                     {/* Desktop Table Header - Hidden on Mobile */}
-                    <div className="hidden md:grid grid-cols-[1.2fr_1.2fr_1.2fr_1.2fr_0.6fr_0.8fr] bg-slate-50 border-b border-slate-200 px-6 py-4">
+                    <div className="hidden md:grid grid-cols-[1.2fr_1.2fr_1.2fr_1.2fr_0.6fr_0.8fr] gap-4 bg-slate-50 border-b border-slate-200 px-6 py-4">
                         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Contact Name</span>
                         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Company</span>
                         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Email (Login)</span>
@@ -234,25 +234,25 @@ export const Owners = () => {
                         {filteredOwners.map((owner) => (
                             <div key={owner.id}>
                                 {/* Desktop Table Row - Hidden on Mobile */}
-                                <div className="hidden md:grid grid-cols-[1.2fr_1.2fr_1.2fr_1.2fr_0.6fr_0.8fr] px-6 py-4 items-center hover:bg-slate-50/80 transition-all duration-200">
-                                    <span className="flex items-center gap-3 font-medium text-slate-700">
-                                        <div className="min-w-[32px] w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 text-slate-500">
+                                <div className="hidden md:grid grid-cols-[1.2fr_1.2fr_1.2fr_1.2fr_0.6fr_0.8fr] gap-4 px-6 py-4 items-center hover:bg-slate-50/80 transition-all duration-200">
+                                    <span className="flex items-center gap-3 font-medium text-slate-700 min-w-0">
+                                        <div className="min-w-[32px] shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 text-slate-500">
                                             <User size={16} />
                                         </div>
-                                        <span className="truncate flex flex-col">
+                                        <span className="truncate flex flex-col min-w-0">
                                             {owner.name}
                                         </span>
                                     </span>
 
-                                    <span className="text-sm text-indigo-600 truncate font-bold">{owner.companyName || '-'}</span>
+                                    <span className="text-sm text-indigo-600 truncate font-bold min-w-0">{owner.companyName || '-'}</span>
 
-                                    <span className="text-sm text-slate-600 truncate">{owner.email}</span>
+                                    <span className="text-sm text-slate-600 truncate min-w-0">{owner.email}</span>
 
-                                    <span className="text-sm text-slate-600 truncate italic">
+                                    <span className="text-sm text-slate-600 truncate italic min-w-0">
                                         {owner.properties.length > 0 ? owner.properties.join(', ') : 'No properties assigned'}
                                     </span>
 
-                                    <span className="text-sm font-bold text-slate-700">{owner.totalUnits}</span>
+                                    <span className="text-sm font-bold text-slate-700 min-w-0">{owner.totalUnits}</span>
 
                                     <span className="flex justify-center gap-1">
                                         <button

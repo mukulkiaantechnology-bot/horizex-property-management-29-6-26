@@ -40,10 +40,10 @@ export const IntegrationKPICards = ({ stats = {} }) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 items-start">
       {cards.map((c, i) => (
-        <div key={i} className="bg-white p-5 rounded-[22px] border border-slate-100 shadow-sm flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-4">
+        <div key={i} className="bg-white p-4 rounded-[22px] border border-slate-100 shadow-sm flex flex-col justify-between h-fit">
+          <div className="flex justify-between items-start mb-3">
             <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${c.color} shadow-sm`}>
               <c.icon size={18} />
             </div>

@@ -392,7 +392,7 @@ const EmailComposer = () => {
                             {/* Left Column: Team, Buildings & Individual Search */}
                             <div className="space-y-6">
                                 {/* management & team selection */}
-                                <div className="space-y-6 pb-10 border-b border-gray-100 mb-10">
+                                <div className="space-y-4 pb-6 border-b border-gray-100 mb-6">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-indigo-600" />
@@ -411,25 +411,25 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {(filteredCoworkersList.length > 0 ? filteredCoworkersList : coworkers).map(c => (
                                             <button
                                                 key={c.id}
                                                 onClick={() => toggleCoworker(c.id)}
-                                                className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                                                className={`p-3 rounded-xl border text-left transition-all ${
                                                     selection.coworkerIds.includes(c.id) 
-                                                    ? 'border-indigo-600 bg-indigo-50/50 ring-4 ring-indigo-50' 
-                                                    : 'border-gray-50 bg-gray-50 hover:border-gray-200'
+                                                    ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-50' 
+                                                    : 'border-gray-100 bg-gray-50 hover:border-gray-200'
                                                 }`}
                                             >
                                                 <div className="text-sm font-bold text-gray-800 line-clamp-1">{c.name}</div>
-                                                <div className="text-[11px] text-indigo-400 font-bold uppercase tracking-tight line-clamp-1">{c.title || 'Team Member'}</div>
+                                                <div className="text-[11px] text-indigo-500 font-bold uppercase tracking-tight line-clamp-1 mt-0.5">{c.title || 'Team Member'}</div>
                                             </button>
                                         ))}
                                     </div>
                                 </div>
 
-                                <div className="space-y-6 pb-10 border-b border-gray-100 mb-10">
+                                <div className="space-y-4 pb-6 border-b border-gray-100 mb-6">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Building className="h-5 w-5 text-indigo-600" />
@@ -449,7 +449,7 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {(() => {
                                             const filtered = buildings.filter(b => 
                                                 b.name.toLowerCase().includes(buildingSearchTerm.toLowerCase()) || 
@@ -464,16 +464,16 @@ const EmailComposer = () => {
                                                         <button
                                                             key={b.id}
                                                             onClick={() => toggleBuilding(b.id)}
-                                                            className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                                                            className={`p-3 rounded-xl border text-left transition-all ${
                                                                 selection.buildingIds.includes(b.id) 
-                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-4 ring-indigo-50' 
-                                                                : 'border-gray-50 bg-gray-50 hover:border-gray-200'
+                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-50' 
+                                                                : 'border-gray-100 bg-gray-50 hover:border-gray-200'
                                                             }`}
                                                         >
-                                                            <div className={`text-sm font-bold uppercase tracking-tight line-clamp-1 ${selection.buildingIds.includes(b.id) ? 'text-indigo-700' : 'text-gray-600'}`}>
+                                                            <div className={`text-sm font-bold uppercase tracking-tight line-clamp-1 ${selection.buildingIds.includes(b.id) ? 'text-indigo-700' : 'text-gray-700'}`}>
                                                                 {b.name}
                                                             </div>
-                                                            <div className="text-[10px] text-gray-400 mt-1 line-clamp-1">{b.address}</div>
+                                                            <div className="text-[10px] text-gray-400 mt-0.5 line-clamp-1">{b.address}</div>
                                                         </button>
                                                     ))}
                                                     
@@ -506,7 +506,7 @@ const EmailComposer = () => {
                                     </div>
                                 </div>
 
-                                <div className="space-y-6 pt-10 border-t border-gray-100 mt-10">
+                                <div className="space-y-4 pb-6 border-b border-gray-100 mb-6">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-indigo-600" />
@@ -526,9 +526,9 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {tenants.filter(t => t.type !== 'RESIDENT').length === 0 && (
-                                            <div className="col-span-full text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400">
+                                            <div className="col-span-full text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200 text-gray-400 text-sm">
                                                 No tenants were found in the database.
                                             </div>
                                         )}
@@ -548,14 +548,14 @@ const EmailComposer = () => {
                                                         <button
                                                             key={t.id}
                                                             onClick={() => toggleIndividualTenant(t.id)}
-                                                            className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                                                            className={`p-3 rounded-xl border text-left transition-all ${
                                                                 selection.tenantIds.includes(t.id) 
-                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-4 ring-indigo-50' 
-                                                                : 'border-gray-50 bg-gray-50 hover:border-gray-200'
+                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-50' 
+                                                                : 'border-gray-100 bg-gray-50 hover:border-gray-200'
                                                             }`}
                                                         >
                                                             <div className="text-sm font-bold text-gray-800 line-clamp-1">{t.name}</div>
-                                                            <div className="text-[11px] text-gray-400 line-clamp-1">{t.email}</div>
+                                                            <div className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">{t.email}</div>
                                                         </button>
                                                     ))}
                                                     
@@ -588,7 +588,7 @@ const EmailComposer = () => {
                                     </div>
                                 </div>
 
-                                <div className="space-y-6 pt-10 border-t border-gray-100 mt-10">
+                                <div className="space-y-4">
                                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
                                         <div className="flex items-center gap-2">
                                             <Users className="h-5 w-5 text-indigo-600" />
@@ -608,9 +608,9 @@ const EmailComposer = () => {
                                             />
                                         </div>
                                     </h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         {tenants.filter(t => t.type === 'RESIDENT').length === 0 && (
-                                            <div className="col-span-full text-center py-10 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-100 text-gray-400">
+                                            <div className="col-span-full text-center py-6 bg-gray-50 rounded-xl border border-dashed border-gray-200 text-gray-400 text-sm">
                                                 No residents were found in the database.
                                             </div>
                                         )}
@@ -630,14 +630,14 @@ const EmailComposer = () => {
                                                         <button
                                                             key={t.id}
                                                             onClick={() => toggleIndividualTenant(t.id)}
-                                                            className={`p-4 rounded-2xl border-2 text-left transition-all ${
+                                                            className={`p-3 rounded-xl border text-left transition-all ${
                                                                 selection.tenantIds.includes(t.id) 
-                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-4 ring-indigo-50' 
-                                                                : 'border-gray-50 bg-gray-50 hover:border-gray-200'
+                                                                ? 'border-indigo-600 bg-indigo-50/50 ring-2 ring-indigo-50' 
+                                                                : 'border-gray-100 bg-gray-50 hover:border-gray-200'
                                                             }`}
                                                         >
                                                             <div className="text-sm font-bold text-gray-800 line-clamp-1">{t.name}</div>
-                                                            <div className="text-[11px] text-gray-400 line-clamp-1">{t.email}</div>
+                                                            <div className="text-[11px] text-gray-400 line-clamp-1 mt-0.5">{t.email}</div>
                                                         </button>
                                                     ))}
                                                     

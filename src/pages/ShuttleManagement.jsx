@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '../components/Card';
 import api from '../api/client';
 import { format } from 'date-fns';
-import { Mail, Plus, Trash2, Edit2, Send, CheckCircle, Clock } from 'lucide-react';
+import { Mail, Plus, Trash2, Edit2, Send, CheckCircle, Clock, Search } from 'lucide-react';
 
 export const ShuttleManagement = () => {
   const { t } = useTranslation();
@@ -439,23 +439,23 @@ export const ShuttleManagement = () => {
           <Card className="p-0 overflow-hidden bg-white shadow-sm rounded-xl">
             {activeTab === 'requests' && (
               <div className="p-4">
-                <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 w-full">
                   <h3 className="text-base font-bold text-slate-800">{t('shuttle.requests')}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    <div className="relative">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <div className="relative w-full sm:w-auto">
                       <input 
                         type="text" 
                         placeholder="Search Tenant or Route..." 
                         value={searchFilter}
                         onChange={(e) => setSearchFilter(e.target.value)}
-                        className="pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-52"
+                        className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-64"
                       />
-                      <svg className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                      <Search size={16} className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     </div>
                     <select 
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
-                      className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                      className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-auto"
                     >
                       <option value="all">All Status</option>
                       <option value="pending">Pending</option>
@@ -464,7 +464,7 @@ export const ShuttleManagement = () => {
                     </select>
                     <button 
                       onClick={() => setShowRequestModal(true)}
-                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm transition-all whitespace-nowrap"
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 shadow-sm transition-all whitespace-nowrap w-full sm:w-auto"
                     >
                       Add Request
                     </button>
@@ -475,17 +475,18 @@ export const ShuttleManagement = () => {
                     No requests found matching your filters.
                   </p>
                 ) : (
-                  <table className="min-w-full text-left text-sm whitespace-nowrap">
-                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs">
-                      <tr>
-                        <th className="px-4 py-3">Tenant</th>
-                        <th className="px-4 py-3">Date & Time</th>
-                        <th className="px-4 py-3">Route</th>
-                        <th className="px-4 py-3">Passengers</th>
-                        <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3 text-right">Actions</th>
-                      </tr>
-                    </thead>
+                  <div className="overflow-x-auto custom-scrollbar">
+                    <table className="min-w-full text-left text-sm whitespace-nowrap">
+                      <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs">
+                        <tr>
+                          <th className="px-4 py-3">Tenant</th>
+                          <th className="px-4 py-3">Date & Time</th>
+                          <th className="px-4 py-3">Route</th>
+                          <th className="px-4 py-3">Passengers</th>
+                          <th className="px-4 py-3">Status</th>
+                          <th className="px-4 py-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
                     <tbody className="divide-y divide-slate-100">
                       {paginatedRequests.map(req => (
                         <tr key={req.id} className="hover:bg-slate-50 transition-colors">
@@ -514,6 +515,7 @@ export const ShuttleManagement = () => {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 )}
                 
                 {/* Pagination Controls */}
@@ -658,23 +660,23 @@ export const ShuttleManagement = () => {
 
             {activeTab === 'access' && (
               <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 w-full">
                   <div>
                     <h3 className="text-lg font-bold text-slate-800">{t('shuttle.access')}</h3>
                     <p className="text-xs text-gray-500">Manage mobile app permissions for tenants.</p>
                   </div>
-                  <div className="flex gap-3">
-                    <div className="relative">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <div className="relative w-full sm:w-auto">
                       <input 
                         type="text" 
                         placeholder="Search Name or Email..." 
                         value={accessSearch}
                         onChange={(e) => setAccessSearch(e.target.value)}
-                        className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-64"
+                        className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none w-full sm:w-64"
                       />
-                      <svg className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                      <Search size={16} className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     </div>
-                    <button onClick={openInviteModal} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-[11px] font-bold hover:bg-indigo-700 shadow-md shadow-indigo-100 flex items-center gap-2 transition-all active:scale-95">
+                    <button onClick={openInviteModal} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-[11px] font-bold hover:bg-indigo-700 shadow-md shadow-indigo-100 flex items-center justify-center gap-2 transition-all active:scale-95 w-full sm:w-auto whitespace-nowrap">
                       <Plus size={14} /> Invite New Tenants
                     </button>
                     <button 
@@ -683,7 +685,7 @@ export const ShuttleManagement = () => {
                         setSelectedBulkIds(currentActive);
                         setShowBulkDisableModal(true);
                       }}
-                      className="px-3 py-2 text-red-600 bg-red-50 rounded-lg text-[11px] font-bold hover:bg-red-100 transition-all active:scale-95"
+                      className="px-3 py-2 text-red-600 bg-red-50 rounded-lg text-[11px] font-bold hover:bg-red-100 transition-all active:scale-95 w-full sm:w-auto"
                     >
                       Bulk Disable
                     </button>

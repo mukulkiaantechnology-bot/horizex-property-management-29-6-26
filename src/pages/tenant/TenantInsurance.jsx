@@ -147,36 +147,36 @@ export const TenantInsurance = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div className="lg:col-span-2 space-y-8">
                             <Card className="p-8 rounded-[32px] shadow-xl shadow-slate-100/50 border-0 bg-white">
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-10 border-b border-slate-50">
-                                    <div className="flex items-center gap-5">
-                                        <div className="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center italic font-black text-2xl border border-indigo-100 shadow-sm">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6 md:mb-10 pb-6 md:pb-10 border-b border-slate-50">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center italic font-black text-xl md:text-2xl border border-indigo-100 shadow-sm shrink-0">
                                             {insurance.provider.substring(0, 2).toUpperCase()}
                                         </div>
                                         <div>
-                                            <h3 className="text-2xl font-black text-slate-800 tracking-tight">{insurance.provider}</h3>
-                                            <p className="text-sm font-black text-slate-400 uppercase tracking-widest leading-none mt-1">{insurance.coverageType || 'General Liability'}</p>
+                                            <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">{insurance.provider}</h3>
+                                            <p className="text-xs md:text-sm font-black text-slate-400 uppercase tracking-widest leading-none mt-1">{insurance.coverageType || 'General Liability'}</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
+                                    <div className="text-left md:text-right">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Policy Number</p>
                                         <p className="text-lg font-mono font-black text-slate-700 tracking-tighter">{insurance.policyNumber}</p>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-8">
-                                    <div className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
+                                    <div className="space-y-1.5">
                                         <div className="flex items-center gap-2 text-slate-400">
-                                            <Calendar size={16} />
-                                            <span className="text-xs font-black uppercase tracking-widest">Effective Date</span>
+                                            <Calendar size={16} className="shrink-0" />
+                                            <span className="text-xs font-black uppercase tracking-widest whitespace-nowrap">Effective Date</span>
                                         </div>
-                                        <p className="text-lg font-black text-slate-700">{new Date(insurance.startDate).toLocaleDateString()}</p>
+                                        <p className="text-base md:text-lg font-black text-slate-700">{new Date(insurance.startDate).toLocaleDateString()}</p>
                                     </div>
-                                    <div className="space-y-4 text-right">
-                                        <div className="flex items-center gap-2 text-slate-400 justify-end">
-                                            <Calendar size={16} />
-                                            <span className="text-xs font-black uppercase tracking-widest">Expiration Date</span>
+                                    <div className="space-y-1.5 sm:text-right">
+                                        <div className="flex items-center gap-2 text-slate-400 sm:justify-end">
+                                            <Calendar size={16} className="shrink-0" />
+                                            <span className="text-xs font-black uppercase tracking-widest whitespace-nowrap">Expiration Date</span>
                                         </div>
-                                        <p className={`text-lg font-black ${insurance.status === 'EXPIRED' ? 'text-red-600' : 'text-slate-800'}`}>
+                                        <p className={`text-base md:text-lg font-black ${insurance.status === 'EXPIRED' ? 'text-red-600' : 'text-slate-800'}`}>
                                             {new Date(insurance.endDate).toLocaleDateString()}
                                         </p>
                                     </div>
@@ -209,13 +209,13 @@ export const TenantInsurance = () => {
                         </div>
 
                         <div className="space-y-8">
-                            <Card className="p-8 rounded-[32px] bg-indigo-600 text-white border-0 shadow-xl shadow-indigo-100">
-                                <Info size={32} className="mb-6 opacity-80" />
-                                <h4 className="text-xl font-black mb-3 italic tracking-tight uppercase">Why Insurance?</h4>
-                                <p className="text-indigo-100 text-sm font-medium leading-relaxed opacity-90">
+                            <div className="p-8 rounded-[32px] bg-indigo-600 text-white border-0 shadow-xl shadow-indigo-100/30 flex flex-col">
+                                <Info size={32} className="mb-6 text-indigo-200" />
+                                <h4 className="text-xl font-black mb-3 italic tracking-tight uppercase text-white">Why Insurance?</h4>
+                                <p className="text-indigo-100 text-sm font-medium leading-relaxed">
                                     Did you know your landlord's insurance doesn't cover your belongings? Renter's insurance protects everything inside your home from theft, fire, or water damage.
                                 </p>
-                            </Card>
+                            </div>
                         </div>
                     </div>
                 )}

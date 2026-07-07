@@ -412,7 +412,7 @@ export const Reports = () => {
 
         {/* 1. TAB: EXECUTIVE DASHBOARD */}
         {activeTab === 'executive' && dashData && (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4">
             {/* KPI Cards */}
             <ExecutiveKPICards kpis={dashData.kpis} onDrilldown={handleKPIDrilldown} />
 
@@ -420,7 +420,7 @@ export const Reports = () => {
             <ExecutiveAlertsWidget alerts={dashData.alerts} />
 
             {/* Grid of Custom Ordered Layout Widgets */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
               {dashLayout.filter(w => w.visible).sort((a,b) => a.order - b.order).map((widget) => {
                 switch (widget.id) {
                   case 'RevenueTrendWidget':
@@ -444,7 +444,7 @@ export const Reports = () => {
                   case 'ListingStatusWidget':
                     return <ListingStatusWidget key={widget.id} listingList={reportService.generate('Listing Status', { companyId })} />;
                   case 'UpcomingTasksWidget':
-                    return <UpcomingTasksWidget key={widget.id} tasks={[{ title: 'Prepare June TAL evidence', dueDate: '2026-07-05' }, { title: 'Review outstanding payroll cycle', dueDate: '2026-07-02' }]} />;
+                    return <UpcomingTasksWidget key={widget.id} tasks={[{ title: 'Prepare June TAL evidence', dueDate: '2026-07-05' }, { title: 'Review outstanding payroll cycle', dueDate: '2026-07-02' }, { title: 'Follow up on Apt 104B overdue rent', dueDate: '2026-07-08' }, { title: 'Process security deposit refund – Alice Cooper', dueDate: '2026-07-10' }]} />;
                   default:
                     return null;
                 }

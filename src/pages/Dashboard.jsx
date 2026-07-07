@@ -337,7 +337,7 @@ export const Dashboard = () => {
                 ].map((card, idx) => (
                     <div
                         key={idx}
-                        className="saas-card p-5 flex flex-col justify-between"
+                        className="saas-card p-4 flex flex-col justify-between h-fit"
                     >
                         <div>
                             <div className="flex justify-between items-start mb-3">
@@ -348,7 +348,7 @@ export const Dashboard = () => {
                             <h4 className="text-slate-500 font-bold text-[11px] uppercase tracking-wider">{card.title}</h4>
                             <p className="text-xl font-black text-slate-800 tracking-tight mt-0.5">{card.value}</p>
                         </div>
-                        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{card.subValue}</span>
                         </div>
                     </div>
@@ -507,7 +507,7 @@ export const Dashboard = () => {
             </section>
 
             {/* TIME & PAYROLL SUMMARY INTEGRATION */}
-            <section className="mt-6 border-t border-slate-100 pt-6">
+            <section className="mt-4 border-t border-slate-100 pt-4">
               <div className="flex flex-col gap-0.5 mb-6">
                 <h3 className="text-base font-black text-slate-800 uppercase tracking-wider">
                   Time & Payroll Overview
